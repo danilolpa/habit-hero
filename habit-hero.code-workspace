@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		// PRETTIER
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+		"prettier.enable": true,
+		"prettier.singleQuote": false,
+		"prettier.trailingComma": "all",
+		"prettier.semi": false,
+		"prettier.printWidth": 100,
+		"prettier.tabWidth": 2,
+		"prettier.arrowParens": "always",
+		"prettier.bracketSpacing": true,
+		"prettier.jsxBracketSameLine": false,
+		"prettier.jsxSingleQuote": false,
+		"prettier.endOfLine": "lf",
+		"prettier.useTabs": false,
+		"prettier.trailingComma": "all",
+		"prettier.printWidth": 100,
+		"prettier.tabWidth": 2,
+		"prettier.arrowParens": "always",
+		"prettier.bracketSpacing": true,
+	}
+}
