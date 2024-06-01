@@ -5,8 +5,12 @@ import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { useEffect } from "react"
 import "react-native-reanimated"
+import "@/styles/global.css"
 
 import { useColorScheme } from "@/components/useColorScheme"
+import { StyleSheet } from "react-native"
+import FloatMenuHome from "@/components/FloatMenuHome"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -15,7 +19,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
+  initialRouteName: "(habits)",
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -50,10 +54,18 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
+      <GestureHandlerRootView>
+        <Stack>
+          <Stack.Screen name="(habits)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
+          <Stack.Screen name="settings" options={{ headerShown: false }} />
+        </Stack>
+        <FloatMenuHome />
+      </GestureHandlerRootView>
     </ThemeProvider>
   )
 }
+
+export const styles = StyleSheet.create({
+  container: {},
+})
