@@ -1,35 +1,46 @@
-import { StyleSheet, SafeAreaView, FlatList, Text } from "react-native"
+import { StyleSheet, Text, Platform, View } from "react-native"
 
-import HabitCard from "@/components/habits/HabitCard"
-import { HABITS_DATA } from "@/utils/testData/habitsData"
+import Habits from "@/components/habits/Habits"
+import { ThemedView } from "@/components/utils/Themed"
+import { theme } from "@/Theme"
 
-export default function Habits() {
+export default function HabitsHome() {
   return (
-    <SafeAreaView style={styles.container} className="h-full border border-red-700">
-      <Text className="text-white font-lg">Habits</Text>
-      <FlatList
-        data={HABITS_DATA}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <HabitCard
-            id={item.id}
-            name={item.name}
-            icon={item.icon}
-            category={item.category}
-            duration={item.duration}
-            goal={item.goal}
-            otherValues={item}
-          />
-        )}
-      />
-    </SafeAreaView>
+    <ThemedView
+      darkColor={theme.colors.black.base}
+      lightColor={theme.colors.white.base}
+      style={styles.container}
+    >
+      {/* <Text className="text-white font-lg">Habits</Text> */}
+      <View style={styles.viewContent}>
+        <Habits />
+      </View>
+    </ThemedView>
   )
 }
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: -20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    // overflow: "hidden",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -5 }, // Sombra apenas no topo
+        shadowOpacity: 0.5,
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 0, // No Android, a sombra é um pouco limitada
+      },
+    }),
+  },
+  viewContent: {
+    overflow: "hidden",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 })

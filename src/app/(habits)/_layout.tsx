@@ -1,14 +1,19 @@
-import { View } from "@/components/utils/Themed"
+import { ThemedView } from "@/components/utils/Themed"
 import { Slot } from "expo-router"
 
 import HeaderDefault from "@/components/HeaderDefault"
 import images from "@/constants/Images"
+import { theme } from "@/Theme"
 
 export default function HabitsLayout() {
   return (
-    <View className="flex-1">
+    <ThemedView
+      className="flex-1 bg-transparent"
+      darkColor={theme.colors.black.base}
+      lightColor={theme.colors.primary.base}
+    >
       <HeaderDefault image={images.headerDefault} />
       <Slot />
-    </View>
+    </ThemedView>
   )
 }

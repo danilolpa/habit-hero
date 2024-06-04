@@ -3,43 +3,85 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { Text as DefaultText, View as DefaultView } from "react-native"
+import { Text, View, TextStyle } from "react-native"
 
-import { Colors } from "@/constants/Colors"
+import Animated from "react-native-reanimated"
+
 import { useColorScheme } from "../useColorScheme"
+import { theme } from "@/Theme"
 
 type ThemeProps = {
   lightColor?: string
   darkColor?: string
+  animated?: boolean
 }
 
-export type TextProps = ThemeProps & DefaultText["props"]
-export type ViewProps = ThemeProps & DefaultView["props"]
+export type TextProps = ThemeProps & {
+  marginBottom?: number
+  fontSize?: TextStyle["fontSize"]
+  fontWeight?: "light" | "medium" | "bold" | "extra-bold"
+  italic?: boolean
+  animated?: boolean
+} & Text["props"]
 
-export function useThemeColor(
-  props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light & keyof typeof Colors.dark,
-) {
+export type ViewProps = ThemeProps & View["props"] & { animated?: boolean }
+
+export function useThemeColor<T, U>(props: { light: T; dark: U }) {
   const theme = useColorScheme() ?? "dark"
-  const colorFromProps = props[theme]
+  // const theme = "dark";
+  return props[theme]
+}
 
-  if (colorFromProps) {
-    return colorFromProps
-  } else {
-    return Colors[theme][colorName]
+export function ThemedText(props: TextProps) {
+  const {
+    style,
+    lightColor,
+    darkColor,
+    marginBottom = 0,
+    fontSize = theme.font.sizes.fontSize16,
+    fontWeight,
+    italic,
+    animated,
+    ...otherProps
+  } = props
+  const color = useThemeColor({
+    light: lightColor || theme.colors.black.base,
+    dark: darkColor || theme.colors.white.base,
+  })
+  const fontFamily = (() => {
+    if (fontWeight === "light") {
+      return italic ? theme.font.familyDefault.light : theme.font.familyDefault.light
+    } else if (fontWeight === "bold") {
+      return italic ? theme.font.familyDefault.bold : theme.font.familyDefault.bold
+    } else if (fontWeight === "extra-bold") {
+      return italic ? theme.font.familyDefault.extraBold : theme.font.familyDefault.extraBold
+    } else {
+      return italic ? theme.font.familyDefault.regular : theme.font.familyDefault.regular
+    }
+  })()
+
+  if (animated) {
+    return (
+      <Animated.Text
+        style={[{ color, marginBottom, fontSize, fontFamily }, style]}
+        {...otherProps}
+      />
+    )
   }
+
+  return <Text style={[{ color, marginBottom, fontSize, fontFamily }, style]} {...otherProps} />
 }
 
-export function Text(props: TextProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text")
+export function ThemedView(props: ViewProps) {
+  const { style, lightColor, darkColor, animated, ...otherProps } = props
+  const backgroundColor = useThemeColor({
+    light: lightColor || "transparent",
+    dark: darkColor || "transparent",
+  })
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />
-}
+  if (animated) {
+    return <Animated.View style={[{ backgroundColor }, style]} {...otherProps} />
+  }
 
-export function View(props: ViewProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "background")
-
-  return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />
+  return <View style={[{ backgroundColor }, style]} {...otherProps} />
 }

@@ -1,5 +1,4 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome"
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
@@ -27,7 +26,13 @@ SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    "Mukta-Bold": require("@/assets/fonts/Mukta-Bold.ttf"),
+    "Mukta-ExtraBold": require("@/assets/fonts/Mukta-ExtraBold.ttf"),
+    "Mukta-ExtraLight": require("@/assets/fonts/Mukta-ExtraLight.ttf"),
+    "Mukta-Light": require("@/assets/fonts/Mukta-Light.ttf"),
+    "Mukta-Medium": require("@/assets/fonts/Mukta-Medium.ttf"),
+    "Mukta-Regular": require("@/assets/fonts/Mukta-Regular.ttf"),
+    "Mukta-SemiBold": require("@/assets/fonts/Mukta-SemiBold.ttf"),
     ...FontAwesome.font,
   })
 
@@ -53,16 +58,14 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme()
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <GestureHandlerRootView>
-        <Stack>
-          <Stack.Screen name="(habits)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
-          <Stack.Screen name="settings" options={{ headerShown: false }} />
-        </Stack>
-        <FloatMenuHome />
-      </GestureHandlerRootView>
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <Stack>
+        <Stack.Screen name="(habits)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
+        <Stack.Screen name="settings" options={{ headerShown: false }} />
+      </Stack>
+      <FloatMenuHome />
+    </GestureHandlerRootView>
   )
 }
 
