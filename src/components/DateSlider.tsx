@@ -2,9 +2,9 @@ import { View, StyleSheet, FlatList, Pressable, FlatListProps } from "react-nati
 import { useEffect, useRef, useState } from "react"
 import React from "react"
 import * as Haptics from "expo-haptics"
-import { addDays, eachDayOfInterval, subDays, format, isToday } from "date-fns"
-import { toZonedTime } from "date-fns-tz"
-import { ptBR } from "date-fns/locale"
+import { addDays, eachDayOfInterval, subDays, format } from "date-fns"
+
+import { getFormattedDate } from "@/utils/useCalendar"
 
 import { ThemedText, ThemedView } from "./utils/Themed"
 import { theme } from "@/Theme"
@@ -13,26 +13,25 @@ interface CustomFlatListProps extends FlatListProps<string> {
   contentContainerStyle?: FlatListProps<string>["contentContainerStyle"]
 }
 type DataItems = {
-  date: string
+  date: Date
 }
 
 // Component Configuration
 const ITEM_WIDTH = 50
 const beforeDays = 15
 const afterDays = 30
-const totalDays = beforeDays + afterDays
 const dateFormat = "yyyy-MM-dd"
 
 export default function DateSlider() {
-  const dates = eachDayOfInterval({
+  const dates: DataItems[] = eachDayOfInterval({
     start: subDays(new Date(), beforeDays),
     end: addDays(new Date(), afterDays),
-  }).map((date) => format(date, dateFormat))
+  }).map((date) => ({ date }))
 
-  const [selectedDate, setSelectedDate] = useState(format(new Date(), dateFormat))
+  const [selectedDate, setSelectedDate] = useState(getFormattedDate(dateFormat))
   const [selectedDateIndex, setSelectedDateIndex] = useState(0)
 
-  const flatListRef = useRef<FlatList<string> | null>(null)
+  const flatListRef = useRef<FlatList<DataItems> | null>(null)
 
   const getItemLayout = (data: any, index: number) => ({
     length: ITEM_WIDTH,
@@ -41,7 +40,7 @@ export default function DateSlider() {
   })
 
   useEffect(() => {
-    const index = dates.findIndex((item) => item === selectedDate)
+    const index = dates.findIndex(({ date }) => format(date, dateFormat) === selectedDate)
     setSelectedDateIndex(index)
   }, [selectedDate])
 
@@ -53,42 +52,42 @@ export default function DateSlider() {
         viewOffset: 60,
       })
     }
-  }, [selectedDateIndex])
+  }, [selectedDateIndex, selectedDate])
 
   const onScrollToIndexFailed = () => {
     const wait = new Promise((resolve) => setTimeout(resolve, 500))
     wait.then(() => {
       flatListRef.current?.scrollToIndex({
         index: selectedDateIndex,
-        animated: false,
-        viewOffset: 10,
+        animated: true,
+        viewOffset: 60,
       })
     })
   }
-  const handlePress = (date: string) => {
+  const handlePress = (date: Date) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    setSelectedDate(format(toZonedTime(date, "UTC"), dateFormat))
+    setSelectedDate(getFormattedDate(dateFormat, date))
   }
 
-  const renderItem = ({ item, index }: { item: string; index: number }) => {
-    const formattedDate = format(toZonedTime(item, "UTC"), dateFormat).toUpperCase()
-    const weedDay = format(toZonedTime(item, "UTC"), "eeeeee", { locale: ptBR }).toUpperCase()
-    const day = format(toZonedTime(item, "UTC"), "dd")
-    const today = isToday(toZonedTime(item, "UTC"))
+  const renderItem = ({ item }: { item: DataItems }) => {
+    const formattedDate = getFormattedDate(dateFormat, item.date).toUpperCase()
+    const weedDay = getFormattedDate("eeeeee", item.date).toUpperCase()
+    const day = getFormattedDate("dd", item.date)
+    const isToday = getFormattedDate(dateFormat, item.date) === getFormattedDate(dateFormat)
     const isActive = selectedDate === formattedDate
 
     return (
       <View>
-        <Pressable onPress={() => handlePress(item)}>
+        <Pressable onPress={() => handlePress(item.date)}>
           <ThemedView
             style={[
               styles.dateContainer,
-              today && styles.dateContainerToday,
+              isToday && styles.dateContainerToday,
               isActive && styles.dateContainerActive,
             ]}
           >
             <ThemedView style={styles.weekDayContainer}>
-              <ThemedText style={styles.weekDay} fontWeight={today ? "extra-bold" : "light"}>
+              <ThemedText style={styles.weekDay} fontWeight={isToday ? "extra-bold" : "light"}>
                 {weedDay}
               </ThemedText>
             </ThemedView>
@@ -101,7 +100,7 @@ export default function DateSlider() {
                 style={styles.day}
                 darkColor={theme.colors.white.light}
                 lightColor={theme.colors.black.dark}
-                fontWeight={today ? "extra-bold" : "light"}
+                fontWeight={isToday ? "extra-bold" : "light"}
               >
                 {day}
               </ThemedText>
@@ -114,10 +113,10 @@ export default function DateSlider() {
 
   return (
     <View>
-      <FlatList
+      <FlatList<DataItems>
         data={dates}
         ref={flatListRef}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.date.toISOString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
@@ -149,7 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.black.base,
   },
   dateContainerToday: {
-    backgroundColor: theme.colors.black.light,
+    backgroundColor: "rgba(0,0,0, 0.3)",
   },
   weekDayContainer: {
     borderRadius: 100,

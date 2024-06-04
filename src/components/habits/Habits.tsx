@@ -28,5 +28,7 @@ export default function Habits() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    paddingVertical: 0,
+  },
 })

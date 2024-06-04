@@ -7,13 +7,12 @@ import {
   SafeAreaView,
   Image,
 } from "react-native"
-import { format } from "date-fns"
-import { toZonedTime } from "date-fns-tz"
-import { ptBR } from "date-fns/locale"
+import { getCalendars } from "expo-localization"
 
 import DateSlider from "./DateSlider"
 import { theme } from "@/Theme"
 import { ThemedText, ThemedView } from "@/components/utils/Themed"
+import { getFormattedDate } from "@/utils/useCalendar"
 
 type HeaderDefaultProps = ImageBackgroundProps & {
   image: string
@@ -22,7 +21,8 @@ type HeaderDefaultProps = ImageBackgroundProps & {
 const user: { name: string } = {
   name: "Dan",
 }
-const actualDay = format(toZonedTime(new Date(), "UTC"), "eee, dd", { locale: ptBR })
+const timeZone = getCalendars()[0].timeZone || "America/Sao_Paulo"
+const actualDay = getFormattedDate("eee, dd")
 
 export default function HeaderDefault({ image }: HeaderDefaultProps) {
   return (
@@ -80,6 +80,8 @@ export const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     paddingBottom: 20,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
   },
   wrapper: {
     height: "100%",
@@ -102,9 +104,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 40,
-    backgroundColor: "rgba(255,255,255, 0.4)",
-    borderBlockColor: theme.colors.white.base,
-    borderWidth: 1,
+    backgroundColor: "rgba(0,0,0, 0.1)",
     borderRadius: 100,
     paddingLeft: 5,
     paddingRight: 15,

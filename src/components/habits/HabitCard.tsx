@@ -75,12 +75,18 @@ export default function HabitCard({ icon, name, category, duration, goal }: Habi
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: "flex",
   },
   card: {
     marginTop: 10,
     padding: 20,
     borderRadius: 10,
     shadowColor: "#000",
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+    justifyContent: "space-between",
+    alignItems: "center",
     marginHorizontal: theme.spaces.defaultSpace,
   },
   itemContainer: {
