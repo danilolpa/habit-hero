@@ -1,10 +1,18 @@
 import { Link } from "expo-router"
 import { View, Text, StyleSheet, Pressable, Platform } from "react-native"
-import { ThemedText, ThemedView } from "./utils/Themed"
-import { theme } from "@/Theme"
+import * as Haptics from "expo-haptics"
 import { FontAwesome6 } from "@expo/vector-icons"
+import { theme } from "@/Theme"
+import { ThemedText, ThemedView } from "./utils/Themed"
+import { useRouteContext } from "@/utils/useContextRoute"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
 export default function FloatMenuHome() {
+  const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+  }
+
+  const { currentRoute } = useRouteContext()
   return (
     <View style={styles.container}>
       <ThemedView
@@ -12,33 +20,61 @@ export default function FloatMenuHome() {
         lightColor={theme.colors.white.base}
         style={styles.actionsGroup}
       >
-        <Link href="/modal" asChild style={styles.actionsNewHabit}>
+        <Link href="/modal" asChild style={styles.tabBarNewHabit}>
           <Pressable>
-            {({ pressed }) => (
-              <ThemedView style={styles.actionsNewHabitContent}>
-                <ThemedText lightColor={theme.colors.white.base}>
-                  <FontAwesome6 name="hat-wizard" size={25} styles={styles.actionsNewHabitIcon} />
-                </ThemedText>
-                <ThemedText style={styles.actionsNewHabitText} fontWeight="bold">
-                  Novo Hábito
-                </ThemedText>
-              </ThemedView>
-            )}
+            {({ pressed }) => {
+              if (pressed) {
+                handlePress()
+              }
+              return (
+                <ThemedView style={styles.tabBarNewHabitContent}>
+                  <ThemedText lightColor={theme.colors.white.base}>
+                    <FontAwesome6 name="hat-wizard" size={25} styles={styles.tabBarNewHabitIcon} />
+                  </ThemedText>
+                  <ThemedText style={styles.tabBarNewHabitText} fontWeight="bold">
+                    Novo Hábito
+                  </ThemedText>
+                </ThemedView>
+              )
+            }}
           </Pressable>
         </Link>
-        <Link push href="/" style={{ marginTop: 6, marginRight: 0 }}>
-          <View style={styles.tabBarButtons}>
-            <ThemedText>
-              <FontAwesome6 name="scroll" size={25} />
-            </ThemedText>
-          </View>
+        <Link push href="/" style={{ marginVertical: 4, marginRight: 0 }} asChild>
+          <Pressable>
+            {({ pressed }) => {
+              if (pressed) {
+                handlePress()
+              }
+              return (
+                <View style={[styles.tabBarButtons]}>
+                  <ThemedText>
+                    <FontAwesome6 name="scroll" size={25} />
+                  </ThemedText>
+                </View>
+              )
+            }}
+          </Pressable>
         </Link>
-        <Link push href="/settings" style={{ marginTop: 6, marginRight: 4 }}>
-          <View style={styles.tabBarButtons}>
-            <ThemedText>
-              <FontAwesome6 name="dice" size={25} />
-            </ThemedText>
-          </View>
+        <Link push href="/settings" style={{ marginVertical: 4, marginRight: 4 }} asChild>
+          <Pressable>
+            {({ pressed }) => {
+              if (pressed) {
+                handlePress()
+              }
+              return (
+                <View
+                  style={[
+                    styles.tabBarButtons,
+                    currentRoute == APP_CONSTANTS.NAV.SETTINGS && styles.tabBarButtonsActive,
+                  ]}
+                >
+                  <ThemedText>
+                    <FontAwesome6 name="dice" size={25} />
+                  </ThemedText>
+                </View>
+              )
+            }}
+          </Pressable>
         </Link>
       </ThemedView>
     </View>
@@ -77,7 +113,7 @@ export const styles = StyleSheet.create({
       },
     }),
   },
-  actionsNewHabit: {
+  tabBarNewHabit: {
     width: 160,
     backgroundColor: theme.colors.primary.base,
     height: 48,
@@ -99,13 +135,13 @@ export const styles = StyleSheet.create({
       },
     }),
   },
-  actionsNewHabitText: {
+  tabBarNewHabitText: {
     color: theme.colors.white.base,
     textAlign: "center",
     marginLeft: 10,
   },
-  actionsNewHabitIcon: { color: theme.colors.primary.base },
-  actionsNewHabitContent: {
+  tabBarNewHabitIcon: { color: theme.colors.primary.base },
+  tabBarNewHabitContent: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",

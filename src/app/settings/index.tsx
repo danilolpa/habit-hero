@@ -7,7 +7,7 @@ export default function Settings() {
     <View className="flex-1 items-center justify-center text-white">
       <Text className="text-3xl text-white">Settings</Text>
 
-      <ThemedView darkColor={theme.colors.black300} lightColor={theme.colors.black500}>
+      <ThemedView darkColor={theme.colors.black.base} lightColor={theme.colors.white.base}>
         <Text className="text-gray">Teste View</Text>
       </ThemedView>
     </View>

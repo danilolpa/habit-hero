@@ -1,15 +1,15 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome"
 import { useFonts } from "expo-font"
-import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { useEffect } from "react"
 import "react-native-reanimated"
 import "@/styles/global.css"
 
-import { useColorScheme } from "@/components/useColorScheme"
-import { StyleSheet } from "react-native"
-import FloatMenuHome from "@/components/FloatMenuHome"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { RouteProvider, useRouteContext } from "@/utils/useContextRoute"
+import Navigation from "@/app/_navigation"
+import { Stack } from "expo-router"
+import FloatMenuHome from "@/components/FloatMenuHome"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -55,20 +55,12 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme()
-
   return (
     <GestureHandlerRootView>
-      <Stack>
-        <Stack.Screen name="(habits)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
-        <Stack.Screen name="settings" options={{ headerShown: false }} />
-      </Stack>
-      <FloatMenuHome />
+      <RouteProvider>
+        <Navigation />
+        <FloatMenuHome />
+      </RouteProvider>
     </GestureHandlerRootView>
   )
 }
-
-export const styles = StyleSheet.create({
-  container: {},
-})

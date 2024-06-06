@@ -19,7 +19,7 @@ type ThemeProps = {
 export type TextProps = ThemeProps & {
   marginBottom?: number
   fontSize?: TextStyle["fontSize"]
-  fontWeight?: "light" | "medium" | "bold" | "extra-bold"
+  fontWeight?: "light" | "medium" | "bold" | "extra-bold" | "extraLight"
   italic?: boolean
   animated?: boolean
 } & Text["props"]
@@ -49,7 +49,9 @@ export function ThemedText(props: TextProps) {
     dark: darkColor || theme.colors.white.base,
   })
   const fontFamily = (() => {
-    if (fontWeight === "light") {
+    if (fontWeight === "extraLight") {
+      return italic ? theme.font.familyDefault.extraLight : theme.font.familyDefault.extraLight
+    } else if (fontWeight === "light") {
       return italic ? theme.font.familyDefault.light : theme.font.familyDefault.light
     } else if (fontWeight === "bold") {
       return italic ? theme.font.familyDefault.bold : theme.font.familyDefault.bold

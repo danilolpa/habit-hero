@@ -1,14 +1,17 @@
-import { MaterialIcons } from "@expo/vector-icons"
-import { Text, StyleSheet, View, TouchableOpacity, Alert } from "react-native"
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
+import { Text, View, TouchableOpacity, Alert } from "react-native"
 import Animated, {
+  Easing,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withSpring,
 } from "react-native-reanimated"
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
-import { ThemedView } from "../utils/Themed"
+import { ThemedText, ThemedView } from "../utils/Themed"
 import { theme } from "@/Theme"
+import styles from "./habitsStyle"
+import { useEffect } from "react"
 
 type HabitCardProps = {
   id: number
@@ -27,12 +30,21 @@ type HabitCardProps = {
   notes?: string
   tags?: string[]
   reminder?: boolean
-  color?: string
+  color: string
   difficulty?: string
   otherValues?: object
+  index: number
 }
 
-export default function HabitCard({ icon, name, category, duration, goal }: HabitCardProps) {
+export default function HabitCard({
+  icon,
+  name,
+  category,
+  duration,
+  goal,
+  color,
+  index,
+}: HabitCardProps) {
   const translateX = useSharedValue(0)
 
   const editButtonStyle = useAnimatedStyle(() => {
@@ -44,79 +56,75 @@ export default function HabitCard({ icon, name, category, duration, goal }: Habi
   const renderRightActions = (progress, dragX) => {
     return (
       <View style={styles.actionsContainer}>
-        <Animated.View style={[styles.actionButton, styles.editButton, editButtonStyle]}>
+        <Animated.View style={[styles.actionButton, editButtonStyle]}>
           <TouchableOpacity onPress={() => Alert.alert("Edit")}>
-            <Text style={styles.actionText}>Edit</Text>
+            <Text>Edit</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
     )
   }
 
+  const opacity = useSharedValue(0)
+  const translateY = useSharedValue(60)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      opacity.value = withTiming(1, {
+        duration: 500,
+        easing: Easing.out(Easing.exp),
+      })
+
+      translateY.value = withTiming(0, {
+        duration: 600,
+        easing: Easing.out(Easing.exp),
+      })
+    }, index * 100) // Delay incremental baseado no índice do item
+
+    return () => clearTimeout(timeoutId)
+  }, [index, opacity, translateY])
+
+  const animatedCardEnter = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{ translateY: translateY.value }],
+    }
+  })
+
   return (
-    <GestureHandlerRootView>
+    <Animated.View style={animatedCardEnter}>
       <Swipeable renderRightActions={renderRightActions}>
         <ThemedView
-          style={styles.card}
-          darkColor={theme.colors.black.light}
+          style={[styles.card, { borderColor: color }]}
+          darkColor={theme.colors.black.lighter}
           lightColor={theme.colors.white.dark}
         >
-          <MaterialIcons name={icon} size={12} />
-          <Text>{name}</Text>
-          <Text>{category}</Text>
-          <Text>{duration}</Text>
-          <Text>{goal}xp</Text>
+          <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: color }]} />
+          <View style={styles.cardContentCenter}>
+            <ThemedText
+              darkColor={theme.colors.white.dark}
+              lightColor={theme.colors.black.dark}
+              fontWeight="bold"
+              style={styles.cardContentHabit}
+            >
+              {name}
+            </ThemedText>
+            <ThemedText
+              darkColor={theme.colors.white.light}
+              lightColor={theme.colors.black.dark}
+              fontSize={14}
+              style={[styles.cardContentMisc, { color: color }]}
+            >
+              {category} - {duration}
+            </ThemedText>
+          </View>
+          <View style={styles.cardContentExp}>
+            <FontAwesome6 name="bolt-lightning" size={18} style={{ color: color }} />
+            <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
+              {goal}xp
+            </ThemedText>
+          </View>
         </ThemedView>
       </Swipeable>
-    </GestureHandlerRootView>
+    </Animated.View>
   )
 }
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    display: "flex",
-  },
-  card: {
-    marginTop: 10,
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    display: "flex",
-    flexDirection: "row",
-    gap: 4,
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginHorizontal: theme.spaces.defaultSpace,
-  },
-  itemContainer: {
-    marginHorizontal: theme.spaces.defaultSpace,
-    backgroundColor: "#fff", // Necessário para o Swipeable funcionar corretamente
-  },
-  actionsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 50,
-  },
-  actionButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 80,
-    height: "100%",
-  },
-  editButton: {
-    backgroundColor: "blue",
-    height: 100,
-  },
-  deleteButton: {
-    backgroundColor: "red",
-  },
-  shareButton: {
-    backgroundColor: "green",
-  },
-  actionText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-})

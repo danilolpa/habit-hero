@@ -35,7 +35,8 @@ const theme: Theme = {
       dark: "#125d67",
     },
     black: {
-      light: "#393E46",
+      lighter: "#393E46",
+      light: "#232323",
       base: "#222831",
       dark: "#232323",
       darkest: "#000000",
@@ -46,6 +47,7 @@ const theme: Theme = {
       base: "#EEEEEE",
       dark: "#DEDEDE",
     },
+    categories: {},
   },
   spaces: {
     defaultSpace: 16,
