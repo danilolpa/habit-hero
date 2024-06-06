@@ -8,7 +8,6 @@ import "@/styles/global.css"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { RouteProvider, useRouteContext } from "@/utils/useContextRoute"
 import Navigation from "@/app/_navigation"
-import { Stack } from "expo-router"
 import FloatMenuHome from "@/components/FloatMenuHome"
 
 export {

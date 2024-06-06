@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Platform, View } from "react-native"
 
-import Habits from "@/components/habits/Habits"
+import Habits from "@/components/Habits/Habits"
 import { ThemedView } from "@/components/utils/Themed"
 import { theme } from "@/Theme"
 

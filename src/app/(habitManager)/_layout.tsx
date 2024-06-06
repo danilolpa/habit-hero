@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar"
 import { Platform, StyleSheet, View, Text } from "react-native"
 
-export default function ModalScreen() {
+export default function HabitManagerIndex() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
+      <Text style={styles.title}>Manager Habit</Text>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   )

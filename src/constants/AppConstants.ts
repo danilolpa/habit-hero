@@ -7,8 +7,10 @@ const APP_CONSTANTS = {
     HABITS_HOME: "(habits)",
     SETTINGS: "settings",
     STATS: "stats",
-    NEW_HABIT: "modal",
+    HABIT_MANAGER: "(habitManager)",
   },
 }
 
 export default APP_CONSTANTS
+
+// expo expo-font expo-splash-screen expo-system-ui react-native

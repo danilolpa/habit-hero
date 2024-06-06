@@ -1,5 +1,5 @@
 import { theme } from "@/Theme"
-import HabitCard from "@/components/habits/HabitCard"
+import HabitCard from "@/components/Habits/HabitCard"
 
 import { HABITS_DATA } from "@/utils/testData/habitsData"
 import { FlatList, Platform, StyleSheet, View } from "react-native"

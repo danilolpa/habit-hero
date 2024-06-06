@@ -1,4 +1,4 @@
-import { Stack, StackScreenProps } from "expo-router"
+import { Stack } from "expo-router"
 import "react-native-reanimated"
 import "@/styles/global.css"
 
@@ -14,7 +14,6 @@ export default function Navigation() {
       transitionEnd: () => {
         setCurrentRoute(route.name)
       },
-      // Outros ouvintes aqui, se necessário
     }
   }
 
@@ -26,8 +25,9 @@ export default function Navigation() {
         listeners={navigationListeners}
       />
       <Stack.Screen
-        name={APP_CONSTANTS.NAV.NEW_HABIT}
+        name={APP_CONSTANTS.NAV.HABIT_MANAGER}
         options={{ presentation: "modal", headerShown: false }}
+        //"card" | "modal" | "transparentModal" | "containedModal" | "containedTransparentModal" | "fullScreenModal" | "formSheet"
         listeners={navigationListeners}
       />
       <Stack.Screen
