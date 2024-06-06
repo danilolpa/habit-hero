@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 8,
     textAlign: "center",
-    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
   dayContainer: {
     borderRadius: 100,
@@ -173,6 +173,6 @@ const styles = StyleSheet.create({
   day: {
     fontSize: 14,
     textAlign: "center",
-    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
 })

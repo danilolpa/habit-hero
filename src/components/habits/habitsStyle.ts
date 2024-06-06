@@ -71,6 +71,19 @@ const styles = StyleSheet.create({
     width: 80,
     height: "100%",
   },
+  concluded: {
+    backgroundColor: theme.colors.green.base,
+    fontSize: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    color: theme.colors.white.base,
+    width: 100,
+    marginRight: theme.spaces.defaultSpace,
+    // top: 12,
+    marginTop: 10,
+    borderRadius: 10,
+  },
 })
 
 export default styles

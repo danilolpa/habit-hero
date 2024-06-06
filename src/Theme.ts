@@ -47,6 +47,9 @@ const theme: Theme = {
       base: "#EEEEEE",
       dark: "#DEDEDE",
     },
+    green: {
+      base: "#97BE5A",
+    },
     categories: {},
   },
   spaces: {

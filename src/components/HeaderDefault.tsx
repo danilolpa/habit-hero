@@ -6,13 +6,17 @@ import {
   ImageBackgroundProps,
   SafeAreaView,
   Image,
+  Platform,
+  TouchableOpacity,
 } from "react-native"
-import { getCalendars } from "expo-localization"
+import * as Haptics from "expo-haptics"
+import { router } from "expo-router"
 
 import DateSlider from "./DateSlider"
 import { theme } from "@/Theme"
 import { ThemedText, ThemedView } from "@/components/utils/Themed"
 import { getFormattedDate } from "@/utils/useCalendar"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
 type HeaderDefaultProps = ImageBackgroundProps & {
   image: string
@@ -21,10 +25,14 @@ type HeaderDefaultProps = ImageBackgroundProps & {
 const user: { name: string } = {
   name: "Dan",
 }
-const timeZone = getCalendars()[0].timeZone || "America/Sao_Paulo"
 const actualDay = getFormattedDate("eee, dd")
 
 export default function HeaderDefault({ image }: HeaderDefaultProps) {
+  const handleProfile = (route: string) => () => {
+    router.push(route)
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -35,20 +43,25 @@ export default function HeaderDefault({ image }: HeaderDefaultProps) {
       >
         <SafeAreaView>
           <View style={styles.welcome}>
-            <ThemedView style={styles.welcomeAction}>
-              <Image
-                source={{ uri: "https://github.com/danilolpa.png" }}
-                className="rounded-full w-10 h-10 border border-l-2 color-gray-300"
-              />
-              <ThemedText
-                style={styles.welcomeName}
-                fontWeight="bold"
-                numberOfLines={1}
-                lineBreakMode="tail"
-              >
-                Olá, {user.name}
-              </ThemedText>
-            </ThemedView>
+            <TouchableOpacity
+              onPress={handleProfile(APP_CONSTANTS.NAV.SETTINGS)}
+              activeOpacity={0.8}
+            >
+              <ThemedView style={styles.welcomeAction}>
+                <Image
+                  source={{ uri: "https://github.com/danilolpa.png" }}
+                  className="rounded-full w-10 h-10 border border-l-2 color-gray-300"
+                />
+                <ThemedText
+                  style={styles.welcomeName}
+                  fontWeight="bold"
+                  numberOfLines={1}
+                  lineBreakMode="tail"
+                >
+                  Olá, {user.name}
+                </ThemedText>
+              </ThemedView>
+            </TouchableOpacity>
             <ThemedText style={styles.welcomeDate} fontWeight="bold">
               {actualDay}
             </ThemedText>
@@ -97,6 +110,11 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    ...Platform.select({
+      android: {
+        marginTop: 50, // No Android, a sombra é um pouco limitada
+      },
+    }),
   },
   welcomeAction: {
     display: "flex",

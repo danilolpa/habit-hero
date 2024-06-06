@@ -1,5 +1,5 @@
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
-import { Text, View, TouchableOpacity, Alert } from "react-native"
+import { Text, View, TouchableOpacity, Alert, Pressable } from "react-native"
 import Animated, {
   Easing,
   useSharedValue,
@@ -55,11 +55,19 @@ export default function HabitCard({
 
   const renderRightActions = (progress, dragX) => {
     return (
+      <Animated.View style={[styles.concluded, editButtonStyle]}>
+        <Pressable>
+          <ThemedText>Concluido!</ThemedText>
+        </Pressable>
+      </Animated.View>
+    )
+  }
+
+  const renderLeftActions = (progress, dragX) => {
+    return (
       <View style={styles.actionsContainer}>
         <Animated.View style={[styles.actionButton, editButtonStyle]}>
-          <TouchableOpacity onPress={() => Alert.alert("Edit")}>
-            <Text>Edit</Text>
-          </TouchableOpacity>
+          <Text>Edit</Text>
         </Animated.View>
       </View>
     )
@@ -78,7 +86,7 @@ export default function HabitCard({
         duration: 600,
         easing: Easing.out(Easing.exp),
       })
-    }, index * 100) // Delay incremental baseado no índice do item
+    }, index * 100)
 
     return () => clearTimeout(timeoutId)
   }, [index, opacity, translateY])
@@ -90,9 +98,15 @@ export default function HabitCard({
     }
   })
 
+  const onSwipeableOpen = (direction: any) => {
+    if (direction === "right") {
+      console.log("right")
+    }
+  }
+
   return (
     <Animated.View style={animatedCardEnter}>
-      <Swipeable renderRightActions={renderRightActions}>
+      <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
         <ThemedView
           style={[styles.card, { borderColor: color }]}
           darkColor={theme.colors.black.lighter}
