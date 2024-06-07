@@ -12,6 +12,9 @@ interface Theme {
     defaultSpace: number
     [key: string]: string | number
   }
+  radius: {
+    [key: string]: number
+  }
   font: {
     sizes: {
       [key: string]: number
@@ -35,8 +38,8 @@ const theme: Theme = {
       dark: "#125d67",
     },
     black: {
-      lighter: "#393E46",
-      light: "#232323",
+      lighter: "#3C4555",
+      light: "#2B323E",
       base: "#222831",
       dark: "#232323",
       darkest: "#000000",
@@ -54,6 +57,11 @@ const theme: Theme = {
   },
   spaces: {
     defaultSpace: 16,
+  },
+  radius: {
+    radius8: 8,
+    radius16: 16,
+    radius20: 20,
   },
   font: {
     sizes: {

@@ -5,7 +5,7 @@ import { HABITS_DATA } from "@/utils/testData/habitsData"
 import { FlatList, Platform, StyleSheet, View } from "react-native"
 import { ThemedText, ThemedView } from "../utils/Themed"
 
-export default function Habits() {
+export default function HabitsList() {
   const renderHeader = () => (
     <ThemedView style={styles.header}>
       <ThemedText style={styles.headerText} fontWeight="extraLight">
@@ -34,10 +34,8 @@ export default function Habits() {
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       style={styles.container}
-      ListHeaderComponent={renderHeader}
       ListFooterComponent={<View style={styles.footer} />}
       ListFooterComponentStyle={styles.container}
-      stickyHeaderIndices={[0]}
       renderItem={({ item, index }) => (
         <HabitCard
           id={item.id}

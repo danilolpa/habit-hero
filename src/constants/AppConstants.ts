@@ -7,10 +7,12 @@ const APP_CONSTANTS = {
     HABITS_HOME: "(habits)",
     SETTINGS: "settings",
     STATS: "stats",
-    HABIT_MANAGER: "(habitManager)",
+    HABIT_MANAGER: "habitsManager",
+  },
+  IMAGES: {
+    SCENE_1: "/assets/images/header-img-principal-opacity.png",
+    SCENE_2: "@/assets/images/scene_1-sky-and-birds.png",
   },
 }
 
 export default APP_CONSTANTS
-
-// expo expo-font expo-splash-screen expo-system-ui react-native

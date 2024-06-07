@@ -93,12 +93,12 @@ export default function DateSlider() {
             </ThemedView>
             <ThemedView
               style={styles.dayContainer}
-              darkColor={theme.colors.black.darkest}
+              darkColor={theme.colors.black.base}
               lightColor={theme.colors.white.base}
             >
               <ThemedText
                 style={styles.day}
-                darkColor={theme.colors.white.light}
+                darkColor={theme.colors.white.lighter}
                 lightColor={theme.colors.black.dark}
                 fontWeight={isToday ? "extra-bold" : "light"}
               >

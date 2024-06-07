@@ -9,6 +9,7 @@ import Animated from "react-native-reanimated"
 
 import { useColorScheme } from "../useColorScheme"
 import { theme } from "@/Theme"
+import { FontAwesome6 } from "@expo/vector-icons"
 
 type ThemeProps = {
   lightColor?: string
@@ -22,6 +23,11 @@ export type TextProps = ThemeProps & {
   fontWeight?: "light" | "medium" | "bold" | "extra-bold" | "extraLight"
   italic?: boolean
   animated?: boolean
+} & Text["props"]
+
+export type FontProps = ThemeProps & {
+  name?: string
+  size?: TextStyle["fontSize"]
 } & Text["props"]
 
 export type ViewProps = ThemeProps & View["props"] & { animated?: boolean }
@@ -86,4 +92,14 @@ export function ThemedView(props: ViewProps) {
   }
 
   return <View style={[{ backgroundColor }, style]} {...otherProps} />
+}
+
+export function ThemedFontAwesome(props: FontProps) {
+  const { style, lightColor, darkColor, animated, ...otherProps } = props
+  const color = useThemeColor({
+    light: lightColor || "transparent",
+    dark: darkColor || "transparent",
+  })
+
+  return <FontAwesome6 style={[{ color }, style]} {...otherProps} />
 }

@@ -20,7 +20,7 @@ export default function FloatMenuHome() {
         lightColor={theme.colors.white.base}
         style={styles.actionsGroup}
       >
-        <Link href="/modal" asChild style={styles.tabBarNewHabit}>
+        <Link href={APP_CONSTANTS.NAV.HABIT_MANAGER} asChild style={styles.tabBarNewHabit}>
           <Pressable>
             {({ pressed }) => {
               if (pressed) {
