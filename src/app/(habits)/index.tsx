@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Platform, View } from "react-native"
 
 import HabitsList from "@/components/Habits/HabitsList"
-import { ThemedView } from "@/components/utils/Themed"
+import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 
 export default function HabitsHome() {

@@ -1,4 +1,4 @@
-import { ThemedView } from "@/components/utils/Themed"
+import { ThemedView } from "@/components/Utils/Themed"
 import { Slot } from "expo-router"
 
 import HeaderDefault from "@/components/HeaderDefault"

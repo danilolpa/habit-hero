@@ -3,7 +3,7 @@ import HabitCard from "@/components/Habits/HabitCard"
 
 import { HABITS_DATA } from "@/utils/testData/habitsData"
 import { FlatList, Platform, StyleSheet, View } from "react-native"
-import { ThemedText, ThemedView } from "../utils/Themed"
+import { ThemedText, ThemedView } from "../Utils/Themed"
 
 export default function HabitsList() {
   const renderHeader = () => (

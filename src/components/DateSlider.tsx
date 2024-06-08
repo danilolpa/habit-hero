@@ -6,7 +6,7 @@ import { addDays, eachDayOfInterval, subDays, format } from "date-fns"
 
 import { getFormattedDate } from "@/utils/useCalendar"
 
-import { ThemedText, ThemedView } from "./utils/Themed"
+import { ThemedText, ThemedView } from "./Utils/Themed"
 import { theme } from "@/Theme"
 
 interface CustomFlatListProps extends FlatListProps<string> {

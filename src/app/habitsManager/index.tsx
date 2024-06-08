@@ -1,28 +1,32 @@
 import { theme } from "@/Theme"
-import { ThemedText, ThemedView, ThemedFontAwesome } from "@/components/utils/Themed"
+import { ThemedText, ThemedView, ThemedFontAwesome } from "@/components/Utils/Themed"
 import { StatusBar } from "expo-status-bar"
-import { Platform, StyleSheet, Image, Text, View, Pressable } from "react-native"
+import { Platform, StyleSheet, Image, Text, View, Pressable, Button } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
+import { useNavigation } from "expo-router"
+import HabitsList from "@/components/Habits/HabitsList"
 
 export default function HabitManagerIndex() {
+  const route = useNavigation()
   return (
     <View style={styles.pageContainer}>
       <View style={styles.backgroundContainer}>
-        <Image
-          source={require("@/assets/images/scene_1-sky-and-birds.png")}
-          style={styles.backgroundImage}
-          blurRadius={20}
-        />
-
         <LinearGradient
-          colors={["#4c669f", "#3b5998", "#192f6a"]}
+          colors={["rgba(0,0,0, .1)", theme.colors.black.dark]}
           style={styles.backgroundContainerGradient}
+          locations={[0, 0.6]}
         />
       </View>
+      <Image
+        source={require("@/assets/images/scene_1-sky-and-birds.png")}
+        style={styles.backgroundImage}
+        blurRadius={5}
+      />
+
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-      {/* <ThemedView style={styles.contentContainer} darkColor={theme.colors.black.dark}>
+      <ThemedView style={styles.contentContainer} darkColor={theme.colors.black.dark}>
         <ThemedView style={styles.header} darkColor={theme.colors.black.dark}>
-          <Pressable style={styles.headerClose}>
+          <Pressable style={styles.headerClose} onPress={route.goBack}>
             <ThemedFontAwesome
               name="xmark"
               size={24}
@@ -38,9 +42,12 @@ export default function HabitManagerIndex() {
           >
             Hábito
           </ThemedText>
-          <ThemedText>Salvar</ThemedText>
+          <ThemedText style={styles.headerButton}>
+            <Button title="Salvar" color={theme.colors.primary.base} />
+          </ThemedText>
         </ThemedView>
-      </ThemedView> */}
+        <ThemedView></ThemedView>
+      </ThemedView>
     </View>
   )
 }
@@ -68,11 +75,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spaces.defaultSpace,
     borderTopLeftRadius: theme.radius.radius20,
     borderTopRightRadius: theme.radius.radius20,
+    zIndex: 1,
     ...Platform.select({
       ios: {
         shadowColor: theme.colors.black.dark,
-        shadowOffset: { width: 0, height: 10 }, // Sombra apenas no topo
-        shadowOpacity: 0.5,
+        shadowOffset: { width: 0, height: 6 }, // Sombra apenas no topo
+        shadowOpacity: 1,
         shadowRadius: 4,
       },
       android: {
@@ -84,20 +92,20 @@ const styles = StyleSheet.create({
     fontSize: theme.font.sizes.fontSize20,
     flexGrow: 1,
     textAlign: "center",
+    height: 40,
   },
   headerClose: {
     fontSize: theme.font.sizes.fontSize20,
     textAlign: "center",
-    width: 40,
+    width: 60,
     height: 40,
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    paddingLeft: 10,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  headerButton: {
+    display: "flex",
+    justifyContent: "flex-end",
   },
   backgroundContainer: {
     position: "absolute",
@@ -112,6 +120,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    zIndex: -1,
   },
   backgroundImage: {
     width: "100%",

@@ -8,7 +8,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
-import { ThemedText, ThemedView } from "../utils/Themed"
+import { ThemedText, ThemedView } from "../Utils/Themed"
 import { theme } from "@/Theme"
 import styles from "./habitsStyle"
 import { useEffect } from "react"

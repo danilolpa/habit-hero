@@ -1,5 +1,5 @@
 import { View, Text } from "react-native"
-import { ThemedView } from "@/components/utils/Themed"
+import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 
 export default function Settings() {

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Pressable, Platform } from "react-native"
 import * as Haptics from "expo-haptics"
 import { FontAwesome6 } from "@expo/vector-icons"
 import { theme } from "@/Theme"
-import { ThemedText, ThemedView } from "./utils/Themed"
+import { ThemedText, ThemedView } from "./Utils/Themed"
 import { useRouteContext } from "@/utils/useContextRoute"
 import APP_CONSTANTS from "@/constants/AppConstants"
 

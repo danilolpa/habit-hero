@@ -1,5 +1,5 @@
 import { theme } from "@/Theme"
-import { ThemedText, ThemedView } from "@/components/utils/Themed"
+import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { Slot } from "expo-router"
 
 export default function HabitManagerLayout() {
