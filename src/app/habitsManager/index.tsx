@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar"
 import { Platform, StyleSheet, Image, Text, View, Pressable, Button } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
-import HabitsList from "@/components/Habits/HabitsList"
+import HabitsManagerForm from "./habitManagerForm"
 
 export default function HabitManagerIndex() {
   const route = useNavigation()
@@ -24,7 +24,11 @@ export default function HabitManagerIndex() {
       />
 
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-      <ThemedView style={styles.contentContainer} darkColor={theme.colors.black.dark}>
+      <ThemedView
+        style={styles.contentContainer}
+        darkColor={theme.colors.black.dark}
+        lightColor={theme.colors.white.dark}
+      >
         <ThemedView style={styles.header} darkColor={theme.colors.black.dark}>
           <Pressable style={styles.headerClose} onPress={route.goBack}>
             <ThemedFontAwesome
@@ -46,7 +50,7 @@ export default function HabitManagerIndex() {
             <Button title="Salvar" color={theme.colors.primary.base} />
           </ThemedText>
         </ThemedView>
-        <ThemedView></ThemedView>
+        <HabitsManagerForm />
       </ThemedView>
     </View>
   )
@@ -60,6 +64,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-start",
     marginTop: 10,
     width: "96%",
     borderTopLeftRadius: theme.radius.radius20,

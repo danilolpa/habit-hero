@@ -20,12 +20,12 @@ export default function Navigation() {
   return (
     <Stack>
       <Stack.Screen
-        name={APP_CONSTANTS.NAV.HABITS_HOME}
+        name={APP_CONSTANTS.NAV.HABIT_MANAGER}
         options={{ headerShown: false }}
         listeners={navigationListeners}
       />
       <Stack.Screen
-        name={APP_CONSTANTS.NAV.HABIT_MANAGER}
+        name={APP_CONSTANTS.NAV.HABITS_HOME}
         options={{ presentation: "modal", headerShown: false }}
         //"card" | "modal" | "transparentModal" | "containedModal" | "containedTransparentModal" | "fullScreenModal" | "formSheet"
         listeners={navigationListeners}

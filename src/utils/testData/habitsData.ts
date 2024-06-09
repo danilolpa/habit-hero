@@ -26,7 +26,7 @@ export interface HabitsType {
 
 export type HabitsProps = (typeof HABITS_DATA)[0]
 
-const categories = [
+export const categories = [
   {
     name: "Fitness",
     color: "#FF6666", // Cor mais forte
