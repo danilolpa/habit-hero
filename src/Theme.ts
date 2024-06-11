@@ -38,6 +38,7 @@ const theme: Theme = {
       dark: "#125d67",
     },
     black: {
+      lightest: "#444d5e",
       lighter: "#3C4555",
       light: "#2B323E",
       base: "#222831",
@@ -46,6 +47,7 @@ const theme: Theme = {
     },
     white: {
       lightest: "#FFFFFF",
+      lighter: "#ebeced",
       light: "#F8FAED",
       base: "#EEEEEE",
       dark: "#DEDEDE",

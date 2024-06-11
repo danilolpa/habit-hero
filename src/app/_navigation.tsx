@@ -21,13 +21,13 @@ export default function Navigation() {
     <Stack>
       <Stack.Screen
         name={APP_CONSTANTS.NAV.HABIT_MANAGER}
-        options={{ headerShown: false }}
+        options={{ presentation: "modal", headerShown: false }}
+        //"card" | "modal" | "transparentModal" | "containedModal" | "containedTransparentModal" | "fullScreenModal" | "formSheet"
         listeners={navigationListeners}
       />
       <Stack.Screen
         name={APP_CONSTANTS.NAV.HABITS_HOME}
-        options={{ presentation: "modal", headerShown: false }}
-        //"card" | "modal" | "transparentModal" | "containedModal" | "containedTransparentModal" | "fullScreenModal" | "formSheet"
+        options={{ headerShown: false }}
         listeners={navigationListeners}
       />
       <Stack.Screen

@@ -4,12 +4,19 @@ import { StatusBar } from "expo-status-bar"
 import { Platform, StyleSheet, Image, Text, View, Pressable, Button } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
-import HabitsManagerForm from "./habitManagerForm"
+import { HabitManagerForm } from "./habitManagerForm"
+import { useRef } from "react"
+
+interface HabitManagerFormProps {
+  submitForm: () => void
+}
 
 export default function HabitManagerIndex() {
   const route = useNavigation()
+  const formRef = useRef()
   return (
     <View style={styles.pageContainer}>
+      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
       <View style={styles.backgroundContainer}>
         <LinearGradient
           colors={["rgba(0,0,0, .1)", theme.colors.black.dark]}
@@ -23,13 +30,16 @@ export default function HabitManagerIndex() {
         blurRadius={5}
       />
 
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
       <ThemedView
         style={styles.contentContainer}
         darkColor={theme.colors.black.dark}
         lightColor={theme.colors.white.dark}
       >
-        <ThemedView style={styles.header} darkColor={theme.colors.black.dark}>
+        <ThemedView
+          style={styles.header}
+          darkColor={theme.colors.black.dark}
+          lightColor={theme.colors.white.dark}
+        >
           <Pressable style={styles.headerClose} onPress={route.goBack}>
             <ThemedFontAwesome
               name="xmark"
@@ -47,10 +57,18 @@ export default function HabitManagerIndex() {
             Hábito
           </ThemedText>
           <ThemedText style={styles.headerButton}>
-            <Button title="Salvar" color={theme.colors.primary.base} />
+            <Button
+              title="Salvar"
+              color={theme.colors.primary.base}
+              onPress={() => {
+                if (formRef.current) {
+                  formRef.current.submitForm()
+                }
+              }}
+            />
           </ThemedText>
         </ThemedView>
-        <HabitsManagerForm />
+        <HabitManagerForm ref={formRef} />
       </ThemedView>
     </View>
   )
@@ -81,17 +99,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: theme.radius.radius20,
     borderTopRightRadius: theme.radius.radius20,
     zIndex: 1,
-    ...Platform.select({
-      ios: {
-        shadowColor: theme.colors.black.dark,
-        shadowOffset: { width: 0, height: 6 }, // Sombra apenas no topo
-        shadowOpacity: 1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 0, // No Android, a sombra é um pouco limitada
-      },
-    }),
   },
   headerTitle: {
     fontSize: theme.font.sizes.fontSize20,
