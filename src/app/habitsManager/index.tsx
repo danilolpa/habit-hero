@@ -1,4 +1,4 @@
-import { theme } from "@/Theme"
+import { getColorHexByName, theme } from "@/Theme"
 import { ThemedText, ThemedView, ThemedFontAwesome } from "@/components/Utils/Themed"
 import { StatusBar } from "expo-status-bar"
 import { Platform, StyleSheet, Image, Text, View, Pressable, Button } from "react-native"
@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
 import { HabitManagerForm } from "./habitManagerForm"
 import { useEffect, useRef } from "react"
+import { useHabitManagerContext } from "./habitManagerContext"
 
 interface HabitManagerFormProps {
   submitForm: () => void
@@ -14,22 +15,20 @@ interface HabitManagerFormProps {
 export default function HabitManagerIndex() {
   const route = useNavigation()
   const formRef = useRef()
+  const { colorHabit } = useHabitManagerContext()
+
+  const activeColor = getColorHexByName(colorHabit) || theme.colors.primary.base
+
   return (
     <View style={styles.pageContainer}>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={["rgba(0,0,0, .1)", theme.colors.black.dark]}
+          colors={[activeColor, "transparent"]}
           style={styles.backgroundContainerGradient}
-          locations={[0, 0.6]}
+          locations={[0, 0.5]}
         />
       </View>
-      <Image
-        source={require("@/assets/images/scene_1-sky-and-birds.png")}
-        style={styles.backgroundImage}
-        blurRadius={5}
-      />
-
       <ThemedView
         style={styles.contentContainer}
         darkColor={theme.colors.black.dark}
@@ -59,7 +58,7 @@ export default function HabitManagerIndex() {
           <ThemedText style={styles.headerButton}>
             <Button
               title="Salvar"
-              color={theme.colors.primary.base}
+              color={activeColor}
               onPress={() => {
                 if (formRef.current) {
                   formRef.current.submitForm()
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
     alignItems: "center",
-    marginTop: 30,
+    // marginTop: 30,
   },
   contentContainer: {
     flex: 1,

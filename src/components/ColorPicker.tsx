@@ -1,7 +1,6 @@
 import { StyleSheet, FlatList, ViewStyle, Pressable, Text } from "react-native"
-import { COLORS } from "@/utils/testData/habitsData"
 import { ThemedView } from "./Utils/Themed"
-import { theme } from "@/Theme"
+import { getColorHexByName, theme } from "@/Theme"
 import { useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
 import * as Haptics from "expo-haptics"
@@ -13,7 +12,7 @@ type ColorPickerProps = {
 }
 
 type ColorPickerItemsProps = {
-  item: { hex: string }
+  item: { hex: string; name: string }
   style?: ViewStyle
   index: number
 }
@@ -26,31 +25,31 @@ export default function ColorPicker({
   initialColor = theme.colors.primary.base,
 }: ColorPickerProps) {
   const { values, setFieldValue } = useFormikContext<FormValues>()
-  const [selectedColor, setSelectedColor] = useState(initialColor)
+  const { colorHabit, setColorHabit } = useHabitManagerContext()
 
   useEffect(() => {
-    if (selectedColor !== values.color) {
-      setFieldValue("color", selectedColor)
+    if (colorHabit !== values.color) {
+      setFieldValue("color", colorHabit)
     }
-  }, [selectedColor])
+  }, [colorHabit])
 
-  const handleSelectColor = (color: string) => {
-    setSelectedColor(color)
+  const handleSelectColor = (colorName: string) => {
+    setColorHabit(colorName)
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
 
   const renderItem = ({ item, index }: ColorPickerItemsProps) => {
-    const showSelected = selectedColor === item.hex
+    const showSelected = getColorHexByName(colorHabit) === item.hex
     return (
       <ThemedView
         style={[
           { backgroundColor: item.hex },
           index === 0 && styles.firstItem,
-          index === COLORS.length - 1 && styles.lastItem,
+          index === theme.habitColors.length - 1 && styles.lastItem,
           styles.colorItem,
         ]}
       >
-        <Pressable onPress={() => handleSelectColor(item.hex)}>
+        <Pressable onPress={() => handleSelectColor(item.name)}>
           <ThemedView style={[styles.colorItem, showSelected && styles.colorSelected]}>
             {showSelected && (
               <FontAwesome6 name="check" size={15} color={theme.colors.black.light} />
@@ -61,14 +60,20 @@ export default function ColorPicker({
     )
   }
 
+  const initialIndex = theme.habitColors.findIndex(
+    (color) => color.hex === getColorHexByName(initialColor),
+  )
+
   return (
     <FlatList
-      data={COLORS}
+      data={theme.habitColors}
       renderItem={renderItem}
       horizontal={true}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       style={styles.container}
+      initialScrollIndex={initialIndex}
+      getItemLayout={(data, index) => ({ length: 45, offset: 60 * index, index })}
     />
   )
 }

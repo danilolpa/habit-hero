@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated"
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
-import { theme } from "@/Theme"
+import { getColorHexByName, theme } from "@/Theme"
 import styles from "./habitsStyle"
 import { useEffect } from "react"
 
@@ -46,7 +46,7 @@ export default function HabitCard({
   index,
 }: HabitCardProps) {
   const translateX = useSharedValue(0)
-
+  const colorHex = getColorHexByName(color)
   const editButtonStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: withSpring(translateX.value * 2) }],
@@ -108,11 +108,11 @@ export default function HabitCard({
     <Animated.View style={animatedCardEnter}>
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
         <ThemedView
-          style={[styles.card, { borderColor: color }]}
+          style={[styles.card, { borderColor: colorHex }]}
           darkColor={theme.colors.black.lighter}
           lightColor={theme.colors.white.dark}
         >
-          <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: color }]} />
+          <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
           <View style={styles.cardContentCenter}>
             <ThemedText
               darkColor={theme.colors.white.dark}
@@ -126,13 +126,13 @@ export default function HabitCard({
               darkColor={theme.colors.white.light}
               lightColor={theme.colors.black.dark}
               fontSize={14}
-              style={[styles.cardContentMisc, { color: color }]}
+              style={[styles.cardContentMisc, { color: colorHex }]}
             >
               {category} - {duration}
             </ThemedText>
           </View>
           <View style={styles.cardContentExp}>
-            <FontAwesome6 name="bolt-lightning" size={18} style={{ color: color }} />
+            <FontAwesome6 name="bolt-lightning" size={18} style={{ color: colorHex }} />
             <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
               {goal}xp
             </ThemedText>

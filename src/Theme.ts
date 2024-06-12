@@ -1,7 +1,20 @@
 export const primaryColor = "#00ADB5"
 
 interface ColorShades {
-  [key: string]: string
+  lightest?: string
+  lighter?: string
+  light?: string
+  base: string
+  dark?: string
+  darkest?: string
+}
+
+interface HabitColor {
+  name: string
+  hex: string
+  rgb: string
+  rgba: string
+  contrastColor: string
 }
 
 interface Theme {
@@ -23,6 +36,7 @@ interface Theme {
       [key: string]: string
     }
   }
+  habitColors: HabitColor[]
 }
 
 // Definindo as cores principais
@@ -56,7 +70,6 @@ const theme: Theme = {
     green: {
       base: "#97BE5A",
     },
-    categories: {},
   },
   spaces: {
     defaultSpace: 16,
@@ -91,6 +104,92 @@ const theme: Theme = {
       extraBold: "Mukta-ExtraBold",
     },
   },
+  habitColors: [
+    {
+      name: "primary",
+      hex: "#00ADB5",
+      rgb: "rgb(0, 173, 181)",
+      rgba: "rgba(0, 173, 181, 0.5)",
+      contrastColor: "#FFFFFF",
+    },
+    {
+      name: "red",
+      hex: "#FF6666",
+      rgb: "rgb(255, 102, 102)",
+      rgba: "rgba(255, 102, 102, 0.5)",
+      contrastColor: "#FFFFFF",
+    },
+    {
+      name: "pink",
+      hex: "#F06292",
+      rgb: "rgb(240, 98, 146)",
+      rgba: "rgba(240, 98, 146, 0.5)",
+      contrastColor: "#FFFFFF",
+    },
+    {
+      name: "lightPurple",
+      hex: "#BA68C8",
+      rgb: "rgb(186, 104, 200)",
+      rgba: "rgba(186, 104, 200, 0.5)",
+      contrastColor: "#FFFFFF",
+    },
+    {
+      name: "purple",
+      hex: "#9575CD",
+      rgb: "rgb(149, 117, 205)",
+      rgba: "rgba(149, 117, 205, 0.5)",
+      contrastColor: "#FFFFFF",
+    },
+    {
+      name: "orange",
+      hex: "#FFB74D",
+      rgb: "rgb(255, 183, 77)",
+      rgba: "rgba(255, 183, 77, 0.5)",
+      contrastColor: "#232323",
+    },
+    {
+      name: "yellow",
+      hex: "#FFD54F",
+      rgb: "rgb(255, 213, 79)",
+      rgba: "rgba(255, 213, 79, 0.5)",
+      contrastColor: "#232323",
+    },
+    {
+      name: "green",
+      hex: "#81C784",
+      rgb: "rgb(129, 199, 132)",
+      rgba: "rgba(129, 199, 132, 0.5)",
+      contrastColor: "#FFFFFF",
+    },
+    {
+      name: "teal",
+      hex: "#4DB6AC",
+      rgb: "rgb(77, 182, 172)",
+      rgba: "rgba(77, 182, 172, 0.5)",
+      contrastColor: "#232323",
+    },
+    {
+      name: "blue",
+      hex: "#64B5F6",
+      rgb: "rgb(100, 181, 246)",
+      rgba: "rgba(100, 181, 246, 0.5)",
+      contrastColor: "#232323",
+    },
+  ],
 }
 
-export { theme }
+const getColorHexByName = (name: string) => {
+  const color = theme.habitColors.find((c) => c.name === name)
+  return color?.hex
+}
+
+const getColorNameByHex = (hex: string) => {
+  const color = theme.habitColors.find((c) => c.hex === hex)
+  return color?.name
+}
+const getColorContrastColorByHex = (hex: string) => {
+  const color = theme.habitColors.find((c) => c.hex === hex)
+  return color?.contrastColor
+}
+
+export { theme, getColorHexByName, getColorNameByHex, getColorContrastColorByHex }

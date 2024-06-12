@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import React, { useEffect, useState } from "react"
-import { theme } from "@/Theme"
+import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
 import * as Haptics from "expo-haptics"
 
 type contentData = {
@@ -12,19 +12,22 @@ type contentData = {
 type RoundedButtonsProps = {
   data: contentData[]
   initialSelected?: number[]
-  selectedColor: string
+  selectedColor?: string
   multiSelection?: boolean
   multiline?: boolean
+  textColor?: string
 }
 
 const RoundedButtons = ({
   data,
   initialSelected = [],
   selectedColor = theme.colors.primary.base,
+  textColor = theme.colors.white.base,
   multiSelection = false,
   multiline = false,
 }: RoundedButtonsProps) => {
   const [selected, setSelected] = useState<number[]>([])
+  const [contrastColor, setContrastColor] = useState(getColorContrastColorByHex(selectedColor))
 
   useEffect(() => {
     if (initialSelected) {
@@ -50,6 +53,10 @@ const RoundedButtons = ({
     }
   }
 
+  useEffect(() => {
+    setContrastColor(getColorContrastColorByHex(selectedColor))
+  }, [selected])
+
   return (
     <ThemedView
       style={[styles.roundedOptionsContainer, multiline && styles.roundedOptionsContainerMultiline]}
@@ -65,7 +72,13 @@ const RoundedButtons = ({
             ]}
             onPress={() => handleSelected(item.cod)}
           >
-            <ThemedText fontWeight="light" style={styles.roundedOptionsActionText}>
+            <ThemedText
+              fontWeight="light"
+              style={[
+                styles.roundedOptionsActionText,
+                selected.includes(item.cod) && { color: contrastColor },
+              ]}
+            >
               {item.title}
             </ThemedText>
           </Pressable>
