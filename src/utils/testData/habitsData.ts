@@ -14,6 +14,7 @@ export interface HabitsType {
   duration: string
   durationMinutes: number
   frequency: string
+  frequencySchedule: number[]
   goal: number
   progress: number
   createdBy: string
@@ -85,10 +86,157 @@ export const categories = [
   },
 ]
 
+const CATEGORIES = [
+  "Fitness",
+  "Education",
+  "Wellness",
+  "Health",
+  "Personal Development",
+  "Productivity",
+  "Hobbies",
+  "Social",
+  "Mindfulness",
+  "Creativity",
+  "Finance",
+  "Relationships",
+  "Career",
+  "Spirituality",
+]
+
+export const COLORS = [
+  {
+    name: "Light Blue",
+    hex: "#00ADB5",
+    rgb: "rgb(0, 173, 181)",
+    rgba: "rgba(0, 173, 181, 0.5)",
+  },
+  {
+    name: "Red",
+    hex: "#FF6666",
+    rgb: "rgb(255, 102, 102)",
+    rgba: "rgba(255, 102, 102, 0.5)",
+  },
+  {
+    name: "Purple",
+    hex: "#9575CD",
+    rgb: "rgb(149, 117, 205)",
+    rgba: "rgba(149, 117, 205, 0.5)",
+  },
+  {
+    name: "Orange",
+    hex: "#FFB74D",
+    rgb: "rgb(255, 183, 77)",
+    rgba: "rgba(255, 183, 77, 0.5)",
+  },
+  {
+    name: "Yellow",
+    hex: "#FFD54F",
+    rgb: "rgb(255, 213, 79)",
+    rgba: "rgba(255, 213, 79, 0.5)",
+  },
+  {
+    name: "Green",
+    hex: "#81C784",
+    rgb: "rgb(129, 199, 132)",
+    rgba: "rgba(129, 199, 132, 0.5)",
+  },
+  {
+    name: "Pink",
+    hex: "#F06292",
+    rgb: "rgb(240, 98, 146)",
+    rgba: "rgba(240, 98, 146, 0.5)",
+  },
+  {
+    name: "Blue",
+    hex: "#64B5F6",
+    rgb: "rgb(100, 181, 246)",
+    rgba: "rgba(100, 181, 246, 0.5)",
+  },
+  {
+    name: "Light Purple",
+    hex: "#BA68C8",
+    rgb: "rgb(186, 104, 200)",
+    rgba: "rgba(186, 104, 200, 0.5)",
+  },
+  {
+    name: "Teal",
+    hex: "#4DB6AC",
+    rgb: "rgb(77, 182, 172)",
+    rgba: "rgba(77, 182, 172, 0.5)",
+  },
+]
+
 export const priorities = [1, 2, 3, 4, 5]
 export const difficulties = ["Easy", "Medium", "Hard"]
 export const durations = ["15 mins", "30 mins", "45 mins", "1 hour", "2 hours"]
-export const frequencies = ["Daily", "Weekly", "Monthly"]
+
+export const FREQUENCY_LABELS = ["daily", "weekly", "monthly"]
+export const FREQUENCY = [
+  {
+    index: 0,
+    label: FREQUENCY_LABELS[0],
+  },
+  {
+    index: 1,
+    label: FREQUENCY_LABELS[1],
+  },
+  {
+    index: 2,
+    label: FREQUENCY_LABELS[2],
+  },
+]
+export const HABIT_DAYS = [
+  { cod: 1, title: "Seg" },
+  { cod: 2, title: "Ter" },
+  { cod: 3, title: "Qua" },
+  { cod: 4, title: "Qui" },
+  { cod: 5, title: "Sex" },
+  { cod: 6, title: "Sáb" },
+  { cod: 7, title: "Dom" },
+]
+
+export const HABIT_WEEK_FREQUENCY_NUMBERS = [
+  { cod: 1, title: "1" },
+  { cod: 2, title: "2" },
+  { cod: 3, title: "3" },
+  { cod: 4, title: "4" },
+  { cod: 5, title: "5" },
+  { cod: 6, title: "6" },
+  { cod: 7, title: "7" },
+]
+export const DAYS_LIST_OF_MONTH = [
+  { cod: 1, title: "1" },
+  { cod: 2, title: "2" },
+  { cod: 3, title: "3" },
+  { cod: 4, title: "4" },
+  { cod: 5, title: "5" },
+  { cod: 6, title: "6" },
+  { cod: 7, title: "7" },
+  { cod: 8, title: "8" },
+  { cod: 9, title: "9" },
+  { cod: 10, title: "10" },
+  { cod: 11, title: "11" },
+  { cod: 12, title: "12" },
+  { cod: 13, title: "13" },
+  { cod: 14, title: "14" },
+  { cod: 15, title: "15" },
+  { cod: 16, title: "16" },
+  { cod: 17, title: "17" },
+  { cod: 18, title: "18" },
+  { cod: 19, title: "19" },
+  { cod: 20, title: "20" },
+  { cod: 21, title: "21" },
+  { cod: 22, title: "22" },
+  { cod: 23, title: "23" },
+  { cod: 24, title: "24" },
+  { cod: 25, title: "25" },
+  { cod: 26, title: "26" },
+  { cod: 27, title: "27" },
+  { cod: 28, title: "28" },
+  { cod: 29, title: "29" },
+  { cod: 30, title: "30" },
+  { cod: 31, title: "31" },
+]
 
 export const HABITS_DATA: HabitsType[] = [
   {
@@ -103,6 +251,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "30 mins",
     durationMinutes: 30,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 30,
     progress: 10,
     createdBy: "Usuario1",
@@ -124,6 +273,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "1 hora",
     durationMinutes: 60,
     frequency: "Semanal",
+    frequencySchedule: [1, 3],
     goal: 10,
     progress: 7,
     createdBy: "Usuario2",
@@ -145,6 +295,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "15 mins",
     durationMinutes: 15,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 20,
     progress: 5,
     createdBy: "Usuario3",
@@ -166,6 +317,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "45 mins",
     durationMinutes: 45,
     frequency: "Semanal",
+    frequencySchedule: [1, 3],
     goal: 5,
     progress: 3,
     createdBy: "Usuario4",
@@ -187,6 +339,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "1 hora",
     durationMinutes: 60,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 40,
     progress: 25,
     createdBy: "Usuario5",
@@ -208,6 +361,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "1 hora",
     durationMinutes: 60,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 30,
     progress: 20,
     createdBy: "Usuario6",
@@ -229,6 +383,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "30 mins",
     durationMinutes: 30,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 25,
     progress: 10,
     createdBy: "Usuario7",
@@ -250,6 +405,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "30 mins",
     durationMinutes: 30,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 50,
     progress: 40,
     createdBy: "Usuario8",
@@ -271,6 +427,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "15 mins",
     durationMinutes: 15,
     frequency: "Diário",
+    frequencySchedule: [1, 3],
     goal: 35,
     progress: 20,
     createdBy: "Usuario9",
@@ -292,6 +449,7 @@ export const HABITS_DATA: HabitsType[] = [
     duration: "1 hora",
     durationMinutes: 60,
     frequency: "Semanal",
+    frequencySchedule: [1, 3],
     goal: 60,
     progress: 50,
     createdBy: "Usuario10",

@@ -6,13 +6,14 @@ import { useThemeColor } from "@/components/Utils/Themed"
 
 type InputProps = {
   children: ReactNode
-  large?: boolean
+  size?: "small" | "medium" | "large"
 }
 
 type InputFieldProps = TextInputProps & {
   lightColor?: string
   darkColor?: string
-  large?: boolean
+  size?: "small" | "medium" | "large"
+  styleField?: Object
 }
 
 function Input({ children }: InputProps) {
@@ -20,7 +21,7 @@ function Input({ children }: InputProps) {
 }
 
 function InputField({ ...props }: InputFieldProps) {
-  const { lightColor, darkColor, style, large, multiline } = props
+  const { lightColor, darkColor, style, size, multiline, styleField } = props
 
   const backgroundColor = useThemeColor({
     light: lightColor || "transparent",
@@ -34,7 +35,12 @@ function InputField({ ...props }: InputFieldProps) {
 
   return (
     <ThemedView
-      style={[{ backgroundColor }, styles.container, style, large && styles.containerLarge]}
+      style={[
+        { backgroundColor },
+        styles.container,
+        style,
+        size === "large" && styles.containerLarge,
+      ]}
     >
       <TextInput
         placeholderTextColor={theme.colors.white.darkest}
@@ -42,10 +48,11 @@ function InputField({ ...props }: InputFieldProps) {
         {...props}
         style={[
           { color },
-          style,
+          styleField,
           styles.field,
           multiline && styles.fieldMultiline,
-          large && styles.fieldLarge,
+          size === "large" && { fontSize: theme.font.sizes.fontSize20 },
+          size === "medium" && { fontSize: theme.font.sizes.fontSize16 },
         ]}
       />
     </ThemedView>
@@ -60,17 +67,10 @@ export const styles = StyleSheet.create({
   container: {
     borderRadius: theme.radius.radius8,
     paddingHorizontal: theme.spaces.defaultSpace,
-    height: 50,
-    flexGrow: 3,
-    width: "100%",
-  },
-  fieldLarge: {
-    fontSize: theme.font.sizes.fontSize20,
-    height: 50,
+    height: 60,
+    flexGrow: 1,
   },
   field: {
-    borderWidth: 1,
-    maxWidth: "100%",
     flexGrow: 1,
   },
   containerLarge: {

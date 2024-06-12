@@ -1,38 +1,56 @@
 import { StyleSheet, FlatList, ViewStyle, Pressable, Text } from "react-native"
-import { categories as COLORS } from "@/utils/testData/habitsData"
+import { COLORS } from "@/utils/testData/habitsData"
 import { ThemedView } from "./Utils/Themed"
 import { theme } from "@/Theme"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
 import * as Haptics from "expo-haptics"
+import { useHabitManagerContext } from "@/app/habitsManager/habitManagerContext"
+import { useFormikContext } from "formik"
 
 type ColorPickerProps = {
-  item: { color: string }
+  initialColor?: string
+}
+
+type ColorPickerItemsProps = {
+  item: { hex: string }
   style?: ViewStyle
   index: number
 }
 
-export default function ColorPicker() {
-  const [selectedColor, setSelectedColor] = useState("")
+interface FormValues {
+  color: string
+}
+
+export default function ColorPicker({
+  initialColor = theme.colors.primary.base,
+}: ColorPickerProps) {
+  const { values, setFieldValue } = useFormikContext<FormValues>()
+  const [selectedColor, setSelectedColor] = useState(initialColor)
+
+  useEffect(() => {
+    if (selectedColor !== values.color) {
+      setFieldValue("color", selectedColor)
+    }
+  }, [selectedColor])
 
   const handleSelectColor = (color: string) => {
     setSelectedColor(color)
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
 
-  const renderItem = ({ item, index }: ColorPickerProps) => {
-    const showSelected = selectedColor === item.color
-
+  const renderItem = ({ item, index }: ColorPickerItemsProps) => {
+    const showSelected = selectedColor === item.hex
     return (
       <ThemedView
         style={[
-          { backgroundColor: item.color },
+          { backgroundColor: item.hex },
           index === 0 && styles.firstItem,
           index === COLORS.length - 1 && styles.lastItem,
           styles.colorItem,
         ]}
       >
-        <Pressable onPress={() => handleSelectColor(item.color)}>
+        <Pressable onPress={() => handleSelectColor(item.hex)}>
           <ThemedView style={[styles.colorItem, showSelected && styles.colorSelected]}>
             {showSelected && (
               <FontAwesome6 name="check" size={15} color={theme.colors.black.light} />

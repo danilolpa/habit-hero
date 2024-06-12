@@ -1,4 +1,4 @@
-const primaryColor = "#00ADB5"
+export const primaryColor = "#00ADB5"
 
 interface ColorShades {
   [key: string]: string

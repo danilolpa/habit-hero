@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Image, Text, View, Pressable, Button } from "reac
 import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
 import { HabitManagerForm } from "./habitManagerForm"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 
 interface HabitManagerFormProps {
   submitForm: () => void
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
     alignItems: "center",
+    marginTop: 30,
   },
   contentContainer: {
     flex: 1,

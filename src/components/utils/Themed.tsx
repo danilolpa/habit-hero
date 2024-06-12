@@ -6,6 +6,9 @@
 import { Text, View, TextStyle } from "react-native"
 
 import Animated from "react-native-reanimated"
+import SegmentedControl, {
+  SegmentedControlProps,
+} from "@react-native-segmented-control/segmented-control"
 
 import { useColorScheme } from "../useColorScheme"
 import { theme } from "@/Theme"
@@ -29,6 +32,8 @@ export type FontProps = ThemeProps & {
   name?: string
   size?: TextStyle["fontSize"]
 } & Text["props"]
+
+export type ThemedSegmentedControlProps = ThemeProps & SegmentedControlProps & {}
 
 export type ViewProps = ThemeProps & View["props"] & { animated?: boolean }
 
@@ -102,4 +107,14 @@ export function ThemedFontAwesome(props: FontProps) {
   })
 
   return <FontAwesome6 style={[{ color }, style]} {...otherProps} />
+}
+
+export function ThemedSegmentedControl(props: ThemedSegmentedControlProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props
+  const backgroundColor = useThemeColor({
+    light: lightColor || theme.colors.white.light,
+    dark: darkColor || theme.colors.black.base,
+  })
+
+  return <SegmentedControl style={[style]} backgroundColor={backgroundColor} {...otherProps} />
 }

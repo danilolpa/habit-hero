@@ -1,16 +1,27 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
+import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from "react"
 import { View, StyleSheet, Pressable, Switch, ScrollView, Button, Text } from "react-native"
-import { Formik, FormikProps } from "formik"
+import { Formik, FormikProps, useFormikContext } from "formik"
 import * as Yup from "yup"
 
-import { ThemedFontAwesome, ThemedText, ThemedView } from "@/components/Utils/Themed"
+import {
+  ThemedFontAwesome,
+  ThemedText,
+  ThemedView,
+  ThemedSegmentedControl,
+} from "@/components/Utils/Themed"
 import { Input } from "@/components/Input"
 import { theme } from "@/Theme"
 import ColorPicker from "@/components/ColorPicker"
 import { useHabitManagerContext } from "./habitManagerContext"
 import ContentContainer from "@/components/ContentContainer"
-import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import { RoundedButtons } from "@/components/RoundedButtons"
+import {
+  HABIT_DAYS,
+  HABIT_WEEK_FREQUENCY_NUMBERS,
+  DAYS_LIST_OF_MONTH,
+} from "@/utils/testData/habitsData"
+import { getFrequenciesByIndex, isFrequency } from "@/utils/useFrequency"
+import { getFormattedDate } from "@/utils/useCalendar"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -21,34 +32,13 @@ interface HabitManagerFormProps {
   submitForm: () => void
 }
 
-const initialValues = {
-  name: "Corrida todas as manhãs para manter a forma",
-  description: "Corrida todas as manhãs para manter a forma.",
-  completed: false,
-  date: "2024-07-21T06:39:14-03:00",
-  icon: "directions-run",
-  category: "Fitness",
-  priority: 1,
-  duration: "30 mins",
-  durationMinutes: 30,
-  frequency: "Diário",
-  goal: 30,
-  progress: 10,
-  createdBy: "Usuario1",
-  notes: "Corrida matinal ao redor do parque.",
-  tags: ["fitness", "saúde"],
-  reminder: true,
-  color: "#000",
-  difficulty: "Medium",
-}
-
-export const HabitManagerForm = forwardRef<HabitManagerFormProps, {}>((props, ref) => {
+export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) => {
   const [isGoal, setIsGoalEnabled] = useState(false)
   const toggleSwitch = () => setIsGoalEnabled((previousState) => !previousState)
-  const { submitForm, loading, error } = useHabitManagerContext()
-  const [tabIndex, setTabIndex] = React.useState(0)
+  const { submitForm, loading, error, habitData, updateHabitData } = useHabitManagerContext()
+  const [frequency, setFrequency] = React.useState({ index: 1, label: "weekly" })
+  const formikRef = useRef<FormikProps<typeof habitData>>(null)
 
-  const formikRef = useRef<FormikProps<typeof initialValues>>(null)
   useImperativeHandle(ref, () => ({
     submitForm: () => {
       if (formikRef.current) {
@@ -57,129 +47,169 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps, {}>((props, re
     },
   }))
 
+  const handleFrequencyChange = ({ nativeEvent }: any) => {
+    const frequencyLabel = getFrequenciesByIndex(nativeEvent.selectedSegmentIndex)
+    if (frequencyLabel) {
+      setFrequency({
+        index: nativeEvent.selectedSegmentIndex,
+        label: frequencyLabel,
+      })
+    } else {
+      // dispatch error
+    }
+  }
+
   return (
     <ScrollView>
       <Formik
-        initialValues={initialValues}
+        initialValues={habitData}
         validationSchema={validationSchema}
         onSubmit={(values) => submitForm(values)}
         innerRef={formikRef}
       >
-        {(formikProps: FormikProps<typeof initialValues>) => (
-          <ThemedView style={styles.container}>
-            <View style={styles.containerFlexRow}>
+        {(formikProps: FormikProps<typeof habitData>) => {
+          let activeColor = theme.colors.primary.base
+          return (
+            <ThemedView style={styles.container}>
+              {loading && <Text>Carregando...</Text>}
+              {error && <Text>Erro: {error}</Text>}
+              <View style={styles.containerFlexRow}>
+                <Input.Field
+                  placeholder="Name"
+                  darkColor={theme.colors.black.light}
+                  lightColor={theme.colors.white.light}
+                  size="medium"
+                  onChangeText={formikProps.handleChange("name")}
+                  onBlur={formikProps.handleBlur("name")}
+                  value={formikProps.values.name}
+                  styleField={{ margin: 0 }}
+                  style={{ width: "80%", paddingRight: 4 }}
+                />
+                <ThemedView
+                  style={styles.selectIconContainer}
+                  darkColor={theme.colors.black.light}
+                  lightColor={theme.colors.white.light}
+                >
+                  <Pressable>
+                    <ThemedFontAwesome
+                      name="person-biking"
+                      size={24}
+                      darkColor={theme.colors.primary.base}
+                      lightColor={theme.colors.black.base}
+                    />
+                  </Pressable>
+                </ThemedView>
+              </View>
               <Input.Field
-                placeholder="Name"
+                placeholder="Description"
                 darkColor={theme.colors.black.light}
                 lightColor={theme.colors.white.light}
-                large
-                onChangeText={formikProps.handleChange("name")}
-                onBlur={formikProps.handleBlur("name")}
-                value={formikProps.values.name}
-                style={{}}
+                multiline
+                size="medium"
+                numberOfLines={4}
+                style={{ height: 125 }}
+                onChangeText={formikProps.handleChange("description")}
+                onBlur={formikProps.handleBlur("description")}
+                value={formikProps.values.description}
               />
-              <ThemedView
-                style={styles.selectIconContainer}
-                darkColor={theme.colors.black.light}
-                lightColor={theme.colors.white.light}
-              >
-                <Pressable>
-                  <ThemedFontAwesome
-                    name="person-biking"
-                    size={24}
-                    darkColor={theme.colors.primary.base}
-                    lightColor={theme.colors.black.base}
+              <ContentContainer style={{ paddingHorizontal: 0 }}>
+                <ThemedText
+                  style={[{ marginHorizontal: theme.spaces.defaultSpace }, styles.headingTitle]}
+                  fontSize={10}
+                >
+                  Escolha uma cor {activeColor}
+                </ThemedText>
+                <ColorPicker initialColor={formikProps.values.color} />
+              </ContentContainer>
+              <ContentContainer noPadding>
+                <ThemedView style={styles.contentWithDivider}>
+                  <ThemedText style={styles.headingTitle}>Repetir</ThemedText>
+                  <Switch
+                    trackColor={{ false: "#767577", true: formikProps.values.color }}
+                    thumbColor={isGoal ? "#f4f3f4" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isGoal}
                   />
-                </Pressable>
-              </ThemedView>
-            </View>
-            <Input.Field
-              placeholder="Description"
-              darkColor={theme.colors.black.light}
-              lightColor={theme.colors.white.light}
-              multiline
-              large
-              numberOfLines={4}
-              style={{ height: 125 }}
-              onChangeText={formikProps.handleChange("description")}
-              onBlur={formikProps.handleBlur("description")}
-              value={formikProps.values.description}
-            />
-            <ContentContainer style={{ paddingHorizontal: 0 }}>
-              <ThemedText
-                style={[{ marginHorizontal: theme.spaces.defaultSpace }, styles.headingTitle]}
-                fontSize={20}
-              >
-                Escolha uma cor
-              </ThemedText>
-              <ColorPicker />
-            </ContentContainer>
-            <ContentContainer noPadding>
-              <ThemedView style={styles.contentWithDivider}>
-                <ThemedText style={styles.headingTitle}>Repetir</ThemedText>
-                <Switch
-                  trackColor={{ false: "#767577", true: "#81b0ff" }}
-                  thumbColor={isGoal ? "#f5dd4b" : "#f4f3f4"}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
-                  value={isGoal}
-                />
-              </ThemedView>
-              <ThemedView style={styles.contentWithDivider}>
-                <ThemedText style={styles.headingTitle}>Diário</ThemedText>
-                <ThemedFontAwesome
-                  name="chevron-down"
-                  darkColor={theme.colors.white.base}
-                  lightColor={theme.colors.black.base}
-                  size={18}
-                  style={{ height: 30, width: 30 }}
-                />
-              </ThemedView>
-              <ThemedView
-                darkColor={theme.colors.black.lighter}
-                lightColor={theme.colors.white.lighter}
-                style={styles.contentContainerlight}
-              >
-                <SegmentedControl
-                  values={["Diário", "Semanal", "Mensal"]}
-                  selectedIndex={tabIndex}
-                  onChange={(item) => setTabIndex(item.nativeEvent.selectedSegmentIndex)}
-                  style={styles.segmentedControl}
-                  tintColor={theme.colors.primary.base}
-                />
-
-                <RoundedButtons />
-              </ThemedView>
-            </ContentContainer>
-            <ContentContainer noPadding>
-              <ThemedView style={styles.contentWithDivider}>
-                <ThemedText style={styles.headingTitle}>Meta</ThemedText>
-                <Switch
-                  trackColor={{ false: "#767577", true: "#81b0ff" }}
-                  thumbColor={isGoal ? "#f5dd4b" : "#f4f3f4"}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
-                  value={isGoal}
-                />
-              </ThemedView>
-              <ThemedView style={styles.contentWithDivider}>
-                <ThemedText style={styles.headingTitle}>Diário</ThemedText>
-                <ThemedFontAwesome
-                  name="chevron-down"
-                  darkColor={theme.colors.white.base}
-                  lightColor={theme.colors.black.base}
-                  size={18}
-                  style={{ height: 30, width: 30 }}
-                />
-              </ThemedView>
-            </ContentContainer>
-            {/* <Button
-              onPress={() => formikProps.submitForm()}
-              title={loading ? "Saving..." : "Save"}
-              disabled={loading}
-            /> */}
-          </ThemedView>
-        )}
+                </ThemedView>
+                <ThemedView style={styles.contentWithDivider}>
+                  <ThemedText style={styles.headingTitle}>Diário</ThemedText>
+                  <ThemedFontAwesome
+                    name="chevron-down"
+                    darkColor={theme.colors.white.base}
+                    lightColor={theme.colors.black.base}
+                    size={18}
+                    style={{ height: 30, width: 30 }}
+                  />
+                </ThemedView>
+                <ThemedView
+                  darkColor={theme.colors.black.lighter}
+                  lightColor={theme.colors.white.lighter}
+                  style={styles.contentContainerlight}
+                >
+                  <ThemedSegmentedControl
+                    values={["Diário", "Semanal", "Mensal"]}
+                    selectedIndex={frequency.index}
+                    onChange={(item) => handleFrequencyChange(item)}
+                    style={styles.segmentedControl}
+                    tintColor={theme.colors.primary.base}
+                    fontStyle={{ fontSize: 16, fontFamily: theme.font.familyDefault.regular }}
+                  />
+                  {frequency.label === "daily" && (
+                    <RoundedButtons
+                      data={HABIT_DAYS}
+                      initialSelected={habitData.frequencySchedule.weekly}
+                      selectedColor={theme.colors.primary.base}
+                      multiSelection
+                    />
+                  )}
+                  {frequency.label === "weekly" && (
+                    <RoundedButtons
+                      data={HABIT_WEEK_FREQUENCY_NUMBERS}
+                      initialSelected={[1]}
+                      selectedColor={theme.colors.primary.base}
+                    />
+                  )}
+                  {frequency.label === "monthly" && (
+                    <RoundedButtons
+                      data={DAYS_LIST_OF_MONTH}
+                      initialSelected={habitData.frequencySchedule.monthly}
+                      selectedColor={theme.colors.primary.base}
+                      multiline
+                    />
+                  )}
+                </ThemedView>
+              </ContentContainer>
+              <ContentContainer noPadding>
+                <ThemedView style={styles.contentWithDivider}>
+                  <ThemedText style={styles.headingTitle}>Meta</ThemedText>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={isGoal ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isGoal}
+                  />
+                </ThemedView>
+                <ThemedView style={styles.contentWithDivider}>
+                  <ThemedText style={styles.headingTitle}>Diário</ThemedText>
+                  <ThemedFontAwesome
+                    name="chevron-down"
+                    darkColor={theme.colors.white.base}
+                    lightColor={theme.colors.black.base}
+                    size={18}
+                    style={{ height: 30, width: 30 }}
+                  />
+                </ThemedView>
+              </ContentContainer>
+              {/* <Button
+                onPress={() => formikProps.submitForm()}
+                title={loading ? "Saving..." : "Save"}
+                disabled={loading}
+              /> */}
+            </ThemedView>
+          )
+        }}
       </Formik>
     </ScrollView>
   )
@@ -202,14 +232,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 4,
-    // width: "100%",
+    // maxWidth: "100%",
   },
   selectIconContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     minHeight: 60,
-    flexGrow: 10,
+    width: 60,
     borderRadius: theme.radius.radius8,
   },
   headingTitle: {
@@ -227,8 +257,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spaces.defaultSpace,
   },
   segmentedControl: {
-    backgroundColor: theme.colors.black.base,
-    height: 40,
+    height: 50,
   },
   contentContainerlight: {
     marginBottom: 8,
