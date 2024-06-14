@@ -1,5 +1,5 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { getFormattedDate, getTimestamp } from "@/utils/useCalendar"
+import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons"
 import React, { createContext, useContext, useEffect, useState } from "react"
 
@@ -32,6 +32,14 @@ interface frequencyScheduleType {
   weekly: number
   monthly: number[]
 }
+
+export interface singleDateProps {
+  year: number
+  month: number
+  day: number
+  timestamp: number
+  dateString: string
+}
 export interface HabitsType {
   name: string
   description: string
@@ -44,13 +52,7 @@ export interface HabitsType {
   repeat: boolean
   frequency: "daily" | "weekly" | "monthly" | "single"
   frequencySchedule: frequencyScheduleType
-  singleDate?: {
-    year: number
-    month: number
-    day: number
-    timestamp: number
-    dateString: string
-  }
+  singleDate?: singleDateProps
   goal: number
   color: colorsType
   progress: number
@@ -91,7 +93,7 @@ const initialHabitData: HabitsType = {
   createdBy: "",
   notes: "",
   reminder: true,
-  color: "lightPurple",
+  color: "primary",
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
 }

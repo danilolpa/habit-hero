@@ -15,7 +15,7 @@ import { router } from "expo-router"
 import DateSlider from "./DateSlider"
 import { theme } from "@/Theme"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
-import { getFormattedDate } from "@/utils/useCalendar"
+import { getFormattedDate } from "@/utils/dateHelpers"
 import APP_CONSTANTS from "@/constants/AppConstants"
 
 type HeaderDefaultProps = ImageBackgroundProps & {

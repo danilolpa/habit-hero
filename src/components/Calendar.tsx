@@ -1,15 +1,17 @@
 import { Calendar as CalendarLib, LocaleConfig, CalendarProps } from "react-native-calendars"
 
 import { View, Text, StyleSheet } from "react-native"
-import { theme } from "@/Theme"
+import { getColorContrastColorByHex, theme } from "@/Theme"
 import { useThemeColor } from "./Utils/Themed"
 import { useEffect, useState } from "react"
 import { useColorScheme } from "react-native"
+import { singleDateProps } from "@/app/habitsManager/habitManagerContext"
 
 export type ComponentCalendarProps = CalendarProps & {
   lightColor?: string
   darkColor?: string
   currentColor?: string
+  selectedDate: string
 }
 LocaleConfig.locales["pt_BR"] = {
   monthNames: [
@@ -62,17 +64,18 @@ function Calendar(props: ComponentCalendarProps) {
     darkColor = theme.colors.black.lightest,
     onDayPress,
     currentColor,
+    selectedDate,
     ...otherProps
   } = props
 
   const otherColors = {
     textSectionTitleColor: currentColor,
-    selectedDayBackgroundColor: "#f55",
-    selectedDayTextColor: "#9f5",
+    selectedDayBackgroundColor: currentColor,
+    selectedDayTextColor: getColorContrastColorByHex(String(currentColor)),
     todayBackgroundColor: "rgba(0,0,0,0.3)",
     arrowColor: currentColor,
+    selectedDotColor: "red",
   }
-
   const themeColors = useThemeColor({
     light: {
       calendarBackground: lightColor,
@@ -105,7 +108,20 @@ function Calendar(props: ComponentCalendarProps) {
     setTheme({ key: String(colorScheme), currentTheme: themeColors })
   }, [colorScheme])
 
-  return <CalendarLib onDayPress={onDayPress} otherProps key={key} theme={currentTheme} />
+  return (
+    <CalendarLib
+      onDayPress={onDayPress}
+      otherProps
+      key={key}
+      theme={currentTheme}
+      markingType={"custom"}
+      current={selectedDate}
+      enableSwipeMonths={true}
+      markedDates={{
+        [selectedDate]: { selected: true },
+      }}
+    />
+  )
 }
 
 export const styles = StyleSheet.create({

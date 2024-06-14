@@ -4,7 +4,7 @@ import React from "react"
 import * as Haptics from "expo-haptics"
 import { addDays, eachDayOfInterval, subDays, format } from "date-fns"
 
-import { getFormattedDate } from "@/utils/useCalendar"
+import { getFormattedDate } from "@/utils/dateHelpers"
 
 import { ThemedText, ThemedView } from "./Utils/Themed"
 import { theme } from "@/Theme"

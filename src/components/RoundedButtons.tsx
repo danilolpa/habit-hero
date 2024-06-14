@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import React, { useEffect, useState } from "react"
 import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
-import { getFormattedDate } from "@/utils/useCalendar"
+import { getFormattedDate } from "@/utils/dateHelpers"
 import * as Haptics from "expo-haptics"
 
 import { useFormikContext } from "formik"

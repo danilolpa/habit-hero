@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "habit-hero",
+    "name": "Habit Hero: Versão Alpha",
     "slug": "habit-hero",
-    "version": "1.0.0",
+    "version": "0.0.2",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "myapp",
@@ -13,12 +13,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.daniloalmeida.habithero"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/android_adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },

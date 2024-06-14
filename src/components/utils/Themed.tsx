@@ -26,6 +26,7 @@ export type TextProps = ThemeProps & {
   fontWeight?: "light" | "medium" | "bold" | "extra-bold" | "extraLight"
   italic?: boolean
   animated?: boolean
+  colorText?: string
 } & Text["props"]
 
 export type FontProps = ThemeProps & {
@@ -53,12 +54,15 @@ export function ThemedText(props: TextProps) {
     fontWeight,
     italic,
     animated,
+    colorText,
     ...otherProps
   } = props
-  const color = useThemeColor({
-    light: lightColor || theme.colors.black.base,
-    dark: darkColor || theme.colors.white.base,
-  })
+  const color =
+    colorText ||
+    useThemeColor({
+      light: lightColor || theme.colors.black.base,
+      dark: darkColor || theme.colors.white.base,
+    })
   const fontFamily = (() => {
     if (fontWeight === "extraLight") {
       return italic ? theme.font.familyDefault.extraLight : theme.font.familyDefault.extraLight

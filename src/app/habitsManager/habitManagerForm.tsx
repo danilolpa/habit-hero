@@ -27,8 +27,10 @@ import JsonViewer from "@/components/Utils/JsonView"
 import Tag from "@/components/Tags"
 import { MaterialIcons } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { getDaysOfWeek, isTodayDate, getFormattedDate } from "@/utils/useCalendar"
+import { dateTextFormatter, constructFrequencyText } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
+import * as Haptics from "expo-haptics"
+import BubbleButton from "@/components/BubbleButton"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -42,6 +44,7 @@ interface HabitManagerFormProps {
 export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) => {
   const { submitForm, loading, error, habitData } = useHabitManagerContext()
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
+  const [calendarView, setCalendarView] = useState(false)
 
   useImperativeHandle(ref, () => ({
     submitForm: () => {
@@ -50,34 +53,6 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
       }
     },
   }))
-
-  const constructFrequencyText = (props: any) => {
-    const {
-      frequency,
-      frequencySchedule: { daily, weekly, monthly },
-    } = props
-
-    if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY) {
-      return daily.length === 7 ? "Todos os dias" : getDaysOfWeek(daily)
-    } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY) {
-      return weekly + (weekly > 1 ? " vezes por semana" : " vez por semana")
-    } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY) {
-      if (monthly.length === 0) {
-        return "Escolha um ou vários dias no mes"
-      } else if (monthly.length === 1) {
-        return "No mês todo dia: " + monthly[0]
-      } else if (monthly.length === 2) {
-        return "No mês todos os dias: " + monthly.join(" e ")
-      } else {
-        return (
-          "No mês todos os dias: " +
-          monthly.slice(0, -1).join(", ") +
-          " e " +
-          monthly[monthly.length - 1]
-        )
-      }
-    }
-  }
 
   return (
     <ScrollView>
@@ -94,6 +69,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
 
           const toggleRepeat = (value: boolean) => {
             formikProps.setFieldValue("repeat", value)
+            setCalendarView(false)
             !value
               ? formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.SINGLE)
               : formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.DAILY)
@@ -113,7 +89,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
               {error && <Text>Erro: {error}</Text>}
               <View style={styles.containerFlexRow}>
                 <Input.Field
-                  placeholder="Name"
+                  placeholder="Nome"
                   darkColor={theme.colors.black.light}
                   lightColor={theme.colors.white.light}
                   size="medium"
@@ -124,18 +100,23 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   style={{ width: "80%", paddingRight: 4 }}
                   cursorColor={selectedColor}
                 />
-                <ThemedView
-                  style={styles.selectIconContainer}
-                  darkColor={theme.colors.black.light}
-                  lightColor={theme.colors.white.light}
+
+                <BubbleButton
+                  backgroundColor={selectedColor}
+                  style={{
+                    minHeight: 60,
+                    width: 60,
+                  }}
                 >
-                  <Pressable>
-                    <MaterialIcons name={formikProps.values.icon} size={24} color={selectedColor} />
-                  </Pressable>
-                </ThemedView>
+                  <MaterialIcons
+                    name={formikProps.values.icon}
+                    size={30}
+                    color={getColorContrastColorByHex(String(selectedColor))}
+                  />
+                </BubbleButton>
               </View>
               <Input.Field
-                placeholder="Description"
+                placeholder="Descrição"
                 darkColor={theme.colors.black.light}
                 lightColor={theme.colors.white.light}
                 multiline
@@ -148,11 +129,6 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 cursorColor={selectedColor}
               />
               <ContentContainer style={{ paddingHorizontal: 0 }}>
-                <ThemedText
-                  style={[{ marginHorizontal: theme.spaces.defaultSpace }, styles.headingTitle]}
-                >
-                  Escolha uma cor
-                </ThemedText>
                 <ColorPicker initialColor={formikProps.values.color} />
               </ContentContainer>
               <ContentContainer noPadding>
@@ -169,30 +145,36 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 {!formikProps.values.repeat && (
                   <ThemedView style={styles.contentWithDivider}>
                     <ThemedText style={styles.headingTitle}>Fazer uma vez</ThemedText>
-                    <Tag
-                      name={
-                        isTodayDate(formikProps.values.singleDate?.dateString)
-                          ? "Hoje"
-                          : getFormattedDate(
-                              "dd 'de' MMM",
-                              formikProps.values.singleDate.dateString,
-                            )
-                      }
-                      color={selectedColor}
-                      textColor={selectedColor && getColorContrastColorByHex(selectedColor)}
-                    />
+                    <BubbleButton
+                      backgroundColor={selectedColor}
+                      onPress={() => {
+                        setCalendarView(!calendarView)
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                      }}
+                    >
+                      <ThemedText
+                        colorText={selectedColor && getColorContrastColorByHex(selectedColor)}
+                      >
+                        {dateTextFormatter(formikProps.values.singleDate?.dateString)}
+                      </ThemedText>
+                    </BubbleButton>
                   </ThemedView>
                 )}
-                {!formikProps.values.repeat && (
-                  <Calendar
-                    onDayPress={(day) => {
-                      formikProps.setFieldValue("singleDate", day)
-                      console.log(day)
-                    }}
-                    current={formikProps.values.singleDate?.dateString}
-                    currentColor={selectedColor}
-                    enableSwipeMonths
-                  />
+                {calendarView && !formikProps.values.repeat && (
+                  <ThemedView
+                    darkColor={theme.colors.black.lighter}
+                    lightColor={theme.colors.white.lighter}
+                    style={[styles.contentContainerlight, { padding: 0 }]}
+                  >
+                    <Calendar
+                      onDayPress={(day) => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                        formikProps.setFieldValue("singleDate", day)
+                      }}
+                      currentColor={selectedColor}
+                      selectedDate={String(formikProps.values.singleDate?.dateString)}
+                    />
+                  </ThemedView>
                 )}
                 {formikProps.values.repeat && (
                   <View>
