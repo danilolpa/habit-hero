@@ -1,4 +1,5 @@
-import { getFormattedDate } from "@/utils/useCalendar"
+import APP_CONSTANTS from "@/constants/AppConstants"
+import { getFormattedDate, getTimestamp } from "@/utils/useCalendar"
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons"
 import React, { createContext, useContext, useEffect, useState } from "react"
 
@@ -9,16 +10,27 @@ type habitManagerContextType = {
   colorHabit: string
   updateHabitData: (name: string, value: any) => void
   submitForm: (form: any) => void
-  setColorHabit: (color: string) => void
+  setColorHabit: (color: colorsType) => void
 }
 
 const HabitManagerContext = createContext<habitManagerContextType>({} as habitManagerContextType)
 
+type colorsType =
+  | "primary"
+  | "red"
+  | "pink"
+  | "lightPurple"
+  | "purple"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "teal"
+  | "blue"
+
 interface frequencyScheduleType {
   daily: number[]
-  weekly: number[]
+  weekly: number
   monthly: number[]
-  unique: boolean
 }
 export interface HabitsType {
   name: string
@@ -30,17 +42,23 @@ export interface HabitsType {
   duration: boolean
   durationMinutes: number
   repeat: boolean
-  frequency: "weekly" | "monthly" | "daily" | "single"
+  frequency: "daily" | "weekly" | "monthly" | "single"
   frequencySchedule: frequencyScheduleType
-  specificDate?: string
+  singleDate?: {
+    year: number
+    month: number
+    day: number
+    timestamp: number
+    dateString: string
+  }
   goal: number
+  color: colorsType
   progress: number
   createdBy: string
   createdDate: string
   notes?: string
   tags: string[]
   reminder?: boolean
-  color: string
   difficulty: string
 }
 
@@ -54,21 +72,26 @@ const initialHabitData: HabitsType = {
   duration: false,
   durationMinutes: 0,
   repeat: false,
-  frequency: "daily",
+  frequency: APP_CONSTANTS.HABIT.FREQUENCY.SINGLE,
   frequencySchedule: {
-    daily: [],
-    weekly: [1],
+    daily: [1, 2, 3, 4, 5, 6, 7],
+    weekly: 1,
     monthly: [Number(getFormattedDate("dd"))],
-    unique: false,
   },
-  specificDate: "",
+  singleDate: {
+    year: Number(getFormattedDate("yyyy")),
+    month: Number(getFormattedDate("MM")),
+    day: Number(getFormattedDate("dd")),
+    timestamp: getTimestamp(),
+    dateString: getFormattedDate("yyyy-MM-dd"),
+  },
   createdDate: "",
   goal: 0,
   progress: 0,
   createdBy: "",
   notes: "",
   reminder: true,
-  color: "primary",
+  color: "lightPurple",
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
 }
@@ -77,7 +100,7 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [habitData, setHabitData] = useState(initialHabitData)
-  const [colorHabit, setColorHabit] = useState(initialHabitData.color)
+  const [colorHabit, setColorHabit] = useState<colorsType>(initialHabitData.color)
 
   const updateHabitData = (name: string, value: any) => {
     // const { name, value } = e.target

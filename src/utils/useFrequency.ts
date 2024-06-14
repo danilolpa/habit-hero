@@ -1,5 +1,20 @@
 import { useState } from "react"
-import { FREQUENCY } from "@/utils/testData/habitsData"
+
+export const FREQUENCY_LABELS = ["daily", "weekly", "monthly"]
+export const FREQUENCY = [
+  {
+    index: 0,
+    label: FREQUENCY_LABELS[0],
+  },
+  {
+    index: 1,
+    label: FREQUENCY_LABELS[1],
+  },
+  {
+    index: 2,
+    label: FREQUENCY_LABELS[2],
+  },
+]
 
 const frequencies = FREQUENCY
 

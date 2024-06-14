@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
+import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from "react"
 import { View, StyleSheet, Pressable, Switch, ScrollView, Text } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
@@ -19,12 +19,16 @@ import {
   HABIT_DAYS,
   HABIT_WEEK_FREQUENCY_NUMBERS,
   DAYS_LIST_OF_MONTH,
+  FREQUENCY_LABELS,
 } from "@/utils/testData/habitsData"
-import { getFrequenciesByIndex } from "@/utils/useFrequency"
+import { getFrequenciesByIndex, getFrequenciesByLabel } from "@/utils/useFrequency"
 import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6"
 import JsonViewer from "@/components/Utils/JsonView"
 import Tag from "@/components/Tags"
 import { MaterialIcons } from "@expo/vector-icons"
+import APP_CONSTANTS from "@/constants/AppConstants"
+import { getDaysOfWeek, isTodayDate, getFormattedDate } from "@/utils/useCalendar"
+import { Calendar } from "@/components/Calendar"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -37,7 +41,6 @@ interface HabitManagerFormProps {
 
 export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) => {
   const { submitForm, loading, error, habitData } = useHabitManagerContext()
-  const [frequency, setFrequency] = React.useState({ index: 0, label: "weekly" })
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
 
   useImperativeHandle(ref, () => ({
@@ -48,16 +51,31 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
     },
   }))
 
-  const handleFrequencyChange = ({ nativeEvent }: any) => {
-    const frequencyLabel = getFrequenciesByIndex(nativeEvent.selectedSegmentIndex)
-    if (frequencyLabel) {
-      setFrequency({
-        index: nativeEvent.selectedSegmentIndex,
-        label: frequencyLabel,
-      })
-      console.log(frequency)
-    } else {
-      // dispatch error
+  const constructFrequencyText = (props: any) => {
+    const {
+      frequency,
+      frequencySchedule: { daily, weekly, monthly },
+    } = props
+
+    if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY) {
+      return daily.length === 7 ? "Todos os dias" : getDaysOfWeek(daily)
+    } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY) {
+      return weekly + (weekly > 1 ? " vezes por semana" : " vez por semana")
+    } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY) {
+      if (monthly.length === 0) {
+        return "Escolha um ou vários dias no mes"
+      } else if (monthly.length === 1) {
+        return "No mês todo dia: " + monthly[0]
+      } else if (monthly.length === 2) {
+        return "No mês todos os dias: " + monthly.join(" e ")
+      } else {
+        return (
+          "No mês todos os dias: " +
+          monthly.slice(0, -1).join(", ") +
+          " e " +
+          monthly[monthly.length - 1]
+        )
+      }
     }
   }
 
@@ -76,6 +94,18 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
 
           const toggleRepeat = (value: boolean) => {
             formikProps.setFieldValue("repeat", value)
+            !value
+              ? formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.SINGLE)
+              : formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.DAILY)
+          }
+
+          const handleFrequencyChange = ({ nativeEvent }: any) => {
+            const frequencyLabel = getFrequenciesByIndex(nativeEvent.selectedSegmentIndex)
+            if (frequencyLabel) {
+              formikProps.setFieldValue("frequency", frequencyLabel)
+            } else {
+              // dispatch error
+            }
           }
           return (
             <ThemedView style={styles.container}>
@@ -120,7 +150,6 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
               <ContentContainer style={{ paddingHorizontal: 0 }}>
                 <ThemedText
                   style={[{ marginHorizontal: theme.spaces.defaultSpace }, styles.headingTitle]}
-                  fontSize={10}
                 >
                   Escolha uma cor
                 </ThemedText>
@@ -141,24 +170,49 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   <ThemedView style={styles.contentWithDivider}>
                     <ThemedText style={styles.headingTitle}>Fazer uma vez</ThemedText>
                     <Tag
-                      name="Hoje"
+                      name={
+                        isTodayDate(formikProps.values.singleDate?.dateString)
+                          ? "Hoje"
+                          : getFormattedDate(
+                              "dd 'de' MMM",
+                              formikProps.values.singleDate.dateString,
+                            )
+                      }
                       color={selectedColor}
                       textColor={selectedColor && getColorContrastColorByHex(selectedColor)}
                     />
                   </ThemedView>
                 )}
+                {!formikProps.values.repeat && (
+                  <Calendar
+                    onDayPress={(day) => {
+                      formikProps.setFieldValue("singleDate", day)
+                      console.log(day)
+                    }}
+                    current={formikProps.values.singleDate?.dateString}
+                    currentColor={selectedColor}
+                    enableSwipeMonths
+                  />
+                )}
                 {formikProps.values.repeat && (
                   <View>
                     <ThemedView style={styles.contentWithDivider}>
-                      <ThemedText style={styles.headingTitle}>Diário</ThemedText>
-                      <ThemedFontAwesome
+                      <ThemedText
+                        ellipsizeMode="tail"
+                        style={[styles.headingTitle]}
+                        numberOfLines={1}
+                      >
+                        {constructFrequencyText(formikProps.values)}
+                      </ThemedText>
+                      {/* <ThemedFontAwesome
                         name="chevron-down"
                         darkColor={theme.colors.white.base}
                         lightColor={theme.colors.black.base}
                         size={18}
                         style={{ height: 30, width: 30 }}
-                      />
+                      /> */}
                     </ThemedView>
+
                     <ThemedView
                       darkColor={theme.colors.black.lighter}
                       lightColor={theme.colors.white.lighter}
@@ -166,7 +220,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                     >
                       <ThemedSegmentedControl
                         values={["Diário", "Semanal", "Mensal"]}
-                        selectedIndex={frequency.index}
+                        selectedIndex={getFrequenciesByLabel(formikProps.values.frequency)}
                         onChange={(item) => handleFrequencyChange(item)}
                         style={styles.segmentedControl}
                         tintColor={selectedColor}
@@ -178,28 +232,33 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                           color: selectedColor && getColorContrastColorByHex(selectedColor),
                         }}
                       />
-                      {frequency.label === "daily" && (
+                      {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY && (
                         <RoundedButtons
                           data={HABIT_DAYS}
-                          initialSelected={habitData.frequencySchedule.weekly}
+                          initialSelected={formikProps.values.frequencySchedule.daily}
                           selectedColor={selectedColor}
                           multiSelection
+                          frequency={APP_CONSTANTS.HABIT.FREQUENCY.DAILY}
                           textColor={selectedColor}
                         />
                       )}
-                      {frequency.label === "weekly" && (
+                      {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY && (
                         <RoundedButtons
                           data={HABIT_WEEK_FREQUENCY_NUMBERS}
-                          initialSelected={[1]}
+                          initialSelected={formikProps.values.frequencySchedule.weekly}
                           selectedColor={selectedColor}
+                          frequency={APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY}
                         />
                       )}
-                      {frequency.label === "monthly" && (
+                      {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY && (
                         <RoundedButtons
                           data={DAYS_LIST_OF_MONTH}
-                          initialSelected={habitData.frequencySchedule.monthly}
+                          initialSelected={formikProps.values.frequencySchedule.monthly}
                           selectedColor={selectedColor}
                           multiline
+                          frequency={APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY}
+                          isCalendar
+                          multiSelection
                         />
                       )}
                     </ThemedView>
@@ -249,6 +308,9 @@ const styles = StyleSheet.create({
   },
   headingTitle: {
     fontSize: 20,
+    flexGrow: 1,
+    height: 45,
+    lineHeight: 45,
   },
   contentWithDivider: {
     display: "flex",
@@ -256,7 +318,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 4,
-    paddingVertical: theme.spaces.defaultSpace,
+    paddingVertical: theme.spaces.defaultSpace / 2,
     borderBottomColor: theme.colors.black.lighter,
     borderBottomWidth: 1,
     paddingHorizontal: theme.spaces.defaultSpace,

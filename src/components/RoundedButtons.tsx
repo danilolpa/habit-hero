@@ -2,7 +2,10 @@ import { View, Text, StyleSheet, Pressable } from "react-native"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import React, { useEffect, useState } from "react"
 import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
+import { getFormattedDate } from "@/utils/useCalendar"
 import * as Haptics from "expo-haptics"
+
+import { useFormikContext } from "formik"
 
 type contentData = {
   cod: number
@@ -11,50 +14,79 @@ type contentData = {
 
 type RoundedButtonsProps = {
   data: contentData[]
-  initialSelected?: number[]
+  initialSelected?: number[] | number
   selectedColor?: string
   multiSelection?: boolean
   multiline?: boolean
   textColor?: string
+  frequency: string
+  isCalendar?: boolean
+}
+
+interface FormValues {
+  frequencySchedule: []
 }
 
 const RoundedButtons = ({
   data,
-  initialSelected = [],
+  initialSelected = 0,
   selectedColor = theme.colors.primary.base,
   textColor = theme.colors.white.base,
   multiSelection = false,
   multiline = false,
+  frequency,
+  isCalendar = false,
 }: RoundedButtonsProps) => {
-  const [selected, setSelected] = useState<number[]>([])
+  const [selected, setSelected] = useState<number | number[]>(initialSelected)
   const [contrastColor, setContrastColor] = useState(getColorContrastColorByHex(selectedColor))
-
-  useEffect(() => {
-    if (initialSelected) {
-      setSelected(initialSelected)
-    }
-  }, [initialSelected])
+  const { setFieldValue } = useFormikContext<FormValues>()
 
   if (!data) {
     throw new Error("The 'data' prop is required and must be a non-empty array.")
   }
 
+  if (!initialSelected) {
+    throw new Error("The 'initialSelected' prop is required and must be a non-empty.")
+  }
+
+  useEffect(() => {
+    if (multiSelection) {
+      setSelected(initialSelected)
+    } else {
+      if (initialSelected) {
+        setSelected(initialSelected)
+      }
+    }
+  }, [initialSelected])
+
   const handleSelected = (cod: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
 
     if (multiSelection) {
-      if (selected.includes(cod)) {
-        setSelected(selected.filter((i) => i !== cod))
+      if (Array.isArray(selected) && selected.includes(cod)) {
+        // Verificar se há mais de um item no array antes de remover
+        if (selected.length > 1) {
+          setSelected(selected.filter((i) => i !== cod))
+        }
       } else {
-        setSelected([...selected, cod])
+        Array.isArray(selected) && setSelected([...selected, cod].sort((a, b) => a - b))
       }
     } else {
-      setSelected([cod])
+      setSelected(cod)
     }
   }
-
   useEffect(() => {
     setContrastColor(getColorContrastColorByHex(selectedColor))
+  }, [selectedColor])
+
+  useEffect(() => {
+    if (frequency === "weekly") {
+      setFieldValue("frequencySchedule.weekly", selected)
+    } else if (frequency === "monthly") {
+      setFieldValue("frequencySchedule.monthly", selected)
+    } else if (frequency === "daily") {
+      setFieldValue("frequencySchedule.daily", selected)
+    }
   }, [selected])
 
   return (
@@ -68,7 +100,10 @@ const RoundedButtons = ({
             style={[
               styles.roundedOptionsAction,
               multiline && styles.roundedOptionsActionMultiline,
-              selected.includes(item.cod) && { backgroundColor: selectedColor },
+              Number(getFormattedDate("dd")) === item.cod && styles.isToday,
+              Array.isArray(selected) &&
+                selected.includes(item.cod) && { backgroundColor: selectedColor },
+              item.cod === selected && { backgroundColor: selectedColor },
             ]}
             onPress={() => handleSelected(item.cod)}
           >
@@ -76,7 +111,8 @@ const RoundedButtons = ({
               fontWeight="light"
               style={[
                 styles.roundedOptionsActionText,
-                selected.includes(item.cod) && { color: contrastColor },
+                Array.isArray(selected) && selected.includes(item.cod) && { color: contrastColor },
+                item.cod === selected && { color: contrastColor },
               ]}
             >
               {item.title}
@@ -119,8 +155,8 @@ export const styles = StyleSheet.create({
   roundedOptionsActionText: {
     textAlign: "center",
   },
-  roundedOptionsActionSelected: {
-    // backgroundColor: "rgba(0,0,0, 0.8)",
+  isToday: {
+    backgroundColor: "rgba(0,0,0, 0.2)",
   },
 })
 

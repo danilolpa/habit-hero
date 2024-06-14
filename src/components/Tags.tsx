@@ -22,7 +22,7 @@ const Tag: React.FC<TagProps> = ({
 
 const styles = StyleSheet.create({
   tagContainer: {
-    paddingVertical: theme.spaces.defaultSpace,
+    paddingVertical: 12,
     paddingHorizontal: theme.spaces.defaultSpace,
     borderRadius: theme.radius.radius8,
     // margin: 5,
