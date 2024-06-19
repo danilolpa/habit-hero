@@ -1,14 +1,9 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from "react"
-import { View, StyleSheet, Pressable, Switch, ScrollView, Text } from "react-native"
+import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
+import { View, StyleSheet, Switch, ScrollView, Text } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
 
-import {
-  ThemedFontAwesome,
-  ThemedText,
-  ThemedView,
-  ThemedSegmentedControl,
-} from "@/components/Utils/Themed"
+import { ThemedText, ThemedView, ThemedSegmentedControl } from "@/components/Utils/Themed"
 import { Input } from "@/components/Input"
 import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
 import ColorPicker from "@/components/ColorPicker"
@@ -22,15 +17,14 @@ import {
   FREQUENCY_LABELS,
 } from "@/utils/testData/habitsData"
 import { getFrequenciesByIndex, getFrequenciesByLabel } from "@/utils/useFrequency"
-import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6"
 import JsonViewer from "@/components/Utils/JsonView"
-import Tag from "@/components/Tags"
 import { MaterialIcons } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { dateTextFormatter, constructFrequencyText } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
 import * as Haptics from "expo-haptics"
 import BubbleButton from "@/components/BubbleButton"
+import EmoteModal from "@/components/EmoteModal"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),

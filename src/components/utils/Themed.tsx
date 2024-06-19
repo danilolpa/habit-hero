@@ -12,7 +12,7 @@ import SegmentedControl, {
 
 import { useColorScheme } from "../useColorScheme"
 import { theme } from "@/Theme"
-import { FontAwesome6 } from "@expo/vector-icons"
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
 
 type ThemeProps = {
   lightColor?: string
@@ -30,7 +30,7 @@ export type TextProps = ThemeProps & {
 } & Text["props"]
 
 export type FontProps = ThemeProps & {
-  name?: string
+  name?: keyof typeof MaterialIcons.glyphMap
   size?: TextStyle["fontSize"]
 } & Text["props"]
 
@@ -111,6 +111,15 @@ export function ThemedFontAwesome(props: FontProps) {
   })
 
   return <FontAwesome6 style={[{ color }, style]} {...otherProps} />
+}
+export function ThemedMaterialIcons(props: FontProps) {
+  const { style, lightColor, darkColor, animated, ...otherProps } = props
+  const color = useThemeColor({
+    light: lightColor || "transparent",
+    dark: darkColor || "transparent",
+  })
+
+  return <MaterialIcons style={[{ color }, style]} {...otherProps} />
 }
 
 export function ThemedSegmentedControl(props: ThemedSegmentedControlProps) {

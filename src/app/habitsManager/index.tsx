@@ -7,6 +7,7 @@ import { useNavigation } from "expo-router"
 import { HabitManagerForm } from "./habitManagerForm"
 import { useEffect, useRef } from "react"
 import { useHabitManagerContext } from "./habitManagerContext"
+import EmoteModal from "@/components/EmoteModal"
 
 interface HabitManagerFormProps {
   submitForm: () => void
@@ -68,6 +69,8 @@ export default function HabitManagerIndex() {
           </ThemedText>
         </ThemedView>
         <HabitManagerForm ref={formRef} />
+
+        <EmoteModal />
       </ThemedView>
     </View>
   )
