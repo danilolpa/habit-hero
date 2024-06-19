@@ -69,8 +69,6 @@ export default function HabitManagerIndex() {
           </ThemedText>
         </ThemedView>
         <HabitManagerForm ref={formRef} />
-
-        <EmoteModal />
       </ThemedView>
     </View>
   )

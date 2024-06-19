@@ -29,17 +29,23 @@ export type TextProps = ThemeProps & {
   colorText?: string
 } & Text["props"]
 
-export type FontProps = ThemeProps & {
+export type MaterialIconsProps = ThemeProps & {
   name?: keyof typeof MaterialIcons.glyphMap
   size?: TextStyle["fontSize"]
 } & Text["props"]
+
+export type ThemedFontAwesomeProps = ThemeProps & {
+  name?: keyof typeof FontAwesome6.glyphMap
+  size?: TextStyle["fontSize"]
+  style?: ViewProps["style"]
+}
 
 export type ThemedSegmentedControlProps = ThemeProps & SegmentedControlProps & {}
 
 export type ViewProps = ThemeProps & View["props"] & { animated?: boolean }
 
 export function useThemeColor<T, U>(props: { light: T; dark: U }) {
-  const theme = useColorScheme() ?? "dark"
+  const theme = String(useColorScheme() ?? "dark")
   // const theme = "dark";
   return props[theme]
 }
@@ -103,7 +109,7 @@ export function ThemedView(props: ViewProps) {
   return <View style={[{ backgroundColor }, style]} {...otherProps} />
 }
 
-export function ThemedFontAwesome(props: FontProps) {
+export function ThemedFontAwesome(props: ThemedFontAwesomeProps) {
   const { style, lightColor, darkColor, animated, ...otherProps } = props
   const color = useThemeColor({
     light: lightColor || "transparent",
@@ -112,7 +118,7 @@ export function ThemedFontAwesome(props: FontProps) {
 
   return <FontAwesome6 style={[{ color }, style]} {...otherProps} />
 }
-export function ThemedMaterialIcons(props: FontProps) {
+export function ThemedMaterialIcons(props: MaterialIconsProps) {
   const { style, lightColor, darkColor, animated, ...otherProps } = props
   const color = useThemeColor({
     light: lightColor || "transparent",
@@ -128,6 +134,15 @@ export function ThemedSegmentedControl(props: ThemedSegmentedControlProps) {
     light: lightColor || theme.colors.white.light,
     dark: darkColor || theme.colors.black.base,
   })
+  const themeColor = useColorScheme() || "dark"
+  console.log(themeColor)
 
-  return <SegmentedControl style={[style]} backgroundColor={backgroundColor} {...otherProps} />
+  return (
+    <SegmentedControl
+      style={[style]}
+      appearance={themeColor === "dark" ? "dark" : "light"}
+      backgroundColor={backgroundColor}
+      {...otherProps}
+    />
+  )
 }

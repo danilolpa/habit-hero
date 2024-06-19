@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native"
 import { getColorContrastColorByHex, theme } from "@/Theme"
 import { useThemeColor } from "./Utils/Themed"
 import { useEffect, useState } from "react"
-import { useColorScheme } from "react-native"
+import { useColorScheme } from "@/components/useColorScheme"
 import { singleDateProps } from "@/app/habitsManager/habitManagerContext"
 
 export type ComponentCalendarProps = CalendarProps & {

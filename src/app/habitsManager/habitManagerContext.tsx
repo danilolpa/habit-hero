@@ -68,7 +68,7 @@ const initialHabitData: HabitsType = {
   name: "",
   description: "",
   completed: false,
-  icon: "email",
+  icon: "water-drop",
   category: "",
   priority: 1,
   duration: false,

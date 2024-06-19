@@ -24,7 +24,7 @@ import { dateTextFormatter, constructFrequencyText } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
 import * as Haptics from "expo-haptics"
 import BubbleButton from "@/components/BubbleButton"
-import EmoteModal from "@/components/EmoteModal"
+import IconsHabitModal from "@/components/IconsHabitModal"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -39,6 +39,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
   const { submitForm, loading, error, habitData } = useHabitManagerContext()
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
   const [calendarView, setCalendarView] = useState(false)
+  const [emoteModalVisible, setEmoteModalVisible] = useState(false)
 
   useImperativeHandle(ref, () => ({
     submitForm: () => {
@@ -101,6 +102,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                     minHeight: 60,
                     width: 60,
                   }}
+                  onPress={() => setEmoteModalVisible(true)}
                 >
                   <MaterialIcons
                     name={formikProps.values.icon}
@@ -108,6 +110,12 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                     color={getColorContrastColorByHex(String(selectedColor))}
                   />
                 </BubbleButton>
+                <IconsHabitModal
+                  isVisible={emoteModalVisible}
+                  onClose={() => setEmoteModalVisible(!emoteModalVisible)}
+                  selectedColor={String(selectedColor)}
+                  currentIcon={formikProps.values.icon}
+                />
               </View>
               <Input.Field
                 placeholder="Descrição"
