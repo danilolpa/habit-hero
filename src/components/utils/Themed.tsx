@@ -3,7 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { Text, View, TextStyle } from "react-native"
+import { Text, View, TextStyle, ColorSchemeName } from "react-native"
 
 import Animated from "react-native-reanimated"
 import SegmentedControl, {
@@ -45,8 +45,7 @@ export type ThemedSegmentedControlProps = ThemeProps & SegmentedControlProps & {
 export type ViewProps = ThemeProps & View["props"] & { animated?: boolean }
 
 export function useThemeColor<T, U>(props: { light: T; dark: U }) {
-  const theme = String(useColorScheme() ?? "dark")
-  // const theme = "dark";
+  const theme = (useColorScheme() as ColorSchemeName) ?? "dark"
   return props[theme]
 }
 

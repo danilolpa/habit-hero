@@ -9,12 +9,11 @@ import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
 import ColorPicker from "@/components/ColorPicker"
 import { useHabitManagerContext, HabitsType } from "./habitManagerContext"
 import ContentContainer from "@/components/ContentContainer"
-import { RoundedButtons } from "@/components/RoundedButtons"
+import { RoundedButtons } from "@/components/Buttons/RoundedButtons"
 import {
   HABIT_DAYS,
   HABIT_WEEK_FREQUENCY_NUMBERS,
   DAYS_LIST_OF_MONTH,
-  FREQUENCY_LABELS,
 } from "@/utils/testData/habitsData"
 import { getFrequenciesByIndex, getFrequenciesByLabel } from "@/utils/useFrequency"
 import JsonViewer from "@/components/Utils/JsonView"
@@ -23,7 +22,7 @@ import APP_CONSTANTS from "@/constants/AppConstants"
 import { dateTextFormatter, constructFrequencyText } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
 import * as Haptics from "expo-haptics"
-import BubbleButton from "@/components/BubbleButton"
+import BubbleButton from "@/components/Buttons/BubbleButton"
 import IconsHabitModal from "@/components/IconsHabitModal"
 
 const validationSchema = Yup.object().shape({
@@ -280,7 +279,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 4,
-    // maxWidth: "100%",
   },
   selectIconContainer: {
     display: "flex",

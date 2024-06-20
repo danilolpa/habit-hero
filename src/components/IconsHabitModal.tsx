@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, FlatList, Modal, Alert, Pressable, Platform } from "react-native"
-import { ThemedFontAwesome, ThemedMaterialIcons, ThemedText, ThemedView } from "./Utils/Themed"
+import { View, StyleSheet, Modal, Pressable, Platform } from "react-native"
+import { ThemedText, ThemedView } from "./Utils/Themed"
 import { MaterialIcons } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import React, { useEffect, useState } from "react"
 import { BlurView } from "expo-blur"
-import { theme } from "@/Theme"
+import { getColorContrastColorByHex, theme } from "@/Theme"
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,14 +15,12 @@ import Animated, {
 import { useFormikContext } from "formik"
 import CloseButton from "@/components/Buttons/CloseButton"
 
+type iconNames = typeof MaterialIcons.glyphMap
 interface iconModalProps {
   isVisible: boolean
   onClose: () => void
   selectedColor: string
   currentIcon: string
-}
-interface FormValues {
-  icon: string
 }
 
 export default function IconsHabitModal({
@@ -31,7 +29,7 @@ export default function IconsHabitModal({
   selectedColor,
   currentIcon,
 }: iconModalProps) {
-  const { setFieldValue } = useFormikContext<FormValues>()
+  const { setFieldValue } = useFormikContext<iconNames>()
   const translateY = useSharedValue(-50)
   const opacity = useSharedValue(0)
   const [visible, setVisible] = useState(isVisible)
@@ -56,7 +54,7 @@ export default function IconsHabitModal({
     }
   })
 
-  const selectIcon = (icon: string) => {
+  const selectIcon = (icon: iconNames) => {
     setFieldValue("icon", icon)
     onClose()
   }
@@ -76,17 +74,24 @@ export default function IconsHabitModal({
               darkColor={theme.colors.black.base}
               lightColor={theme.colors.white.base}
             >
-              <View style={styles.header}>
-                <ThemedText style={styles.headerTitle} fontWeight="bold">
-                  Ícones
+              <View style={[styles.header, { backgroundColor: selectedColor }]}>
+                <ThemedText
+                  style={[styles.headerTitle, { color: getColorContrastColorByHex(selectedColor) }]}
+                  fontWeight="bold"
+                >
+                  Escolha um ícone
                 </ThemedText>
                 <CloseButton onPress={onClose} />
               </View>
               <ThemedView style={styles.iconsContainer}>
                 {APP_CONSTANTS.HABIT.HABIT_ICONS.map(({ name, key }) => {
                   return (
-                    <Pressable key={key} style={styles.iconBox} onPress={() => selectIcon(name)}>
-                      <MaterialIcons name={name} size={45} color={String(iconColor(name))} />
+                    <Pressable
+                      key={key}
+                      style={styles.iconBox}
+                      onPress={() => selectIcon(name as any)}
+                    >
+                      <MaterialIcons name={name as any} size={45} color={String(iconColor(name))} />
                     </Pressable>
                   )
                 })}
@@ -144,7 +149,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: 1,
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
     paddingHorizontal: theme.spaces.defaultSpace,
     paddingVertical: theme.spaces.defaultSpace,
     borderBottomColor: "rgba(0, 0, 0, 0.8)",
