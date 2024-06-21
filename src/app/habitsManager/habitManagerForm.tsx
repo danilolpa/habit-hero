@@ -1,9 +1,14 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
-import { View, StyleSheet, Switch, ScrollView, Text } from "react-native"
+import { View, StyleSheet, Switch, ScrollView, Text, Pressable } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
 
-import { ThemedText, ThemedView, ThemedSegmentedControl } from "@/components/Utils/Themed"
+import {
+  ThemedText,
+  ThemedView,
+  ThemedSegmentedControl,
+  ThemedMaterialIcons,
+} from "@/components/Utils/Themed"
 import { Input } from "@/components/Input"
 import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
 import ColorPicker from "@/components/ColorPicker"
@@ -17,13 +22,17 @@ import {
 } from "@/utils/testData/habitsData"
 import { getFrequenciesByIndex, getFrequenciesByLabel } from "@/utils/useFrequency"
 import JsonViewer from "@/components/Utils/JsonView"
-import { MaterialIcons } from "@expo/vector-icons"
+import { MaterialIcons, createIconSetFromFontello } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { dateTextFormatter, constructFrequencyText } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
 import * as Haptics from "expo-haptics"
 import BubbleButton from "@/components/Buttons/BubbleButton"
 import IconsHabitModal from "@/components/IconsHabitModal"
+import { getGoalIndexByValue, getGoalTypeByIndex } from "@/utils/goalHabitHelpers"
+import AccordionContainer from "@/components/AccordionContainer"
+import RotatingAnimation from "@/components/RotatingAnimation"
+import useVisibilityControl from "@/utils/useVisibilityControl"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -37,8 +46,14 @@ interface HabitManagerFormProps {
 export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) => {
   const { submitForm, loading, error, habitData } = useHabitManagerContext()
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
-  const [calendarView, setCalendarView] = useState(false)
-  const [emoteModalVisible, setEmoteModalVisible] = useState(false)
+  const { visibilityControl, toggleVisibility, setVisibility, getVisibility } =
+    useVisibilityControl({
+      frequency: false,
+      goal: false,
+      emoteModal: false,
+      calendarViewFrequency: false,
+      calendarViewEnd: false,
+    })
 
   useImperativeHandle(ref, () => ({
     submitForm: () => {
@@ -47,7 +62,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
       }
     },
   }))
-
+  console.log(visibilityControl, getVisibility("emoteModal"))
   return (
     <ScrollView>
       <Formik
@@ -60,19 +75,31 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
           const selectedColor = formikProps.values.color
             ? getColorHexByName(formikProps.values.color)
             : theme.colors.primary.base
-
           const toggleRepeat = (value: boolean) => {
             formikProps.setFieldValue("repeat", value)
-            setCalendarView(false)
+            toggleVisibility("calendarViewFrequency")
             !value
               ? formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.SINGLE)
               : formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.DAILY)
+          }
+          const toggleGoal = (value: boolean) => {
+            formikProps.setFieldValue("goal.hasGoal", value)
           }
 
           const handleFrequencyChange = ({ nativeEvent }: any) => {
             const frequencyLabel = getFrequenciesByIndex(nativeEvent.selectedSegmentIndex)
             if (frequencyLabel) {
               formikProps.setFieldValue("frequency", frequencyLabel)
+            } else {
+              // dispatch error
+            }
+          }
+
+          const handleGoalType = ({ nativeEvent }: any) => {
+            const goalType = getGoalTypeByIndex(nativeEvent.selectedSegmentIndex) || "units"
+
+            if (goalType && typeof goalType === "object" && "VALUE" in goalType) {
+              formikProps.setFieldValue("goal.goalType", String(goalType.VALUE))
             } else {
               // dispatch error
             }
@@ -101,7 +128,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                     minHeight: 60,
                     width: 60,
                   }}
-                  onPress={() => setEmoteModalVisible(true)}
+                  onPress={() => toggleVisibility("emoteModal")}
                 >
                   <MaterialIcons
                     name={formikProps.values.icon}
@@ -110,8 +137,8 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   />
                 </BubbleButton>
                 <IconsHabitModal
-                  isVisible={emoteModalVisible}
-                  onClose={() => setEmoteModalVisible(!emoteModalVisible)}
+                  isVisible={getVisibility("emoteModal")}
+                  onClose={() => toggleVisibility("emoteModal")}
                   selectedColor={String(selectedColor)}
                   currentIcon={formikProps.values.icon}
                 />
@@ -133,7 +160,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 <ColorPicker initialColor={formikProps.values.color} />
               </ContentContainer>
               <ContentContainer noPadding>
-                <ThemedView style={styles.contentWithDivider}>
+                <ThemedView style={[styles.contentRow, styles.contentRowWithDivider]}>
                   <ThemedText style={styles.headingTitle}>Repetir</ThemedText>
                   <Switch
                     trackColor={{ false: "#767577", true: selectedColor }}
@@ -144,42 +171,47 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   />
                 </ThemedView>
                 {!formikProps.values.repeat && (
-                  <ThemedView style={styles.contentWithDivider}>
-                    <ThemedText style={styles.headingTitle}>Fazer uma vez</ThemedText>
-                    <BubbleButton
-                      backgroundColor={selectedColor}
-                      onPress={() => {
-                        setCalendarView(!calendarView)
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                      }}
-                    >
-                      <ThemedText
-                        colorText={selectedColor && getColorContrastColorByHex(selectedColor)}
+                  <View>
+                    <ThemedView style={styles.contentRow}>
+                      <ThemedText style={styles.headingTitle}>Fazer uma vez</ThemedText>
+                      <BubbleButton
+                        backgroundColor={selectedColor}
+                        onPress={() => {
+                          toggleVisibility("calendarViewFrequency")
+                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                        }}
                       >
-                        {dateTextFormatter(formikProps.values.singleDate?.dateString)}
-                      </ThemedText>
-                    </BubbleButton>
-                  </ThemedView>
-                )}
-                {calendarView && !formikProps.values.repeat && (
-                  <ThemedView
-                    darkColor={theme.colors.black.lighter}
-                    lightColor={theme.colors.white.lighter}
-                    style={[styles.contentContainerlight, { padding: 0 }]}
-                  >
-                    <Calendar
-                      onDayPress={(day) => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                        formikProps.setFieldValue("singleDate", day)
-                      }}
-                      currentColor={selectedColor}
-                      selectedDate={String(formikProps.values.singleDate?.dateString)}
-                    />
-                  </ThemedView>
+                        <ThemedText
+                          colorText={selectedColor && getColorContrastColorByHex(selectedColor)}
+                        >
+                          {dateTextFormatter(formikProps.values.singleDate?.dateString)}
+                        </ThemedText>
+                      </BubbleButton>
+                    </ThemedView>
+                    <AccordionContainer isVisible={getVisibility("calendarViewFrequency")}>
+                      <ThemedView
+                        darkColor={theme.colors.black.lighter}
+                        lightColor={theme.colors.white.lighter}
+                        style={[styles.contentContainerlight, { padding: 0 }]}
+                      >
+                        <Calendar
+                          onDayPress={(day) => {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                            formikProps.setFieldValue("singleDate", day)
+                          }}
+                          currentColor={selectedColor}
+                          selectedDate={String(formikProps.values.singleDate?.dateString)}
+                        />
+                      </ThemedView>
+                    </AccordionContainer>
+                  </View>
                 )}
                 {formikProps.values.repeat && (
                   <View>
-                    <ThemedView style={styles.contentWithDivider}>
+                    <Pressable
+                      style={[styles.contentRow, styles.contentRowWithDivider]}
+                      onPress={() => toggleVisibility("frequency")}
+                    >
                       <ThemedText
                         ellipsizeMode="tail"
                         style={[styles.headingTitle]}
@@ -187,65 +219,142 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                       >
                         {constructFrequencyText(formikProps.values)}
                       </ThemedText>
-                      {/* <ThemedFontAwesome
-                        name="chevron-down"
-                        darkColor={theme.colors.white.base}
-                        lightColor={theme.colors.black.base}
-                        size={18}
-                        style={{ height: 30, width: 30 }}
-                      /> */}
-                    </ThemedView>
+                      <RotatingAnimation isRotated={getVisibility("frequency")}>
+                        <ThemedMaterialIcons
+                          name="keyboard-arrow-down"
+                          size={26}
+                          lightColor={theme.colors.black.base}
+                          darkColor={theme.colors.white.base}
+                        />
+                      </RotatingAnimation>
+                    </Pressable>
 
-                    <ThemedView
-                      darkColor={theme.colors.black.lighter}
-                      lightColor={theme.colors.white.lighter}
-                      style={styles.contentContainerlight}
-                    >
+                    <AccordionContainer isVisible={getVisibility("frequency")}>
+                      <ThemedView
+                        darkColor={theme.colors.black.lighter}
+                        lightColor={theme.colors.white.lighter}
+                        style={styles.contentContainerlight}
+                      >
+                        <ThemedSegmentedControl
+                          values={["Diário", "Semanal", "Mensal"]}
+                          selectedIndex={getFrequenciesByLabel(formikProps.values.frequency)}
+                          onChange={(item) => handleFrequencyChange(item)}
+                          style={styles.segmentedControl}
+                          tintColor={selectedColor}
+                          fontStyle={{
+                            fontSize: 14,
+                          }}
+                          activeFontStyle={{
+                            color: selectedColor && getColorContrastColorByHex(selectedColor),
+                            fontSize: 16,
+                          }}
+                        />
+                        {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY && (
+                          <RoundedButtons
+                            data={HABIT_DAYS}
+                            initialSelected={formikProps.values.frequencySchedule.daily}
+                            selectedColor={selectedColor}
+                            multiSelection
+                            frequency={APP_CONSTANTS.HABIT.FREQUENCY.DAILY}
+                            textColor={selectedColor}
+                          />
+                        )}
+                        {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY && (
+                          <RoundedButtons
+                            data={HABIT_WEEK_FREQUENCY_NUMBERS}
+                            initialSelected={formikProps.values.frequencySchedule.weekly}
+                            selectedColor={selectedColor}
+                            frequency={APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY}
+                          />
+                        )}
+                        {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY && (
+                          <RoundedButtons
+                            data={DAYS_LIST_OF_MONTH}
+                            initialSelected={formikProps.values.frequencySchedule.monthly}
+                            selectedColor={selectedColor}
+                            multiline
+                            frequency={APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY}
+                            isCalendar
+                            multiSelection
+                          />
+                        )}
+                      </ThemedView>
+                    </AccordionContainer>
+                    <ThemedView style={[styles.contentRow]}>
+                      <ThemedText style={styles.headingTitle}>Definir data de término</ThemedText>
+                      <Switch
+                        trackColor={{ false: "#767577", true: selectedColor }}
+                        thumbColor={formikProps.values.endDate ? "#f4f3f4" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={(value) => formikProps.setFieldValue("endDate", value)}
+                        value={formikProps.values.endDate}
+                      />
+                    </ThemedView>
+                    <ThemedView style={[styles.contentRow, styles.borderTop]}>
+                      <ThemedText style={styles.headingTitle}>Terminar em</ThemedText>
+                      <BubbleButton
+                        backgroundColor={selectedColor}
+                        onPress={() => {
+                          toggleVisibility("calendarViewEnd")
+                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                        }}
+                      >
+                        <ThemedText
+                          colorText={selectedColor && getColorContrastColorByHex(selectedColor)}
+                        >
+                          {dateTextFormatter(formikProps.values.singleDate?.dateString)}
+                        </ThemedText>
+                      </BubbleButton>
+                    </ThemedView>
+                  </View>
+                )}
+              </ContentContainer>
+              <ContentContainer noPadding>
+                <View style={[styles.contentRow]}>
+                  <ThemedText style={styles.headingTitle}>Meta</ThemedText>
+                  <Switch
+                    trackColor={{ false: "#767577", true: selectedColor }}
+                    thumbColor={formikProps.values.goal.hasGoal ? "#f4f3f4" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={(value) => toggleGoal(value)}
+                    value={formikProps.values.goal.hasGoal}
+                  />
+                </View>
+
+                {formikProps.values.goal.hasGoal && (
+                  <ThemedView
+                    darkColor={theme.colors.black.lighter}
+                    lightColor={theme.colors.white.lighter}
+                    style={{ marginBottom: 10 }}
+                  >
+                    <View style={[styles.insideContentContainer, { paddingBottom: 0 }]}>
                       <ThemedSegmentedControl
-                        values={["Diário", "Semanal", "Mensal"]}
-                        selectedIndex={getFrequenciesByLabel(formikProps.values.frequency)}
-                        onChange={(item) => handleFrequencyChange(item)}
+                        values={APP_CONSTANTS.HABIT.GOAL_LABELS.map((item) => item.LABEL)}
+                        selectedIndex={getGoalIndexByValue(
+                          String(formikProps.values.goal.goalType),
+                        )}
+                        onChange={(item) => handleGoalType(item)}
                         style={styles.segmentedControl}
                         tintColor={selectedColor}
                         fontStyle={{
-                          fontSize: 16,
-                          fontFamily: theme.font.familyDefault.regular,
+                          fontSize: 14,
                         }}
                         activeFontStyle={{
                           color: selectedColor && getColorContrastColorByHex(selectedColor),
+                          fontSize: 16,
                         }}
                       />
-                      {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY && (
-                        <RoundedButtons
-                          data={HABIT_DAYS}
-                          initialSelected={formikProps.values.frequencySchedule.daily}
-                          selectedColor={selectedColor}
-                          multiSelection
-                          frequency={APP_CONSTANTS.HABIT.FREQUENCY.DAILY}
-                          textColor={selectedColor}
-                        />
-                      )}
-                      {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY && (
-                        <RoundedButtons
-                          data={HABIT_WEEK_FREQUENCY_NUMBERS}
-                          initialSelected={formikProps.values.frequencySchedule.weekly}
-                          selectedColor={selectedColor}
-                          frequency={APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY}
-                        />
-                      )}
-                      {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY && (
-                        <RoundedButtons
-                          data={DAYS_LIST_OF_MONTH}
-                          initialSelected={formikProps.values.frequencySchedule.monthly}
-                          selectedColor={selectedColor}
-                          multiline
-                          frequency={APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY}
-                          isCalendar
-                          multiSelection
-                        />
-                      )}
-                    </ThemedView>
-                  </View>
+                    </View>
+                    <Pressable style={[styles.fowardActions]}>
+                      <ThemedText style={styles.headingTitle}>[1] vez por [dia]</ThemedText>
+                      <ThemedMaterialIcons
+                        name="arrow-forward-ios"
+                        size={20}
+                        lightColor={theme.colors.black.base}
+                        darkColor={theme.colors.white.base}
+                      />
+                    </Pressable>
+                  </ThemedView>
                 )}
               </ContentContainer>
               <JsonViewer jsonString={formikProps.values}></JsonViewer>
@@ -294,16 +403,23 @@ const styles = StyleSheet.create({
     height: 45,
     lineHeight: 45,
   },
-  contentWithDivider: {
+  contentRow: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 4,
     paddingVertical: theme.spaces.defaultSpace / 2,
-    borderBottomColor: theme.colors.black.lighter,
-    borderBottomWidth: 1,
     paddingHorizontal: theme.spaces.defaultSpace,
+    height: 60,
+  },
+  contentRowWithDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.black.lighter,
+  },
+  borderTop: {
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.black.lighter,
   },
   segmentedControl: {
     height: 50,
@@ -311,5 +427,22 @@ const styles = StyleSheet.create({
   contentContainerlight: {
     marginBottom: 8,
     padding: theme.spaces.defaultSpace,
+  },
+  insideContentContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 4,
+    paddingVertical: theme.spaces.defaultSpace,
+    paddingHorizontal: theme.spaces.defaultSpace,
+  },
+  fowardActions: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 4,
+    paddingVertical: theme.spaces.defaultSpace / 2,
+    paddingHorizontal: theme.spaces.defaultSpace,
+    height: 60,
   },
 })

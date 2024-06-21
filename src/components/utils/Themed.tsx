@@ -134,7 +134,6 @@ export function ThemedSegmentedControl(props: ThemedSegmentedControlProps) {
     dark: darkColor || theme.colors.black.base,
   })
   const themeColor = useColorScheme() || "dark"
-  console.log(themeColor)
 
   return (
     <SegmentedControl

@@ -40,6 +40,18 @@ export interface singleDateProps {
   timestamp: number
   dateString: string
 }
+
+type GoalDetails = {
+  time?: {
+    hours: number
+    minutes: number
+  }
+  units?: {
+    count: number
+    type: "time" | "cup" | "page" | "kilometers"
+  }
+}
+
 export interface HabitsType {
   name: string
   description: string
@@ -53,11 +65,17 @@ export interface HabitsType {
   frequency: "daily" | "weekly" | "monthly" | "single"
   frequencySchedule: frequencyScheduleType
   singleDate?: singleDateProps
-  goal: number
+  goal: {
+    hasGoal: boolean
+    goalType?: "time" | "units"
+    goalDetails?: GoalDetails
+  }
   color: colorsType
-  progress: number
+  status: "TO_DO" | "IGNORED" | "COMPLETED"
   createdBy: string
   createdDate: string
+  concludedDate?: string
+  endDate?: string | boolean
   notes?: string
   tags: string[]
   reminder?: boolean
@@ -73,8 +91,8 @@ const initialHabitData: HabitsType = {
   priority: 1,
   duration: false,
   durationMinutes: 0,
-  repeat: false,
-  frequency: APP_CONSTANTS.HABIT.FREQUENCY.SINGLE,
+  repeat: true,
+  frequency: APP_CONSTANTS.HABIT.FREQUENCY.DAILY,
   frequencySchedule: {
     daily: [1, 2, 3, 4, 5, 6, 7],
     weekly: 1,
@@ -87,13 +105,27 @@ const initialHabitData: HabitsType = {
     timestamp: getTimestamp(),
     dateString: getFormattedDate("yyyy-MM-dd"),
   },
+  goal: {
+    hasGoal: false,
+    goalType: "units", // Can be "time" or "units"
+    goalDetails: {
+      time: {
+        hours: 1,
+        minutes: 30,
+      },
+      units: {
+        count: 5,
+        type: "time", // Can be "time", "cup", "page" or "kilometers"
+      },
+    },
+  },
   createdDate: "",
-  goal: 0,
-  progress: 0,
+  status: "TO_DO",
   createdBy: "",
+  endDate: false,
   notes: "",
   reminder: true,
-  color: "primary",
+  color: "purple",
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
 }

@@ -21,6 +21,16 @@ const APP_CONSTANTS = {
       YEARLY: "yearly" as const,
       SINGLE: "single" as const,
     },
+    GOAL_LABELS: [
+      {
+        LABEL: "Quantidade" as const,
+        VALUE: "units" as const,
+      },
+      {
+        LABEL: "Tempo" as const,
+        VALUE: "time" as const,
+      },
+    ],
     HABIT_ICONS: [
       { key: "1", name: "check-circle", description: "Para marcar tarefas concluídas" },
       { key: "2", name: "alarm", description: "Para definir lembretes de hábitos" },
