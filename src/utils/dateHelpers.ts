@@ -63,15 +63,12 @@ const constructFrequencyText = (props: any) => {
     if (monthly.length === 0) {
       return "Escolha um ou vários dias no mes"
     } else if (monthly.length === 1) {
-      return "No mês todo dia: " + monthly[0]
+      return "Todo dia: " + monthly[0]
     } else if (monthly.length === 2) {
-      return "No mês todos os dias: " + monthly.join(" e ")
+      return "Todos os dias: " + monthly.join(" e ")
     } else {
       return (
-        "No mês todos os dias: " +
-        monthly.slice(0, -1).join(", ") +
-        " e " +
-        monthly[monthly.length - 1]
+        "Todos os dias: " + monthly.slice(0, -1).join(", ") + " e " + monthly[monthly.length - 1]
       )
     }
   }

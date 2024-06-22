@@ -75,7 +75,7 @@ export interface HabitsType {
   createdBy: string
   createdDate: string
   concludedDate?: string
-  endDate?: string | boolean
+  endDate?: string
   notes?: string
   tags: string[]
   reminder?: boolean
@@ -106,7 +106,7 @@ const initialHabitData: HabitsType = {
     dateString: getFormattedDate("yyyy-MM-dd"),
   },
   goal: {
-    hasGoal: false,
+    hasGoal: true,
     goalType: "units", // Can be "time" or "units"
     goalDetails: {
       time: {
@@ -122,7 +122,7 @@ const initialHabitData: HabitsType = {
   createdDate: "",
   status: "TO_DO",
   createdBy: "",
-  endDate: false,
+  endDate: "",
   notes: "",
   reminder: true,
   color: "purple",

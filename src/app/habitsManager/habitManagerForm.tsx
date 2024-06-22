@@ -2,6 +2,8 @@ import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
 import { View, StyleSheet, Switch, ScrollView, Text, Pressable } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
+import * as Haptics from "expo-haptics"
+import { MaterialIcons } from "@expo/vector-icons"
 
 import {
   ThemedText,
@@ -22,17 +24,16 @@ import {
 } from "@/utils/testData/habitsData"
 import { getFrequenciesByIndex, getFrequenciesByLabel } from "@/utils/useFrequency"
 import JsonViewer from "@/components/Utils/JsonView"
-import { MaterialIcons, createIconSetFromFontello } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { dateTextFormatter, constructFrequencyText } from "@/utils/dateHelpers"
+import { dateTextFormatter, constructFrequencyText, getFormattedDate } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
-import * as Haptics from "expo-haptics"
 import BubbleButton from "@/components/Buttons/BubbleButton"
 import IconsHabitModal from "@/components/IconsHabitModal"
 import { getGoalIndexByValue, getGoalTypeByIndex } from "@/utils/goalHabitHelpers"
 import AccordionContainer from "@/components/AccordionContainer"
 import RotatingAnimation from "@/components/RotatingAnimation"
 import useVisibilityControl from "@/utils/useVisibilityControl"
+import Animated, { Easing, FadeInUp } from "react-native-reanimated"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -52,7 +53,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
       goal: false,
       emoteModal: false,
       calendarViewFrequency: false,
-      calendarViewEnd: false,
+      calendarViewEndDate: false,
     })
 
   useImperativeHandle(ref, () => ({
@@ -62,7 +63,6 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
       }
     },
   }))
-  console.log(visibilityControl, getVisibility("emoteModal"))
   return (
     <ScrollView>
       <Formik
@@ -77,13 +77,10 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
             : theme.colors.primary.base
           const toggleRepeat = (value: boolean) => {
             formikProps.setFieldValue("repeat", value)
-            toggleVisibility("calendarViewFrequency")
+            setVisibility("calendarViewFrequency", false)
             !value
               ? formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.SINGLE)
               : formikProps.setFieldValue("frequency", APP_CONSTANTS.HABIT.FREQUENCY.DAILY)
-          }
-          const toggleGoal = (value: boolean) => {
-            formikProps.setFieldValue("goal.hasGoal", value)
           }
 
           const handleFrequencyChange = ({ nativeEvent }: any) => {
@@ -95,6 +92,10 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
             }
           }
 
+          const toggleGoal = (value: boolean) => {
+            formikProps.setFieldValue("goal.hasGoal", value)
+          }
+
           const handleGoalType = ({ nativeEvent }: any) => {
             const goalType = getGoalTypeByIndex(nativeEvent.selectedSegmentIndex) || "units"
 
@@ -102,6 +103,13 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
               formikProps.setFieldValue("goal.goalType", String(goalType.VALUE))
             } else {
               // dispatch error
+            }
+          }
+          const setEndDate = (value: boolean | string, formikProps: any) => {
+            if (value) {
+              formikProps.setFieldValue("endDate", getFormattedDate("yyyy-MM-dd", new Date()))
+            } else {
+              formikProps.setFieldValue("endDate", "")
             }
           }
           return (
@@ -214,7 +222,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                     >
                       <ThemedText
                         ellipsizeMode="tail"
-                        style={[styles.headingTitle]}
+                        style={[styles.headingTitle, { maxWidth: "93%" }]}
                         numberOfLines={1}
                       >
                         {constructFrequencyText(formikProps.values)}
@@ -286,26 +294,54 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         trackColor={{ false: "#767577", true: selectedColor }}
                         thumbColor={formikProps.values.endDate ? "#f4f3f4" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
-                        onValueChange={(value) => formikProps.setFieldValue("endDate", value)}
-                        value={formikProps.values.endDate}
+                        onValueChange={(value) => {
+                          setEndDate(value, formikProps)
+                          setVisibility("calendarViewEndDate", false)
+                        }}
+                        value={Boolean(formikProps.values.endDate) || false}
                       />
                     </ThemedView>
-                    <ThemedView style={[styles.contentRow, styles.borderTop]}>
-                      <ThemedText style={styles.headingTitle}>Terminar em</ThemedText>
-                      <BubbleButton
-                        backgroundColor={selectedColor}
-                        onPress={() => {
-                          toggleVisibility("calendarViewEnd")
-                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                        }}
+                    {Boolean(formikProps.values.endDate) && (
+                      <Animated.View
+                        entering={FadeInUp.duration(100)
+                          .easing(Easing.ease)
+                          .withInitialValues({ transform: [{ translateY: -20 }] })}
                       >
-                        <ThemedText
-                          colorText={selectedColor && getColorContrastColorByHex(selectedColor)}
-                        >
-                          {dateTextFormatter(formikProps.values.singleDate?.dateString)}
-                        </ThemedText>
-                      </BubbleButton>
-                    </ThemedView>
+                        <ThemedView style={[styles.contentRow, styles.borderTop]}>
+                          <ThemedText style={styles.headingTitle}>Terminar em</ThemedText>
+                          <BubbleButton
+                            backgroundColor={selectedColor}
+                            onPress={() => {
+                              toggleVisibility("calendarViewEndDate")
+                              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                            }}
+                          >
+                            <ThemedText
+                              colorText={selectedColor && getColorContrastColorByHex(selectedColor)}
+                            >
+                              {dateTextFormatter(formikProps.values.endDate)}
+                            </ThemedText>
+                          </BubbleButton>
+                        </ThemedView>
+                        <AccordionContainer isVisible={getVisibility("calendarViewEndDate")}>
+                          <ThemedView
+                            darkColor={theme.colors.black.lighter}
+                            lightColor={theme.colors.white.lighter}
+                            style={[styles.contentContainerlight, { padding: 0 }]}
+                          >
+                            <Calendar
+                              onDayPress={(day) => {
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                                console.log(day)
+                                formikProps.setFieldValue("endDate", day.dateString)
+                              }}
+                              currentColor={selectedColor}
+                              selectedDate={String(formikProps.values.endDate)}
+                            />
+                          </ThemedView>
+                        </AccordionContainer>
+                      </Animated.View>
+                    )}
                   </View>
                 )}
               </ContentContainer>
