@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/android_adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.daniloalmeida.habithero"
     },
     "web": {
       "bundler": "metro",

@@ -5,6 +5,8 @@ import * as Yup from "yup"
 import * as Haptics from "expo-haptics"
 import { MaterialIcons } from "@expo/vector-icons"
 
+import { Picker } from "@react-native-picker/picker"
+
 import {
   ThemedText,
   ThemedView,
@@ -33,7 +35,9 @@ import { getGoalIndexByValue, getGoalTypeByIndex } from "@/utils/goalHabitHelper
 import AccordionContainer from "@/components/AccordionContainer"
 import RotatingAnimation from "@/components/RotatingAnimation"
 import useVisibilityControl from "@/utils/useVisibilityControl"
-import Animated, { Easing, FadeInUp } from "react-native-reanimated"
+import Animated from "react-native-reanimated"
+import RoulletPicker from "@/components/RoulletPicker"
+import SelectWheel from "@/components/SelectWheel"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -302,11 +306,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                       />
                     </ThemedView>
                     {Boolean(formikProps.values.endDate) && (
-                      <Animated.View
-                        entering={FadeInUp.duration(100)
-                          .easing(Easing.ease)
-                          .withInitialValues({ transform: [{ translateY: -20 }] })}
-                      >
+                      <Animated.View>
                         <ThemedView style={[styles.contentRow, styles.borderTop]}>
                           <ThemedText style={styles.headingTitle}>Terminar em</ThemedText>
                           <BubbleButton
@@ -390,6 +390,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         darkColor={theme.colors.white.base}
                       />
                     </Pressable>
+                    <SelectWheel />
                   </ThemedView>
                 )}
               </ContentContainer>
