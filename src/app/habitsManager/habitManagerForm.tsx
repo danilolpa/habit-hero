@@ -1,5 +1,5 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
-import { View, StyleSheet, Switch, ScrollView, Text, Pressable } from "react-native"
+import { View, StyleSheet, Switch, ScrollView, Text, Pressable, Alert } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
 import * as Haptics from "expo-haptics"
@@ -36,8 +36,8 @@ import AccordionContainer from "@/components/AccordionContainer"
 import RotatingAnimation from "@/components/RotatingAnimation"
 import useVisibilityControl from "@/utils/useVisibilityControl"
 import Animated from "react-native-reanimated"
-import RoulletPicker from "@/components/RoulletPicker"
 import SelectWheel from "@/components/SelectWheel"
+import BottomDrawer from "@/components/BottomDrawer"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -58,6 +58,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
       emoteModal: false,
       calendarViewFrequency: false,
       calendarViewEndDate: false,
+      goalSelectPicker: false,
     })
 
   useImperativeHandle(ref, () => ({
@@ -332,7 +333,6 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                             <Calendar
                               onDayPress={(day) => {
                                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                                console.log(day)
                                 formikProps.setFieldValue("endDate", day.dateString)
                               }}
                               currentColor={selectedColor}
@@ -381,7 +381,10 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         }}
                       />
                     </View>
-                    <Pressable style={[styles.fowardActions]}>
+                    <Pressable
+                      style={[styles.fowardActions]}
+                      onPress={() => toggleVisibility("goalSelectPicker")}
+                    >
                       <ThemedText style={styles.headingTitle}>[1] vez por [dia]</ThemedText>
                       <ThemedMaterialIcons
                         name="arrow-forward-ios"
@@ -390,7 +393,15 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         darkColor={theme.colors.white.base}
                       />
                     </Pressable>
-                    <SelectWheel />
+                    <BottomDrawer
+                      visible={getVisibility("goalSelectPicker")}
+                      onClose={() => setVisibility("goalSelectPicker", false)}
+                      rightButton
+                      color={selectedColor}
+                      rightButtonOnPress={() => Alert.alert("clicked")}
+                    >
+                      <SelectWheel />
+                    </BottomDrawer>
                   </ThemedView>
                 )}
               </ContentContainer>

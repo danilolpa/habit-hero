@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ViewProps, Pressable } from "react-native"
+import { View, Text, StyleSheet, ViewProps, Pressable, TouchableOpacity } from "react-native"
 import { ThemedFontAwesome, ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 
@@ -7,20 +7,30 @@ interface closeButtonProps {
   color?: string
   size?: number
   style?: ViewProps["style"]
+  transparent?: boolean
 }
 
 export default function CloseButton(props: closeButtonProps) {
-  const { onPress, color = theme.colors.primary.base, size = 24, style } = props
+  const {
+    onPress,
+    color = theme.colors.primary.base,
+    size = 24,
+    style,
+    transparent = false,
+  } = props
   return (
     <ThemedView>
-      <Pressable onPress={onPress} style={[style, styles.container]}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={[style, styles.container, transparent && { backgroundColor: "transparent" }]}
+      >
         <ThemedFontAwesome
           name="xmark"
           size={size}
           darkColor={theme.colors.white.base}
           lightColor={theme.colors.black.base}
         />
-      </Pressable>
+      </TouchableOpacity>
     </ThemedView>
   )
 }

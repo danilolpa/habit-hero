@@ -6,10 +6,10 @@ interface Button extends ButtonProps {
   //   children: ReactNode
 }
 
-export default function Button({ title, color = theme.colors.primary.base, ...rest }: Button) {
+export default function Button({ color = theme.colors.primary.base, ...otherProps }: Button) {
   return (
     <View>
-      <ButtonNative title="Salvar" color={color} />
+      <ButtonNative color={color} {...otherProps} />
     </View>
   )
 }

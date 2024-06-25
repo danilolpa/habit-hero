@@ -6,6 +6,7 @@ interface VisibilityControlState {
   emoteModal: boolean
   calendarViewFrequency: boolean
   calendarViewEndDate: boolean
+  goalSelectPicker: boolean
 }
 
 const useVisibilityControl = (initialState: VisibilityControlState) => {
