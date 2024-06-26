@@ -9,8 +9,7 @@ const pluralizeIfNeeded = (string: string, quantity: number) => {
   if (typeof string !== "string" || string.length === 0) {
     throw new Error("Text must be a non-empty string")
   }
-
-  if (string.endsWith("s")) {
+  if (string.endsWith("S")) {
     return string
   }
   if (quantity > 1) {

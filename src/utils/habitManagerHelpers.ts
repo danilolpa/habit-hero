@@ -55,16 +55,43 @@ const formatFrequencyText = (props: any) => {
   }
 }
 
+const translateGoalText = (string: string) => {
+  const text = string.toUpperCase()
+
+  switch (text) {
+    case "TIME":
+      return "vez"
+    case "TIMES":
+      return "vezes"
+    case "CUP":
+      return "copo"
+    case "CUPS":
+      return "copos"
+    case "PAGE":
+      return "página"
+    case "PAGES":
+      return "páginas"
+    case "KILOMETER":
+      return "quilômetro"
+    case "KILOMETERS":
+      return "quilômetros"
+    default:
+      return text
+  }
+}
+
 const formatGoalText = (props: goalProps) => {
   const { goalType, goalDetails } = props
 
   if (goalDetails) {
     const { count, hours, minutes, seconds, type } = goalDetails
 
-    if (goalType === "UNITS") {
-      return `${count} ${pluralizeIfNeeded(String(type), Number(count)).toLowerCase()} por dia`
+    if (goalType === "BY_UNITS") {
+      return `${count} ${translateGoalText(
+        pluralizeIfNeeded(String(type), Number(count)),
+      ).toLowerCase()} por dia`
     }
-    if (goalType === "TIME") {
+    if (goalType === "BY_TIME") {
       let timeString = ""
 
       if (Number(hours) > 0) {

@@ -25,14 +25,14 @@ const APP_CONSTANTS = {
       GOAL_LABELS: [
         {
           LABEL: "Quantidade" as const,
-          VALUE: "UNITS" as const,
+          VALUE: "BY_UNITS" as const,
         },
         {
           LABEL: "Tempo" as const,
-          VALUE: "TIME" as const,
+          VALUE: "BY_TIME" as const,
         },
       ],
-      GOAL_UNITS_VALUES: ["TIMES", "CUP", "PAGE", "KILOMETER"],
+      GOAL_UNITS_VALUES: ["TIME", "CUP", "PAGE", "KILOMETER"],
       GOAL_WHEEL_PICKER: {
         TIME: [
           {
@@ -67,7 +67,7 @@ const APP_CONSTANTS = {
           },
           {
             label: ["Vez", "Copo", "Pagina", "Quilometro"],
-            value: ["TIMES", "CUP", "PAGE", "KILOMETER"],
+            value: ["TIME", "CUP", "PAGE", "KILOMETER"],
             type: "TEXT",
             title: "Qual o tipo de medida?",
             keyValue: "type",
@@ -79,7 +79,7 @@ const APP_CONSTANTS = {
         minutes: 30,
         seconds: 0,
         count: 1,
-        type: "TIMES",
+        type: "TIME", // "TIME" | "CUP" | "PAGE" | "KILOMETER"
       },
     },
     HABIT_ICONS: [

@@ -46,11 +46,11 @@ type GoalDetails = {
   minutes?: number
   count?: number
   seconds?: number
-  type?: "TIMES" | "CUP" | "PAGE" | "KILOMETER" | string
+  type?: "TIME" | "CUP" | "PAGE" | "KILOMETER" | string
 }
 export interface goalProps {
   hasGoal: boolean
-  goalType?: "TIME" | "UNITS"
+  goalType?: "BY_TIME" | "BY_UNITS"
   goalDetails?: GoalDetails
 }
 
@@ -89,7 +89,7 @@ const initialHabitData: HabitsType = {
   priority: 1,
   duration: false,
   durationMinutes: 0,
-  repeat: true,
+  repeat: false,
   frequency: APP_CONSTANTS.HABIT.FREQUENCY.DAILY,
   frequencySchedule: {
     daily: [1, 2, 3, 4, 5, 6, 7],
@@ -104,8 +104,8 @@ const initialHabitData: HabitsType = {
     dateString: getFormattedDate("yyyy-MM-dd"),
   },
   goal: {
-    hasGoal: true,
-    goalType: "TIME", // Can be "TIME" or "UNITS"
+    hasGoal: false,
+    goalType: "BY_UNITS", // Can be "BY_TIME" or "BY_UNITS"
     goalDetails: APP_CONSTANTS.HABIT.GOAL.GOAL_DETAILS_INITIAL_VALUES,
   },
   createdDate: "",

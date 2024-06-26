@@ -35,7 +35,7 @@ interface FormValues {
 const SelectWheelGoal: React.FC<SelectWheelGoalProps> = (props) => {
   const { selectionColor, title = "", visible, onClose, type } = props
   const data =
-    type === "UNITS"
+    type === "BY_UNITS"
       ? APP_CONSTANTS.HABIT.GOAL.GOAL_WHEEL_PICKER.UNITS
       : APP_CONSTANTS.HABIT.GOAL.GOAL_WHEEL_PICKER.TIME
 
