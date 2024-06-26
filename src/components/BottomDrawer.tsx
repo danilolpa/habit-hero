@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   indicator: {
     width: 40,
     height: 5,
-    backgroundColor: "#ccc",
+    backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 2.5,
     alignSelf: "center",
     marginVertical: 8,

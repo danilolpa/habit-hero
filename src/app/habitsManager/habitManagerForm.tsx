@@ -27,17 +27,21 @@ import {
 import { getFrequenciesByIndex, getFrequenciesByLabel } from "@/utils/useFrequency"
 import JsonViewer from "@/components/Utils/JsonView"
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { dateTextFormatter, constructFrequencyText, getFormattedDate } from "@/utils/dateHelpers"
+import { dateTextFormatter, getFormattedDate } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
 import BubbleButton from "@/components/Buttons/BubbleButton"
 import IconsHabitModal from "@/components/IconsHabitModal"
-import { getGoalIndexByValue, getGoalTypeByIndex } from "@/utils/goalHabitHelpers"
+import {
+  getGoalIndexByValue,
+  getGoalTypeByIndex,
+  formatFrequencyText,
+  formatGoalText,
+} from "@/utils/habitManagerHelpers"
 import AccordionContainer from "@/components/AccordionContainer"
 import RotatingAnimation from "@/components/RotatingAnimation"
 import useVisibilityControl from "@/utils/useVisibilityControl"
 import Animated from "react-native-reanimated"
-import SelectWheel from "@/components/SelectWheel"
-import BottomDrawer from "@/components/BottomDrawer"
+import SelectWheelGoal from "@/components/Habits/SelectWheelGoal"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -103,9 +107,15 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
 
           const handleGoalType = ({ nativeEvent }: any) => {
             const goalType = getGoalTypeByIndex(nativeEvent.selectedSegmentIndex) || "units"
-
+            const hasGoalDetails = Object.keys(formikProps.values.goal.goalDetails || {}).length > 0
             if (goalType && typeof goalType === "object" && "VALUE" in goalType) {
               formikProps.setFieldValue("goal.goalType", String(goalType.VALUE))
+              if (!hasGoalDetails) {
+                formikProps.setFieldValue(
+                  "goal.goalDetails",
+                  APP_CONSTANTS.HABIT.GOAL.GOAL_DETAILS_INITIAL_VALUES,
+                )
+              }
             } else {
               // dispatch error
             }
@@ -230,7 +240,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         style={[styles.headingTitle, { maxWidth: "93%" }]}
                         numberOfLines={1}
                       >
-                        {constructFrequencyText(formikProps.values)}
+                        {formatFrequencyText(formikProps.values)}
                       </ThemedText>
                       <RotatingAnimation isRotated={getVisibility("frequency")}>
                         <ThemedMaterialIcons
@@ -365,7 +375,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   >
                     <View style={[styles.insideContentContainer, { paddingBottom: 0 }]}>
                       <ThemedSegmentedControl
-                        values={APP_CONSTANTS.HABIT.GOAL_LABELS.map((item) => item.LABEL)}
+                        values={APP_CONSTANTS.HABIT.GOAL.GOAL_LABELS.map((item) => item.LABEL)}
                         selectedIndex={getGoalIndexByValue(
                           String(formikProps.values.goal.goalType),
                         )}
@@ -385,7 +395,9 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                       style={[styles.fowardActions]}
                       onPress={() => toggleVisibility("goalSelectPicker")}
                     >
-                      <ThemedText style={styles.headingTitle}>[1] vez por [dia]</ThemedText>
+                      <ThemedText style={styles.headingTitle}>
+                        {formatGoalText(formikProps.values.goal)}
+                      </ThemedText>
                       <ThemedMaterialIcons
                         name="arrow-forward-ios"
                         size={20}
@@ -393,15 +405,13 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         darkColor={theme.colors.white.base}
                       />
                     </Pressable>
-                    <BottomDrawer
+
+                    <SelectWheelGoal
                       visible={getVisibility("goalSelectPicker")}
                       onClose={() => setVisibility("goalSelectPicker", false)}
-                      rightButton
-                      color={selectedColor}
-                      rightButtonOnPress={() => Alert.alert("clicked")}
-                    >
-                      <SelectWheel />
-                    </BottomDrawer>
+                      type={String(formikProps.values.goal.goalType)}
+                      selectionColor={selectedColor}
+                    />
                   </ThemedView>
                 )}
               </ContentContainer>

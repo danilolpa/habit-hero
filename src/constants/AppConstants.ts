@@ -21,16 +21,67 @@ const APP_CONSTANTS = {
       YEARLY: "yearly" as const,
       SINGLE: "single" as const,
     },
-    GOAL_LABELS: [
-      {
-        LABEL: "Quantidade" as const,
-        VALUE: "units" as const,
+    GOAL: {
+      GOAL_LABELS: [
+        {
+          LABEL: "Quantidade" as const,
+          VALUE: "UNITS" as const,
+        },
+        {
+          LABEL: "Tempo" as const,
+          VALUE: "TIME" as const,
+        },
+      ],
+      GOAL_UNITS_VALUES: ["TIMES", "CUP", "PAGE", "KILOMETER"],
+      GOAL_WHEEL_PICKER: {
+        TIME: [
+          {
+            value: [0, 23],
+            type: "RANGE",
+            title: "Hora",
+            sufix: "h",
+            keyValue: "hours",
+          },
+          {
+            value: [0, 59],
+            type: "RANGE",
+            title: "Minuto",
+            sufix: "min",
+            keyValue: "minutes",
+          },
+          ,
+          {
+            value: [0, 59],
+            type: "RANGE",
+            title: "Segundos",
+            sufix: "s",
+            keyValue: "seconds",
+          },
+        ],
+        UNITS: [
+          {
+            value: [1, 999],
+            type: "RANGE",
+            title: "Quantidade",
+            keyValue: "count",
+          },
+          {
+            label: ["Vez", "Copo", "Pagina", "Quilometro"],
+            value: ["TIMES", "CUP", "PAGE", "KILOMETER"],
+            type: "TEXT",
+            title: "Qual o tipo de medida?",
+            keyValue: "type",
+          },
+        ],
       },
-      {
-        LABEL: "Tempo" as const,
-        VALUE: "time" as const,
+      GOAL_DETAILS_INITIAL_VALUES: {
+        hours: 0,
+        minutes: 30,
+        seconds: 0,
+        count: 1,
+        type: "TIMES",
       },
-    ],
+    },
     HABIT_ICONS: [
       { key: "1", name: "check-circle", description: "Para marcar tarefas concluídas" },
       { key: "2", name: "alarm", description: "Para definir lembretes de hábitos" },

@@ -42,14 +42,16 @@ export interface singleDateProps {
 }
 
 type GoalDetails = {
-  time?: {
-    hours: number
-    minutes: number
-  }
-  units?: {
-    count: number
-    type: "time" | "cup" | "page" | "kilometers"
-  }
+  hours?: number
+  minutes?: number
+  count?: number
+  seconds?: number
+  type?: "TIMES" | "CUP" | "PAGE" | "KILOMETER" | string
+}
+export interface goalProps {
+  hasGoal: boolean
+  goalType?: "TIME" | "UNITS"
+  goalDetails?: GoalDetails
 }
 
 export interface HabitsType {
@@ -65,11 +67,7 @@ export interface HabitsType {
   frequency: "daily" | "weekly" | "monthly" | "single"
   frequencySchedule: frequencyScheduleType
   singleDate?: singleDateProps
-  goal: {
-    hasGoal: boolean
-    goalType?: "time" | "units"
-    goalDetails?: GoalDetails
-  }
+  goal: goalProps
   color: colorsType
   status: "TO_DO" | "IGNORED" | "COMPLETED"
   createdBy: string
@@ -107,17 +105,8 @@ const initialHabitData: HabitsType = {
   },
   goal: {
     hasGoal: true,
-    goalType: "units", // Can be "time" or "units"
-    goalDetails: {
-      time: {
-        hours: 1,
-        minutes: 30,
-      },
-      units: {
-        count: 5,
-        type: "time", // Can be "time", "cup", "page" or "kilometers"
-      },
-    },
+    goalType: "TIME", // Can be "TIME" or "UNITS"
+    goalDetails: APP_CONSTANTS.HABIT.GOAL.GOAL_DETAILS_INITIAL_VALUES,
   },
   createdDate: "",
   status: "TO_DO",

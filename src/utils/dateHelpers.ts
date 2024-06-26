@@ -49,36 +49,4 @@ function dateTextFormatter(date: string | Date = new Date()) {
   }
 }
 
-const constructFrequencyText = (props: any) => {
-  const {
-    frequency,
-    frequencySchedule: { daily, weekly, monthly },
-  } = props
-
-  if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY) {
-    return daily.length === 7 ? "Todos os dias" : getDaysOfWeek(daily)
-  } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY) {
-    return weekly + (weekly > 1 ? " vezes por semana" : " vez por semana")
-  } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY) {
-    if (monthly.length === 0) {
-      return "Escolha um ou vários dias no mes"
-    } else if (monthly.length === 1) {
-      return "Todo dia: " + monthly[0]
-    } else if (monthly.length === 2) {
-      return "Todos os dias: " + monthly.join(" e ")
-    } else {
-      return (
-        "Todos os dias: " + monthly.slice(0, -1).join(", ") + " e " + monthly[monthly.length - 1]
-      )
-    }
-  }
-}
-
-export {
-  getFormattedDate,
-  getDaysOfWeek,
-  getTimestamp,
-  isTodayDate,
-  dateTextFormatter,
-  constructFrequencyText,
-}
+export { getFormattedDate, getDaysOfWeek, getTimestamp, isTodayDate, dateTextFormatter }
