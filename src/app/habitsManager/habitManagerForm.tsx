@@ -38,6 +38,8 @@ import AccordionContainer from "@/components/AccordionContainer"
 import useVisibilityControl from "@/utils/useVisibilityControl"
 import SelectWheelGoal from "@/components/Habits/SelectWheelGoal"
 import ContentFlexRow from "@/components/ContentFlexRow"
+import HabitPeriodSelector from "@/components/HabitManager/HabitPeriodSelector"
+import HabitReminderSelector from "@/components/HabitManager/HabitReminderSelector"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -55,11 +57,11 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
     useVisibilityControl({
       frequency: true,
       goal: false,
-      emoteModal: false,
+      emoteModal: true,
       calendarViewFrequency: false,
       calendarViewEndDate: false,
       goalSelectPicker: false,
-      periodView: false,
+      periodView: true,
       reminderView: true,
     })
 
@@ -159,9 +161,9 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 </BubbleButton>
                 <IconsHabitModal
                   isVisible={getVisibility("emoteModal")}
-                  onClose={() => toggleVisibility("emoteModal")}
+                  onClose={() => setVisibility("emoteModal", false)}
                   selectedColor={String(selectedColor)}
-                  currentIcon={formikProps.values.icon}
+                  habitIconActual={formikProps.values.icon}
                 />
               </View>
               <Input.Field
@@ -407,11 +409,12 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                       iconIndicator="keyboard-arrow-down"
                       onPress={() => toggleVisibility("periodView")}
                       iconRotated={getVisibility("periodView")}
+                      separatorPosition="bottom"
                     />
                   }
                 >
-                  <ContentContainer schemeColor="light" onlyRadiusBottom>
-                    <Text>Content Text</Text>
+                  <ContentContainer schemeColor="light" onlyRadiusBottom withMargin>
+                    <HabitPeriodSelector />
                   </ContentContainer>
                 </AccordionContainer>
 
@@ -420,19 +423,17 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   header={
                     <ContentFlexRow
                       text="Lembrar-me no horário"
-                      // iconIndicator="keyboard-arrow-down"
                       switchOptions={{
                         selectedColor: selectedColor || theme.colors.black.base,
                         value: getVisibility("reminderView"),
                         onValueChange: () => toggleVisibility("reminderView"),
                       }}
-                      separatorPosition="top"
                       iconRotated={getVisibility("reminderView")}
                     />
                   }
                 >
-                  <ContentContainer schemeColor="light" withMargin={true}>
-                    <Text>Content Text</Text>
+                  <ContentContainer schemeColor="light" withMargin>
+                    <HabitReminderSelector />
                   </ContentContainer>
                 </AccordionContainer>
               </ContentContainer>

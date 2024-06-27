@@ -1,167 +1,101 @@
-import { View, StyleSheet, Modal, Pressable, Platform } from "react-native"
-import { ThemedText, ThemedView } from "./Utils/Themed"
+import { StyleSheet, Pressable, Platform } from "react-native"
+import { ThemedView } from "./Utils/Themed"
 import { MaterialIcons } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
-import React, { useEffect, useState } from "react"
-import { BlurView } from "expo-blur"
-import { getColorContrastColorByHex, theme } from "@/Theme"
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
-} from "react-native-reanimated"
+import React, { useMemo, useState } from "react"
 import { useFormikContext } from "formik"
-import CloseButton from "@/components/Buttons/CloseButton"
+import BottomDrawer from "./BottomDrawer"
+import { theme } from "@/Theme"
 
 type iconNames = typeof MaterialIcons.glyphMap
 interface iconModalProps {
   isVisible: boolean
   onClose: () => void
   selectedColor: string
-  currentIcon: string
+  habitIconActual: string
 }
 
-export default function IconsHabitModal({
-  isVisible = false,
-  onClose,
-  selectedColor,
-  currentIcon,
-}: iconModalProps) {
+export default function IconsHabitModal(props: iconModalProps) {
+  const { isVisible, onClose, selectedColor, habitIconActual } = props
   const { setFieldValue } = useFormikContext<iconNames>()
-  const translateY = useSharedValue(-50)
-  const opacity = useSharedValue(0)
-  const [visible, setVisible] = useState(isVisible)
-
-  useEffect(() => {
-    if (isVisible) {
-      setVisible(true)
-      translateY.value = withSpring(0)
-      opacity.value = withSpring(1)
-    } else {
-      translateY.value = withTiming(-50, { duration: 200 })
-      opacity.value = withTiming(0, { duration: 200 }, () => {
-        runOnJS(setVisible)(false)
-      })
-    }
-  }, [isVisible])
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: translateY.value }],
-      opacity: opacity.value,
-    }
-  })
+  const [selectedIcon, setSelectedIcon] = useState(habitIconActual)
 
   const selectIcon = (icon: iconNames) => {
-    setFieldValue("icon", icon)
-    onClose()
+    setSelectedIcon(icon as any)
+  }
+  function handleSave() {
+    setFieldValue("icon", selectedIcon)
+    onClose
   }
 
-  const iconColor = (icon: any) => {
-    return icon === currentIcon ? selectedColor : theme.colors.white.base
+  function getRandomColor() {
+    const habitColors = theme.habitColors
+    const randomIndex = Math.floor(Math.random() * habitColors.length)
+    return habitColors[randomIndex].hex
   }
+
+  const iconColors = useMemo(() => {
+    return APP_CONSTANTS.HABIT.HABIT_ICONS.reduce((acc, { name }) => {
+      acc[name] = getRandomColor()
+      return acc
+    }, {} as Record<string, string>)
+  }, [])
 
   return (
     <ThemedView>
-      <Modal animationType="none" transparent={true} visible={visible} onRequestClose={onClose}>
-        <ThemedView style={[styles.container, animatedStyle]} animated>
-          <BlurView intensity={20} style={styles.blurContainer}>
-            <ThemedView
-              style={[styles.modalContainer, animatedStyle]}
-              animated
-              darkColor={theme.colors.black.base}
-              lightColor={theme.colors.white.base}
-            >
-              <View style={[styles.header, { backgroundColor: selectedColor }]}>
-                <ThemedText
-                  style={[styles.headerTitle, { color: getColorContrastColorByHex(selectedColor) }]}
-                  fontWeight="bold"
-                >
-                  Escolha um ícone
-                </ThemedText>
-                <CloseButton onPress={onClose} />
-              </View>
-              <ThemedView style={styles.iconsContainer}>
-                {APP_CONSTANTS.HABIT.HABIT_ICONS.map(({ name, key }) => {
-                  return (
-                    <Pressable
-                      key={key}
-                      style={styles.iconBox}
-                      onPress={() => selectIcon(name as any)}
-                    >
-                      <MaterialIcons name={name as any} size={45} color={String(iconColor(name))} />
-                    </Pressable>
-                  )
-                })}
-              </ThemedView>
-            </ThemedView>
-          </BlurView>
+      <BottomDrawer
+        rightButton
+        color={selectedColor}
+        rightButtonOnPress={() => handleSave()}
+        visible={isVisible}
+        onClose={onClose}
+      >
+        <ThemedView style={styles.iconsContainer}>
+          {APP_CONSTANTS.HABIT.HABIT_ICONS.map(({ name, key }) => {
+            const initialSelected = name === habitIconActual
+            const iconSelected = name === selectedIcon
+            const iconColor = iconSelected ? theme.colors.white.base : iconColors[name as any]
+            return (
+              <Pressable
+                key={key}
+                style={[
+                  styles.iconBox,
+                  initialSelected && styles.iconBoxInitial,
+                  iconSelected && { backgroundColor: selectedColor },
+                ]}
+                onPress={() => selectIcon(name as any)}
+              >
+                <MaterialIcons name={name as any} size={40} color={iconColor} />
+              </Pressable>
+            )
+          })}
         </ThemedView>
-      </Modal>
+      </BottomDrawer>
     </ThemedView>
   )
 }
 
 export const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    width: "104%",
-    height: "102%",
-    top: "-2%",
-    left: "-2%",
-    right: 0,
-    zIndex: 1000,
-    display: "flex",
-  },
-  modalContainer: {
-    borderRadius: theme.radius.radius20,
-    top: "10%",
-    width: "80%",
-    borderWidth: 2,
-    ...Platform.select({
-      ios: {
-        shadowColor: "rgba(0,0,0,0.4)",
-        shadowOffset: { width: 0, height: 10 }, // Sombra apenas no topo
-        shadowOpacity: 0.5,
-        shadowRadius: 3.84,
-      },
-      android: {
-        elevation: 0, // No Android, a sombra é um pouco limitada
-      },
-    }),
-  },
   iconsContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: 10,
+    justifyContent: "center",
     width: "100%",
-    padding: theme.spaces.defaultSpace,
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    width: "100%",
-    paddingHorizontal: theme.spaces.defaultSpace,
+    gap: 4,
     paddingVertical: theme.spaces.defaultSpace,
-    borderBottomColor: "rgba(0, 0, 0, 0.8)",
-    borderTopLeftRadius: theme.radius.radius20,
-    borderTopRightRadius: theme.radius.radius20,
   },
-  headerTitle: {
-    fontSize: 20,
-    height: 40,
+  iconBox: {
+    width: 55,
     display: "flex",
-    lineHeight: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+    height: 55,
   },
-  iconBox: {},
+  iconBoxInitial: {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
   blurContainer: {
     flex: 1,
     width: "100%",
