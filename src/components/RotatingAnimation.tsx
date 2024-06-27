@@ -1,11 +1,10 @@
-import React, { Children, useEffect } from "react"
-import { View, StyleSheet } from "react-native"
+import React, { useEffect } from "react"
+import { StyleSheet, ViewStyle } from "react-native"
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   Easing,
-  ReduceMotion,
 } from "react-native-reanimated"
 
 interface RotatingAnimationProps {
@@ -13,6 +12,7 @@ interface RotatingAnimationProps {
   rotatedDeg?: number
   defaultDeg?: number
   children: React.ReactNode
+  style?: ViewStyle
 }
 
 const RotatingAnimation: React.FC<RotatingAnimationProps> = ({
@@ -20,6 +20,7 @@ const RotatingAnimation: React.FC<RotatingAnimationProps> = ({
   children,
   rotatedDeg = 180,
   defaultDeg = 0,
+  style,
 }) => {
   const rotation = useSharedValue(0)
 
@@ -36,7 +37,7 @@ const RotatingAnimation: React.FC<RotatingAnimationProps> = ({
     }
   })
 
-  return <Animated.View style={animatedStyle}>{children}</Animated.View>
+  return <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>
 }
 
 const styles = StyleSheet.create({

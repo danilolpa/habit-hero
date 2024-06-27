@@ -11,9 +11,15 @@ interface AccordionProps {
   children: React.ReactNode
   isVisible: boolean
   height?: number
+  header?: React.ReactNode
 }
 
-const AccordionContainer: React.FC<AccordionProps> = ({ children, isVisible, height = 0 }) => {
+const AccordionContainer: React.FC<AccordionProps> = ({
+  children,
+  isVisible,
+  height = 0,
+  header,
+}) => {
   const animation = useSharedValue(0)
   const [contentHeight, setContentHeight] = useState(0)
 
@@ -40,15 +46,18 @@ const AccordionContainer: React.FC<AccordionProps> = ({ children, isVisible, hei
     }
   }
   return (
-    <View style={styles.container}>
-      {contentHeight === 0 && (
-        <View style={styles.hiddenContent} onLayout={onContentLayout}>
-          {children}
-        </View>
-      )}
-      <Animated.View style={[animatedStyle]}>
-        <View onLayout={onContentLayout}>{children}</View>
-      </Animated.View>
+    <View>
+      {header && <View style={styles.header}>{header}</View>}
+      <View style={styles.container}>
+        {contentHeight === 0 && (
+          <View style={styles.hiddenContent} onLayout={onContentLayout}>
+            {children}
+          </View>
+        )}
+        <Animated.View style={[animatedStyle]}>
+          <View onLayout={onContentLayout}>{children}</View>
+        </Animated.View>
+      </View>
     </View>
   )
 }
@@ -62,6 +71,7 @@ const styles = StyleSheet.create({
     opacity: 0,
     zIndex: -1,
   },
+  header: {},
 })
 
 export default AccordionContainer

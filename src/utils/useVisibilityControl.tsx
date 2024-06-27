@@ -7,6 +7,8 @@ interface VisibilityControlState {
   calendarViewFrequency: boolean
   calendarViewEndDate: boolean
   goalSelectPicker: boolean
+  periodView: boolean
+  reminderView: boolean
 }
 
 const useVisibilityControl = (initialState: VisibilityControlState) => {

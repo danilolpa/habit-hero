@@ -1,6 +1,6 @@
 import { StyleSheet, FlatList, ViewStyle, Pressable, Text } from "react-native"
 import { ThemedView } from "./Utils/Themed"
-import { getColorHexByName, theme } from "@/Theme"
+import { HabitColorNameType, getColorHexByName, theme, HabitColorType } from "@/Theme"
 import { useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
 import * as Haptics from "expo-haptics"
@@ -18,7 +18,7 @@ type ColorPickerItemsProps = {
 }
 
 interface FormValues {
-  color: string
+  color: HabitColorNameType
 }
 
 export default function ColorPicker({
@@ -33,12 +33,12 @@ export default function ColorPicker({
     }
   }, [colorHabit])
 
-  const handleSelectColor = (colorName: string) => {
+  const handleSelectColor = (colorName: HabitColorNameType) => {
     setColorHabit(colorName)
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
 
-  const renderItem = ({ item, index }: ColorPickerItemsProps) => {
+  const renderItem = ({ item, index }: { item: HabitColorType; index: number }) => {
     const showSelected = getColorHexByName(colorHabit) === item.hex
     return (
       <ThemedView
@@ -60,10 +60,13 @@ export default function ColorPicker({
     )
   }
 
-  const initialIndex = theme.habitColors.findIndex(
-    (color) => color.hex === getColorHexByName(initialColor),
-  )
+  const initialIndex = function () {
+    let actualIndex = theme.habitColors.findIndex(
+      (color) => color.hex === getColorHexByName(initialColor),
+    )
 
+    return actualIndex >= 6 ? actualIndex : 0
+  }
   return (
     <FlatList
       data={theme.habitColors}
@@ -72,7 +75,7 @@ export default function ColorPicker({
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       style={styles.container}
-      initialScrollIndex={initialIndex}
+      initialScrollIndex={initialIndex()}
       getItemLayout={(data, index) => ({ length: 45, offset: 60 * index, index })}
     />
   )

@@ -2,6 +2,7 @@ import APP_CONSTANTS from "@/constants/AppConstants"
 import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons"
 import React, { createContext, useContext, useEffect, useState } from "react"
+import { HabitColorNameType } from "@/Theme"
 
 type habitManagerContextType = {
   loading: boolean
@@ -10,22 +11,10 @@ type habitManagerContextType = {
   colorHabit: string
   updateHabitData: (name: string, value: any) => void
   submitForm: (form: any) => void
-  setColorHabit: (color: colorsType) => void
+  setColorHabit: (color: HabitColorNameType) => void
 }
 
 const HabitManagerContext = createContext<habitManagerContextType>({} as habitManagerContextType)
-
-type colorsType =
-  | "primary"
-  | "red"
-  | "pink"
-  | "lightPurple"
-  | "purple"
-  | "orange"
-  | "yellow"
-  | "green"
-  | "teal"
-  | "blue"
 
 interface frequencyScheduleType {
   daily: number[]
@@ -59,36 +48,30 @@ export interface HabitsType {
   description: string
   completed: boolean
   icon: keyof typeof MaterialIcons.glyphMap
-  category: string
   priority: number
-  duration: boolean
-  durationMinutes: number
   repeat: boolean
   frequency: "daily" | "weekly" | "monthly" | "single"
   frequencySchedule: frequencyScheduleType
   singleDate?: singleDateProps
   goal: goalProps
-  color: colorsType
+  color: HabitColorNameType
   status: "TO_DO" | "IGNORED" | "COMPLETED"
+  reminderTimes?: string[]
+  period?: "MORNING" | "AFTERNOON" | "EVENING" | "ANYTIME"
   createdBy: string
   createdDate: string
   concludedDate?: string
   endDate?: string
   notes?: string
   tags: string[]
-  reminder?: boolean
   difficulty: string
 }
 
 const initialHabitData: HabitsType = {
   name: "",
   description: "",
-  completed: false,
-  icon: "water-drop",
-  category: "",
+  icon: "fastfood",
   priority: 1,
-  duration: false,
-  durationMinutes: 0,
   repeat: false,
   frequency: APP_CONSTANTS.HABIT.FREQUENCY.DAILY,
   frequencySchedule: {
@@ -108,12 +91,14 @@ const initialHabitData: HabitsType = {
     goalType: "BY_UNITS", // Can be "BY_TIME" or "BY_UNITS"
     goalDetails: APP_CONSTANTS.HABIT.GOAL.GOAL_DETAILS_INITIAL_VALUES,
   },
-  createdDate: "",
+  createdDate: new Date().toISOString(),
   status: "TO_DO",
   createdBy: "",
   endDate: "",
+  completed: false,
   notes: "",
-  reminder: true,
+  period: "ANYTIME",
+  reminderTimes: [], //["08:00", "12:00", "18:00"],
   color: "purple",
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
@@ -123,7 +108,7 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [habitData, setHabitData] = useState(initialHabitData)
-  const [colorHabit, setColorHabit] = useState<colorsType>(initialHabitData.color)
+  const [colorHabit, setColorHabit] = useState<HabitColorNameType>(initialHabitData.color)
 
   const updateHabitData = (name: string, value: any) => {
     // const { name, value } = e.target

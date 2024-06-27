@@ -8,9 +8,20 @@ interface ColorShades {
   dark?: string
   darkest?: string
 }
+export type HabitColorNameType =
+  | "primary"
+  | "red"
+  | "pink"
+  | "lightPurple"
+  | "purple"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "teal"
+  | "blue"
 
-interface HabitColor {
-  name: string
+export interface HabitColorType {
+  name: HabitColorNameType
   hex: string
   rgb: string
   rgba: string
@@ -36,7 +47,7 @@ interface Theme {
       [key: string]: string
     }
   }
-  habitColors: HabitColor[]
+  habitColors: HabitColorType[]
 }
 
 // Definindo as cores principais
