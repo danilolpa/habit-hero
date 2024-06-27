@@ -15,11 +15,11 @@ const APP_CONSTANTS = {
   },
   HABIT: {
     FREQUENCY: {
-      DAILY: "daily" as const,
-      WEEKLY: "weekly" as const,
-      MONTHLY: "monthly" as const,
-      YEARLY: "yearly" as const,
-      SINGLE: "single" as const,
+      DAILY: "DAILY" as const,
+      WEEKLY: "WEEKLY" as const,
+      MONTHLY: "MONTHLY" as const,
+      YEARLY: "YEARLY" as const,
+      SINGLE: "SINGLE" as const,
     },
     GOAL: {
       GOAL_LABELS: [

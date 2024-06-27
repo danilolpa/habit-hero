@@ -244,7 +244,11 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         />
                       }
                     >
-                      <ContentContainer schemeColor="light" withMargin onlyRadiusBottom>
+                      <ContentContainer
+                        schemeColor="light"
+                        onlyRadiusBottom
+                        style={{ paddingBottom: theme.spaces.defaultSpace }}
+                      >
                         <ThemedSegmentedControl
                           values={["Diário", "Semanal", "Mensal"]}
                           selectedIndex={getFrequenciesByLabel(formikProps.values.frequency)}
@@ -357,39 +361,41 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 />
 
                 {formikProps.values.goal.hasGoal && (
-                  <ContentContainer schemeColor="light" onlyRadiusBottom>
-                    <View>
-                      <ThemedSegmentedControl
-                        values={APP_CONSTANTS.HABIT.GOAL.GOAL_LABELS.map((item) => item.LABEL)}
-                        selectedIndex={getGoalIndexByValue(
-                          String(formikProps.values.goal.goalType),
-                        )}
-                        onChange={(item) => handleGoalType(item)}
-                        style={styles.segmentedControl}
-                        tintColor={selectedColor}
-                        fontStyle={{
-                          fontSize: 14,
-                        }}
-                        activeFontStyle={{
-                          color: selectedColor && getColorContrastColorByHex(selectedColor),
-                          fontSize: 16,
-                        }}
+                  <AccordionContainer isVisible={formikProps.values.goal.hasGoal}>
+                    <ContentContainer schemeColor="light" onlyRadiusBottom>
+                      <View>
+                        <ThemedSegmentedControl
+                          values={APP_CONSTANTS.HABIT.GOAL.GOAL_LABELS.map((item) => item.LABEL)}
+                          selectedIndex={getGoalIndexByValue(
+                            String(formikProps.values.goal.goalType),
+                          )}
+                          onChange={(item) => handleGoalType(item)}
+                          style={styles.segmentedControl}
+                          tintColor={selectedColor}
+                          fontStyle={{
+                            fontSize: 14,
+                          }}
+                          activeFontStyle={{
+                            color: selectedColor && getColorContrastColorByHex(selectedColor),
+                            fontSize: 16,
+                          }}
+                        />
+                      </View>
+                      <ContentFlexRow
+                        text={formatGoalText(formikProps.values.goal) || "Escolha uma meta"}
+                        iconIndicator="arrow-forward-ios"
+                        iconSize={16}
+                        onPress={() => toggleVisibility("goalSelectPicker")}
                       />
-                    </View>
-                    <ContentFlexRow
-                      text={formatGoalText(formikProps.values.goal) || "Escolha uma meta"}
-                      iconIndicator="arrow-forward-ios"
-                      iconSize={16}
-                      onPress={() => toggleVisibility("goalSelectPicker")}
-                    />
 
-                    <SelectWheelGoal
-                      visible={getVisibility("goalSelectPicker")}
-                      onClose={() => setVisibility("goalSelectPicker", false)}
-                      type={String(formikProps.values.goal.goalType)}
-                      selectionColor={selectedColor}
-                    />
-                  </ContentContainer>
+                      <SelectWheelGoal
+                        visible={getVisibility("goalSelectPicker")}
+                        onClose={() => setVisibility("goalSelectPicker", false)}
+                        type={String(formikProps.values.goal.goalType)}
+                        selectionColor={selectedColor}
+                      />
+                    </ContentContainer>
+                  </AccordionContainer>
                 )}
               </ContentContainer>
               <ContentContainer>

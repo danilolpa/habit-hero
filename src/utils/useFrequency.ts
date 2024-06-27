@@ -1,6 +1,7 @@
-import { useState } from "react"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
-export const FREQUENCY_LABELS = ["daily", "weekly", "monthly"]
+export const FREQUENCY_LABELS = Object.values(APP_CONSTANTS.HABIT.FREQUENCY)
+
 export const FREQUENCY = [
   {
     index: 0,

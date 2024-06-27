@@ -50,7 +50,7 @@ export interface HabitsType {
   icon: keyof typeof MaterialIcons.glyphMap
   priority: number
   repeat: boolean
-  frequency: "daily" | "weekly" | "monthly" | "single"
+  frequency: "DAILY" | "WEEKLY" | "MONTHLY" | "SINGLE"
   frequencySchedule: frequencyScheduleType
   singleDate?: singleDateProps
   goal: goalProps
