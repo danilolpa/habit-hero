@@ -10,9 +10,11 @@ import { ThemedIcons } from "@/components/Utils/Themed"
 import { useFormikContext } from "formik"
 import { useEffect, useState } from "react"
 import APP_CONSTANTS from "@/constants/AppConstants"
+import { formatGoalText } from "@/utils/habitManagerHelpers"
 
 interface FormValues {
   period: HabitsType["period"]
+  goal: HabitsType["goal"]
 }
 
 export default function HabitPeriodSelector() {
@@ -41,6 +43,25 @@ export default function HabitPeriodSelector() {
   useEffect(() => {
     setFieldValue("period", selectedPeriod)
   }, [selectedPeriod])
+
+  const countSelectedPeriods = selectedPeriod.length
+  const constructWarnText = () => {
+    let text = [] as string[]
+
+    selectedPeriod.map((period) => {
+      if (period === MORNING) {
+        text.push(String(formatGoalText(values.goal, "à manhã")))
+      }
+      if (period === AFTERNOON) {
+        text.push(String(formatGoalText(values.goal, "à tarde")))
+      }
+      if (period === NIGHT) {
+        text.push(String(formatGoalText(values.goal, "à noite")))
+      }
+    })
+
+    return `${text.slice(0, -1).join(", ")} e ${text[text.length - 1]}.`
+  }
 
   return (
     <View style={styles.container}>
@@ -81,17 +102,19 @@ export default function HabitPeriodSelector() {
           A qualquer hora do dia
         </Chip>
       </View>
-      <View style={styles.warn}>
-        <ThemedIcons
-          name="info"
-          size={25}
-          darkColor={theme.colors.yellow.base}
-          style={{ marginRight: 10 }}
-        />
-        <Text style={{ color: theme.colors.yellow.base }}>
-          Observação: Total da sua meta diária, 30min manhã, 30min tarde e 30min a noite{" "}
-        </Text>
-      </View>
+      {countSelectedPeriods > 1 && values.goal.hasGoal && (
+        <View style={styles.warn}>
+          <ThemedIcons
+            name="info"
+            size={25}
+            darkColor={theme.colors.yellow.base}
+            style={{ marginRight: 10 }}
+          />
+          <Text style={{ color: theme.colors.yellow.base }}>
+            Observação: Total da sua meta diária, {constructWarnText()}
+          </Text>
+        </View>
+      )}
     </View>
   )
 }

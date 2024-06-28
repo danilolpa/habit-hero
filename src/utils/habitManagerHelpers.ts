@@ -80,7 +80,7 @@ const translateGoalText = (string: string) => {
   }
 }
 
-const formatGoalText = (props: goalProps) => {
+const formatGoalText = (props: goalProps, suffix = "por dia") => {
   const { goalType, goalDetails } = props
 
   if (goalDetails) {
@@ -89,7 +89,7 @@ const formatGoalText = (props: goalProps) => {
     if (goalType === "BY_UNITS") {
       return `${count} ${translateGoalText(
         pluralizeIfNeeded(String(type), Number(count)),
-      ).toLowerCase()} por dia`
+      ).toLowerCase()} ${suffix}`
     }
     if (goalType === "BY_TIME") {
       let timeString = ""
@@ -103,7 +103,7 @@ const formatGoalText = (props: goalProps) => {
       if (Number(seconds) > 0) {
         timeString += `${seconds}s `
       }
-      return timeString.trim() + " por dia"
+      return timeString.trim() + ` ${suffix}`
     }
   }
 }
