@@ -15,12 +15,12 @@ import { formatGoalText } from "@/utils/habitManagerHelpers"
 interface FormValues {
   period: HabitsType["period"]
   goal: HabitsType["goal"]
+  color: HabitsType["color"]
 }
 
 export default function HabitPeriodSelector() {
-  const { colorHabit } = useHabitManagerContext()
-  const selectedColor = getColorHexByName(colorHabit)
   const { values, setFieldValue } = useFormikContext<FormValues>()
+  const selectedColor = getColorHexByName(values.color)
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriodType[]>(values.period || [])
   const { MORNING, AFTERNOON, NIGHT, ANYTIME } = APP_CONSTANTS.HABIT.PERIOD
 
@@ -68,7 +68,7 @@ export default function HabitPeriodSelector() {
       <View style={styles.row}>
         <Chip
           style={styles.chip}
-          color={selectedColor}
+          activeColor={selectedColor}
           selected={selectedPeriod.includes(MORNING)}
           onPress={() => handleSelect(MORNING)}
         >
@@ -76,7 +76,7 @@ export default function HabitPeriodSelector() {
         </Chip>
         <Chip
           style={styles.chip}
-          color={selectedColor}
+          activeColor={selectedColor}
           onPress={() => handleSelect(AFTERNOON)}
           selected={selectedPeriod.includes(AFTERNOON)}
         >
@@ -84,7 +84,7 @@ export default function HabitPeriodSelector() {
         </Chip>
         <Chip
           style={styles.chip}
-          color={selectedColor}
+          activeColor={selectedColor}
           onPress={() => handleSelect(NIGHT)}
           selected={selectedPeriod.includes(NIGHT)}
         >
@@ -95,7 +95,7 @@ export default function HabitPeriodSelector() {
       <View style={styles.row}>
         <Chip
           style={styles.chipFull}
-          color={selectedColor}
+          activeColor={selectedColor}
           onPress={() => handleSelect(ANYTIME)}
           selected={selectedPeriod.includes(ANYTIME)}
         >

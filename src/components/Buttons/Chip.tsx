@@ -1,16 +1,14 @@
-import { View, Text, StyleSheet, ViewProps, Pressable, Alert } from "react-native"
+import { StyleSheet, ViewProps, Pressable } from "react-native"
 import { ThemedIcons, ThemedText, ThemedView, IconsProps } from "@/components/Utils/Themed"
 import { getColorContrastColorByHex, theme } from "@/Theme"
 import CloseButton from "./CloseButton"
-import { useEffect, useRef } from "react"
-import Animated, {
+import { useEffect } from "react"
+import {
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from "react-native-reanimated"
-import { TapGestureHandler } from "react-native-gesture-handler"
 
 interface ChipProps {
   children: React.ReactNode
@@ -25,6 +23,7 @@ interface ChipProps {
   ellipsizeMode?: "tail" | "middle" | "head" | "clip"
   icon?: IconsProps["name"]
   color?: string
+  activeColor?: string
 }
 const Chip = (props: ChipProps) => {
   const {
@@ -38,6 +37,7 @@ const Chip = (props: ChipProps) => {
     icon,
     onClose,
     color = "rgba(0,0,0,0.1)",
+    activeColor = "rgba(0,0,0,0.1)",
   } = props
 
   const scale = useSharedValue(1)
@@ -48,16 +48,13 @@ const Chip = (props: ChipProps) => {
     animatedValue.value = withTiming(selected ? 1 : 0, { duration: animationDuration })
   }, [selected])
 
-  const animatedStyle = useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(
-      animatedValue.value,
-      [0, 1],
-      ["rgba(0,0,0,0.1)", color],
-    )
+  const animatedBackground = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(animatedValue.value, [0, 1], [color, activeColor])
     return {
       backgroundColor,
     }
   })
+
   const scaleStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
@@ -73,10 +70,20 @@ const Chip = (props: ChipProps) => {
   }
 
   const selectedTextColor = {
-    color: getColorContrastColorByHex(String(color)) || theme.colors.white.base,
+    color: getColorContrastColorByHex(String(activeColor)) || theme.colors.white.base,
   }
+
   return (
-    <ThemedView style={[styles.container, style, animatedStyle, onPress && scaleStyle]} animated>
+    <ThemedView
+      style={[
+        styles.container,
+        style,
+        onPress && scaleStyle,
+        selected && { backgroundColor: activeColor },
+        animatedBackground,
+      ]}
+      animated
+    >
       <Pressable
         onPress={onPress}
         onLongPress={onLongPress}
