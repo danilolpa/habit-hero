@@ -4,18 +4,13 @@ import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
 import * as Haptics from "expo-haptics"
 import { MaterialIcons } from "@expo/vector-icons"
-import {
-  ThemedText,
-  ThemedView,
-  ThemedSegmentedControl,
-  ThemedMaterialIcons,
-} from "@/components/Utils/Themed"
+import { ThemedText, ThemedView, ThemedSegmentedControl } from "@/components/Utils/Themed"
 import { Input } from "@/components/Input"
 import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
 import ColorPicker from "@/components/ColorPicker"
 import { useHabitManagerContext, HabitsType } from "./habitManagerContext"
 import ContentContainer from "@/components/ContentContainer"
-import { RoundedButtons } from "@/components/Buttons/RoundedButtons"
+import { HabitFrequencyChip } from "@/components/HabitManager/HabitFrequencyChip"
 import {
   HABIT_DAYS,
   HABIT_WEEK_FREQUENCY_NUMBERS,
@@ -55,9 +50,9 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
   const { visibilityControl, toggleVisibility, setVisibility, getVisibility } =
     useVisibilityControl({
-      frequency: true,
+      frequency: false,
       goal: false,
-      emoteModal: true,
+      emoteModal: false,
       calendarViewFrequency: false,
       calendarViewEndDate: false,
       goalSelectPicker: false,
@@ -266,17 +261,16 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                           }}
                         />
                         {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY && (
-                          <RoundedButtons
+                          <HabitFrequencyChip
                             data={HABIT_DAYS}
                             initialSelected={formikProps.values.frequencySchedule.daily}
                             selectedColor={selectedColor}
                             multiSelection
                             frequency={APP_CONSTANTS.HABIT.FREQUENCY.DAILY}
-                            textColor={selectedColor}
                           />
                         )}
                         {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY && (
-                          <RoundedButtons
+                          <HabitFrequencyChip
                             data={HABIT_WEEK_FREQUENCY_NUMBERS}
                             initialSelected={formikProps.values.frequencySchedule.weekly}
                             selectedColor={selectedColor}
@@ -284,13 +278,12 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                           />
                         )}
                         {formikProps.values.frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY && (
-                          <RoundedButtons
+                          <HabitFrequencyChip
                             data={DAYS_LIST_OF_MONTH}
                             initialSelected={formikProps.values.frequencySchedule.monthly}
                             selectedColor={selectedColor}
                             multiline
                             frequency={APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY}
-                            isCalendar
                             multiSelection
                           />
                         )}

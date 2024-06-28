@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     height: 42,
     width: 42,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    // backgroundColor: "rgba(255, 255, 255, 0.3)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

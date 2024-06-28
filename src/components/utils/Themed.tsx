@@ -29,7 +29,7 @@ export type TextProps = ThemeProps & {
   colorText?: string
 } & Text["props"]
 
-export type MaterialIconsProps = ThemeProps & {
+export type IconsProps = ThemeProps & {
   name?: keyof typeof MaterialIcons.glyphMap
   size?: TextStyle["fontSize"]
 } & Text["props"]
@@ -117,7 +117,17 @@ export function ThemedFontAwesome(props: ThemedFontAwesomeProps) {
 
   return <FontAwesome6 style={[{ color }, style]} {...otherProps} />
 }
-export function ThemedMaterialIcons(props: MaterialIconsProps) {
+export function ThemedMaterialIcons(props: IconsProps) {
+  const { style, lightColor, darkColor, animated, ...otherProps } = props
+  const color = useThemeColor({
+    light: lightColor || "transparent",
+    dark: darkColor || "transparent",
+  })
+
+  return <MaterialIcons style={[{ color }, style]} {...otherProps} />
+}
+
+export function ThemedIcons(props: IconsProps) {
   const { style, lightColor, darkColor, animated, ...otherProps } = props
   const color = useThemeColor({
     light: lightColor || "transparent",

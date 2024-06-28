@@ -1,7 +1,6 @@
 import { theme } from "@/Theme"
 import { View, Text, StyleSheet, Pressable, ViewStyle, Switch } from "react-native"
-import MaterialIcons from "@expo/vector-icons/build/MaterialIcons"
-import { ThemedMaterialIcons, ThemedText, ThemedView } from "./Utils/Themed"
+import { ThemedIcons, ThemedText, ThemedView, IconsProps } from "./Utils/Themed"
 import RotatingAnimation from "@/components/RotatingAnimation"
 
 interface SwitchOptionsProps {
@@ -11,7 +10,7 @@ interface SwitchOptionsProps {
 }
 interface ContentFlexRowProps {
   text: string
-  iconIndicator?: keyof typeof MaterialIcons.glyphMap
+  iconIndicator?: IconsProps["name"]
   iconRotated?: boolean
   iconSize?: number
   switchOptions?: SwitchOptionsProps
@@ -43,7 +42,7 @@ const ContentFlexRow: React.FC<ContentFlexRowProps> = (props: ContentFlexRowProp
   const renderIcon = () => {
     return (
       <RotatingAnimation isRotated={iconRotated} style={{ width: 30, alignItems: "center" }}>
-        <ThemedMaterialIcons
+        <ThemedIcons
           name={iconIndicator}
           size={iconSize}
           lightColor={theme.colors.black.base}

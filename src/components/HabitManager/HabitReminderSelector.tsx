@@ -10,6 +10,6 @@ export default function HabitReminderSelector() {
 
 export const styles = StyleSheet.create({
   container: {
-    height: "auto",
+    height: 100,
   },
 })

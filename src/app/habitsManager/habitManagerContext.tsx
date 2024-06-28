@@ -1,7 +1,7 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
 import MaterialIcons from "@expo/vector-icons/build/MaterialIcons"
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useState } from "react"
 import { HabitColorNameType } from "@/Theme"
 
 type habitManagerContextType = {
@@ -42,6 +42,7 @@ export interface goalProps {
   goalType?: "BY_TIME" | "BY_UNITS"
   goalDetails?: GoalDetails
 }
+export type TimePeriodType = "MORNING" | "AFTERNOON" | "NIGHT" | "ANYTIME"
 
 export interface HabitsType {
   name: string
@@ -57,7 +58,7 @@ export interface HabitsType {
   color: HabitColorNameType
   status: "TO_DO" | "IGNORED" | "COMPLETED"
   reminderTimes?: string[]
-  period?: "MORNING" | "AFTERNOON" | "EVENING" | "ANYTIME"
+  period?: TimePeriodType[]
   createdBy: string
   createdDate: string
   concludedDate?: string
@@ -97,9 +98,9 @@ const initialHabitData: HabitsType = {
   endDate: "",
   completed: false,
   notes: "",
-  period: "ANYTIME",
+  period: ["MORNING", "AFTERNOON", "NIGHT"],
   reminderTimes: [], //["08:00", "12:00", "18:00"],
-  color: "purple",
+  color: "orange" as HabitColorNameType,
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
 }

@@ -82,6 +82,12 @@ const APP_CONSTANTS = {
         type: "TIME", // "TIME" | "CUP" | "PAGE" | "KILOMETER"
       },
     },
+    PERIOD: {
+      MORNING: "MORNING" as const,
+      AFTERNOON: "AFTERNOON" as const,
+      NIGHT: "NIGHT" as const,
+      ANYTIME: "ANYTIME" as const,
+    },
     HABIT_ICONS: [
       { key: "1", name: "check-circle", description: "To mark completed tasks" },
       { key: "2", name: "alarm", description: "To set habit reminders" },

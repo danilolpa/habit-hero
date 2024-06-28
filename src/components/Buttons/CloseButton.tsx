@@ -5,7 +5,7 @@ import { theme } from "@/Theme"
 interface closeButtonProps {
   onPress: () => void
   color?: string
-  size?: number
+  size?: "small" | "medium" | "large"
   style?: ViewProps["style"]
   transparent?: boolean
 }
@@ -14,19 +14,27 @@ export default function CloseButton(props: closeButtonProps) {
   const {
     onPress,
     color = theme.colors.primary.base,
-    size = 24,
+    size = "medium",
     style,
     transparent = false,
   } = props
+
+  const iconSize = size === "small" ? 15 : size === "large" ? 30 : 24
+
   return (
     <ThemedView>
       <TouchableOpacity
         onPress={onPress}
-        style={[style, styles.container, transparent && { backgroundColor: "transparent" }]}
+        style={[
+          style,
+          styles.container,
+          transparent && { backgroundColor: "transparent" },
+          size === "small" && styles.small,
+        ]}
       >
         <ThemedFontAwesome
           name="xmark"
-          size={size}
+          size={iconSize}
           darkColor={theme.colors.white.base}
           lightColor={theme.colors.black.base}
         />
@@ -44,5 +52,9 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.4)",
+  },
+  small: {
+    width: 25,
+    height: 25,
   },
 })

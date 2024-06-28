@@ -1,42 +1,39 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import React, { useEffect, useState } from "react"
-import { getColorContrastColorByHex, getColorHexByName, theme } from "@/Theme"
+import { getColorContrastColorByHex, theme } from "@/Theme"
 import { getFormattedDate } from "@/utils/dateHelpers"
 import * as Haptics from "expo-haptics"
 
 import { useFormikContext } from "formik"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
 type contentData = {
   cod: number
   title: string
 }
 
-type RoundedButtonsProps = {
+type HabitFrequencyChipProps = {
   data: contentData[]
   initialSelected?: number[] | number
   selectedColor?: string
   multiSelection?: boolean
   multiline?: boolean
-  textColor?: string
   frequency: string
-  isCalendar?: boolean
 }
 
 interface FormValues {
   frequencySchedule: []
 }
 
-const RoundedButtons = ({
+const HabitFrequencyChip = ({
   data,
   initialSelected = 0,
   selectedColor = theme.colors.primary.base,
-  textColor = theme.colors.white.base,
   multiSelection = false,
   multiline = false,
   frequency,
-  isCalendar = false,
-}: RoundedButtonsProps) => {
+}: HabitFrequencyChipProps) => {
   const [selected, setSelected] = useState<number | number[]>(initialSelected)
   const [contrastColor, setContrastColor] = useState(getColorContrastColorByHex(selectedColor))
   const { setFieldValue } = useFormikContext<FormValues>()
@@ -80,11 +77,11 @@ const RoundedButtons = ({
   }, [selectedColor])
 
   useEffect(() => {
-    if (frequency === "weekly") {
+    if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.WEEKLY) {
       setFieldValue("frequencySchedule.weekly", selected)
-    } else if (frequency === "monthly") {
+    } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY) {
       setFieldValue("frequencySchedule.monthly", selected)
-    } else if (frequency === "daily") {
+    } else if (frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY) {
       setFieldValue("frequencySchedule.daily", selected)
     }
   }, [selected])
@@ -160,4 +157,4 @@ export const styles = StyleSheet.create({
   },
 })
 
-export { RoundedButtons }
+export { HabitFrequencyChip }

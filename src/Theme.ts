@@ -81,6 +81,9 @@ const theme: Theme = {
     green: {
       base: "#97BE5A",
     },
+    yellow: {
+      base: "#FFB74D",
+    },
   },
   spaces: {
     defaultSpace: 16,
