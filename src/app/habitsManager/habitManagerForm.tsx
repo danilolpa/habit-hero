@@ -31,7 +31,7 @@ import {
 } from "@/utils/habitManagerHelpers"
 import AccordionContainer from "@/components/AccordionContainer"
 import useVisibilityControl from "@/utils/useVisibilityControl"
-import SelectWheelGoal from "@/components/Habits/SelectWheelGoal"
+import HabitGoalPicker from "@/components/HabitManager/HabitGoalPicker"
 import ContentFlexRow from "@/components/ContentFlexRow"
 import HabitPeriodSelector from "@/components/HabitManager/HabitPeriodSelector"
 import HabitReminderSelector from "@/components/HabitManager/HabitReminderSelector"
@@ -382,7 +382,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                         onPress={() => toggleVisibility("goalSelectPicker")}
                       />
 
-                      <SelectWheelGoal
+                      <HabitGoalPicker
                         visible={getVisibility("goalSelectPicker")}
                         onClose={() => setVisibility("goalSelectPicker", false)}
                         type={String(formikProps.values.goal.goalType)}
@@ -415,7 +415,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 </ContentContainer>
               </ContentContainer>
               <JsonViewer jsonString={formikProps.values}></JsonViewer>
-              <JsonViewer jsonString={visibilityControl}></JsonViewer>
+              {/* <JsonViewer jsonString={visibilityControl}></JsonViewer> */}
               {/* <Button
                 onPress={() => formikProps.submitForm()}
                 title={loading ? "Saving..." : "Save"}

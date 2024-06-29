@@ -27,6 +27,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.daniloalmeida.habithero"/>
         <data android:scheme="exp+habit-hero"/>
+        <data android:scheme="habithero"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

@@ -1,4 +1,4 @@
-rootProject.name = 'Habit Hero Versão Alpha'
+rootProject.name = 'Habit Hero Alpha'
 
 dependencyResolutionManagement {
   versionCatalogs {

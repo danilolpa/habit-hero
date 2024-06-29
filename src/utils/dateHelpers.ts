@@ -54,6 +54,14 @@ function getNextHour(additionalHours: number = 1) {
   return getFormattedDate("HH:mm", nextHour)
 }
 
+const generateTimeRange = (start: number, end: number) => {
+  const result = []
+  for (let i = start; i <= end; i++) {
+    result.push(i)
+  }
+  return result
+}
+
 export {
   getFormattedDate,
   getDaysOfWeek,
@@ -61,4 +69,5 @@ export {
   isTodayDate,
   dateTextFormatter,
   getNextHour,
+  generateTimeRange,
 }

@@ -44,7 +44,6 @@ export default function IconsHabitModal(props: iconModalProps) {
   return (
     <ThemedView>
       <BottomDrawer
-        rightButton
         color={selectedColor}
         rightButtonOnPress={() => handleSave()}
         visible={isVisible}

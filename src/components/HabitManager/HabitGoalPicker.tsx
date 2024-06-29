@@ -17,7 +17,7 @@ interface dataProps {
   title?: string
   keyValue: string
 }
-interface SelectWheelGoalProps {
+interface HabitGoalPickerProps {
   selectionColor?: string
   type?: string
   title?: string
@@ -32,7 +32,7 @@ interface FormValues {
   }
 }
 
-const SelectWheelGoal: React.FC<SelectWheelGoalProps> = (props) => {
+const HabitGoalPicker: React.FC<HabitGoalPickerProps> = (props) => {
   const { selectionColor, title = "", visible, onClose, type } = props
   const data =
     type === "BY_UNITS"
@@ -122,7 +122,6 @@ const SelectWheelGoal: React.FC<SelectWheelGoalProps> = (props) => {
 
   return (
     <BottomDrawer
-      rightButton
       color={selectionColor}
       rightButtonOnPress={() => handleSave()}
       visible={visible}
@@ -169,4 +168,4 @@ export const styles = StyleSheet.create({
   },
 })
 
-export default SelectWheelGoal
+export default HabitGoalPicker

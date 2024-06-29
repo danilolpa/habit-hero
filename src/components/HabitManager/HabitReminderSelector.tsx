@@ -11,6 +11,7 @@ import ContentContainer from "@/components/ContentContainer"
 import { useEffect, useRef } from "react"
 import { getNextHour } from "@/utils/dateHelpers"
 import { FadeOut } from "react-native-reanimated"
+import HabitReminderPicker from "./HabitReminderPicker"
 
 interface FormValues {
   reminderTimes: HabitsType["reminderTimes"]
@@ -94,10 +95,10 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
     >
       <ContentContainer schemeColor="light">
         <View style={styles.container}>
+          <HabitReminderPicker />
           <View style={styles.timesContainer}>
             {reminderTimes && reminderTimes.map((time) => renderTime(time))}
           </View>
-          {/* <Button title="Adicionar novo horário" /> */}
         </View>
       </ContentContainer>
     </AccordionContainer>

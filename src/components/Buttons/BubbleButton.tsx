@@ -1,6 +1,7 @@
 import { theme } from "@/Theme"
 import React, { useRef } from "react"
 import { Animated, Pressable, StyleSheet, View, ViewProps, Text } from "react-native"
+import { ThemedText } from "../Utils/Themed"
 type BubbleButtonProps = {
   children: React.ReactNode
   backgroundColor?: string
@@ -40,7 +41,7 @@ const BubbleButton = (props: BubbleButtonProps) => {
         style={[styles.button, style, { backgroundColor, transform: [{ scale: scaleAnim }] }]}
       >
         <View style={styles.innerButton}>
-          <Text>{children}</Text>
+          <ThemedText>{children}</ThemedText>
         </View>
       </Animated.View>
     </Pressable>

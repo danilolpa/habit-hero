@@ -17,7 +17,6 @@ interface BottomDrawerProps {
   visible: boolean
   onClose: () => void
   children: React.ReactNode
-  rightButton?: boolean
   rightButtonOnPress?: () => void
   rightButtonText?: string
   color?: string
@@ -26,10 +25,9 @@ interface BottomDrawerProps {
 const BottomDrawer: React.FC<BottomDrawerProps> = ({
   visible,
   onClose,
+  rightButtonOnPress,
   children,
-  rightButton,
   rightButtonText = "Salvar",
-  rightButtonOnPress = () => {},
   color = theme.colors.primary.base,
 }) => {
   const translateY = useRef(new Animated.Value(0)).current
@@ -80,7 +78,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   if (!visible) return null
 
   const handleRightButtonPress = () => {
-    rightButtonOnPress()
+    rightButtonOnPress && rightButtonOnPress()
     handleClose()
   }
   const handleClose = () => {
@@ -111,7 +109,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
               <CloseButton onPress={handleClose} transparent />
               <TouchableOpacity style={[styles.indicator, { marginLeft: 65 }]} />
               <View style={{ width: 100, display: "flex", alignItems: "flex-end", marginRight: 6 }}>
-                {rightButton && (
+                {rightButtonOnPress && (
                   <Button
                     title={String(rightButtonText)}
                     onPress={handleRightButtonPress}
