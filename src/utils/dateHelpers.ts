@@ -1,5 +1,5 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { format, getTime, isToday, isTomorrow, isYesterday } from "date-fns"
+import { addHours, format, getTime, isToday, isTomorrow, isYesterday, startOfHour } from "date-fns"
 import { toZonedTime } from "date-fns-tz"
 import { ptBR } from "date-fns/locale"
 import { getCalendars } from "expo-localization"
@@ -49,4 +49,16 @@ function dateTextFormatter(date: string | Date = new Date()) {
   }
 }
 
-export { getFormattedDate, getDaysOfWeek, getTimestamp, isTodayDate, dateTextFormatter }
+function getNextHour(additionalHours: number = 1) {
+  const nextHour = addHours(startOfHour(new Date()), additionalHours)
+  return getFormattedDate("HH:mm", nextHour)
+}
+
+export {
+  getFormattedDate,
+  getDaysOfWeek,
+  getTimestamp,
+  isTodayDate,
+  dateTextFormatter,
+  getNextHour,
+}

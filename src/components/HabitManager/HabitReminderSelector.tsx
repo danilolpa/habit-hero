@@ -8,6 +8,9 @@ import { HabitsType } from "@/app/habitsManager/habitManagerContext"
 import Button from "@/components/Buttons/Buttons"
 import AccordionContainer from "@/components/AccordionContainer"
 import ContentContainer from "@/components/ContentContainer"
+import { useEffect, useRef } from "react"
+import { getNextHour } from "@/utils/dateHelpers"
+import { FadeOut } from "react-native-reanimated"
 
 interface FormValues {
   reminderTimes: HabitsType["reminderTimes"]
@@ -19,8 +22,11 @@ interface HabitReminderSelectorProps {
 }
 export default function HabitReminderSelector(props: HabitReminderSelectorProps) {
   const { values, setFieldValue } = useFormikContext<FormValues>()
-  const { reminderTimes, color, reminder } = values
+  const { reminderTimes, reminder } = values
   const { selectedColor } = props
+
+  const prevReminderRef = useRef(reminder)
+  const prevReminderTimesRef = useRef(reminderTimes)
 
   const handleRemoveTime = (time: string) => {
     if (reminderTimes) {
@@ -30,19 +36,39 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
       )
     }
   }
+  useEffect(() => {
+    const prevReminder = prevReminderRef.current
+    const prevReminderTimes = prevReminderTimesRef.current
+
+    if (
+      reminderTimes &&
+      reminderTimes.length === 0 &&
+      reminder &&
+      prevReminderTimes &&
+      prevReminderTimes?.length > 0
+    ) {
+      setFieldValue("reminder", false)
+      return
+    }
+    if (reminderTimes && reminderTimes.length === 0 && !prevReminder && reminder) {
+      setFieldValue("reminderTimes", [getNextHour(1)])
+      return
+    }
+    prevReminderRef.current = reminder
+    prevReminderTimesRef.current = reminderTimes
+  }, [reminderTimes, reminder])
 
   const renderTime = (time: string) => {
     return (
       <Chip
         key={time}
         icon="alarm-on"
-        iconSize={26}
-        style={{ width: "100%", height: 55 }}
+        iconSize={28}
+        style={{ width: "100%", height: 55, borderRadius: 10 }}
         fontSize={20}
         textColor={getColorHexByName(values.color) || theme.colors.white.base}
         onPress={() => console.log("Clicked")}
         onClose={() => handleRemoveTime(time)}
-        iconColor={selectedColor}
         confirmClose
       >
         {time}

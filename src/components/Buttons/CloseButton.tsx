@@ -16,6 +16,7 @@ interface closeButtonProps {
   color?: string
   size?: "small" | "medium" | "large"
   style?: ViewProps["style"]
+  styleContainer?: ViewProps["style"]
   transparent?: boolean
   confirmClose?: boolean
 }
@@ -26,6 +27,7 @@ export default function CloseButton(props: closeButtonProps) {
     color = theme.colors.primary.base,
     size = "medium",
     style,
+    styleContainer,
     transparent = false,
     confirmClose = false,
   } = props
@@ -39,20 +41,19 @@ export default function CloseButton(props: closeButtonProps) {
   }
   const HandleAskConfirm = (status: boolean = true) => {
     setAskConfirm(status)
-    console.log("Ask Confirm")
   }
 
   return (
     <View>
       <TouchableOpacity
         onPress={() => (confirmClose ? HandleAskConfirm() : onPress())}
-        style={[styles.container, size === "small" && styles.small, style]}
+        style={[styles.container, size === "small" && styles.small, styleContainer]}
       >
         {!askConfirm && (
           <Animated.View
             entering={LightSpeedInRight}
             exiting={LightSpeedOutRight}
-            style={[styles.closeButton, transparent && { backgroundColor: "transparent" }]}
+            style={[styles.closeButton, transparent && { backgroundColor: "transparent" }, style]}
           >
             <ThemedFontAwesome
               name="xmark"
@@ -115,8 +116,8 @@ export const styles = StyleSheet.create({
     position: "absolute",
     width: 210,
     height: 60,
-    right: 0,
-    top: 0,
+    right: -20,
+    top: -10,
     color: theme.colors.white.base,
     display: "flex",
     justifyContent: "center",

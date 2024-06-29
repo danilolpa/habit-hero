@@ -12,7 +12,9 @@ import {
 import { getColorContrastColorByHex, theme } from "@/Theme"
 import CloseButton from "./CloseButton"
 import { useEffect } from "react"
-import {
+import Animated, {
+  LightSpeedInLeft,
+  LightSpeedOutLeft,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
@@ -37,6 +39,8 @@ type ChipProps = ViewProps & {
   activeColor?: string
   textColor?: string
   confirmClose?: boolean
+  exiting?: any
+  animated?: boolean
 }
 const Chip = (props: ChipProps) => {
   const {
@@ -54,6 +58,7 @@ const Chip = (props: ChipProps) => {
     color = "rgba(0,0,0,0.1)",
     activeColor = "rgba(0,0,0,0.8)",
     confirmClose = false,
+    animated,
     ...otherProps
   } = props
 
@@ -112,11 +117,13 @@ const Chip = (props: ChipProps) => {
         style={styles.pressable}
       >
         {icon && (
-          <View
+          <Animated.View
+            entering={LightSpeedInLeft}
+            exiting={LightSpeedOutLeft}
             style={[
               styles.icon,
               Boolean(iconColor) && {
-                backgroundColor: colord(iconColor).alpha(0.1).toHex(),
+                backgroundColor: colord(iconColor).toHex(),
               },
             ]}
           >
@@ -126,7 +133,7 @@ const Chip = (props: ChipProps) => {
               darkColor={selectedTextColor}
               lightColor={selectedTextColor}
             />
-          </View>
+          </Animated.View>
         )}
         <ThemedText
           fontSize={fontSize}
@@ -136,7 +143,7 @@ const Chip = (props: ChipProps) => {
         >
           {children}
         </ThemedText>
-        {onClose && <CloseButton onPress={onClose} style={styles.closeButton} confirmClose />}
+        {onClose && <CloseButton onPress={onClose} style={[styles.closeButton]} confirmClose />}
       </Pressable>
     </ThemedView>
   )
@@ -172,6 +179,9 @@ export const styles = StyleSheet.create({
     width: 60,
     marginRight: -15,
     bottom: 0,
+    borderRadius: 0,
+    borderBottomStartRadius: 100,
+    borderTopStartRadius: 100,
   },
   icon: {
     width: 60,
@@ -180,7 +190,8 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: -15,
-    borderRadius: 100,
+    borderBottomEndRadius: 100,
+    borderTopEndRadius: 100,
   },
 })
 
