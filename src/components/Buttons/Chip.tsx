@@ -1,5 +1,14 @@
-import { StyleSheet, ViewProps, Pressable } from "react-native"
-import { ThemedIcons, ThemedText, ThemedView, IconsProps } from "@/components/Utils/Themed"
+import { StyleSheet, Pressable, View } from "react-native"
+import { colord } from "colord"
+
+import {
+  ThemedIcons,
+  ThemedText,
+  ThemedView,
+  IconsProps,
+  useThemeColor,
+  ViewProps,
+} from "@/components/Utils/Themed"
 import { getColorContrastColorByHex, theme } from "@/Theme"
 import CloseButton from "./CloseButton"
 import { useEffect } from "react"
@@ -10,7 +19,7 @@ import {
   withTiming,
 } from "react-native-reanimated"
 
-interface ChipProps {
+type ChipProps = ViewProps & {
   children: React.ReactNode
   fontSize?: number
   selected?: boolean
@@ -22,8 +31,12 @@ interface ChipProps {
   selectedColor?: string
   ellipsizeMode?: "tail" | "middle" | "head" | "clip"
   icon?: IconsProps["name"]
+  iconSize?: number
+  iconColor?: string
   color?: string
   activeColor?: string
+  textColor?: string
+  confirmClose?: boolean
 }
 const Chip = (props: ChipProps) => {
   const {
@@ -32,12 +45,16 @@ const Chip = (props: ChipProps) => {
     style,
     onPress,
     onLongPress,
+    onClose,
     ellipsizeMode = "tail",
     fontSize = 20,
     icon,
-    onClose,
+    iconSize = 20,
+    iconColor = "rgba(0,0,0,0.2)",
     color = "rgba(0,0,0,0.1)",
-    activeColor = "rgba(0,0,0,0.1)",
+    activeColor = "rgba(0,0,0,0.8)",
+    confirmClose = false,
+    ...otherProps
   } = props
 
   const scale = useSharedValue(1)
@@ -69,10 +86,12 @@ const Chip = (props: ChipProps) => {
     scale.value = withTiming(1, { duration: animationDuration / 2 })
   }
 
-  const selectedTextColor = {
-    color: getColorContrastColorByHex(String(activeColor)) || theme.colors.white.base,
-  }
-
+  const selectedTextColor =
+    getColorContrastColorByHex(String(activeColor)) ||
+    useThemeColor({
+      light: theme.colors.black.base,
+      dark: theme.colors.white.base,
+    })
   return (
     <ThemedView
       style={[
@@ -83,6 +102,7 @@ const Chip = (props: ChipProps) => {
         animatedBackground,
       ]}
       animated
+      {...otherProps}
     >
       <Pressable
         onPress={onPress}
@@ -91,16 +111,32 @@ const Chip = (props: ChipProps) => {
         onPressOut={onPressOut}
         style={styles.pressable}
       >
-        {icon && <ThemedIcons name={icon} size={18} darkColor="red" />}
+        {icon && (
+          <View
+            style={[
+              styles.icon,
+              Boolean(iconColor) && {
+                backgroundColor: colord(iconColor).alpha(0.1).toHex(),
+              },
+            ]}
+          >
+            <ThemedIcons
+              name={icon}
+              size={Number(iconSize)}
+              darkColor={selectedTextColor}
+              lightColor={selectedTextColor}
+            />
+          </View>
+        )}
         <ThemedText
           fontSize={fontSize}
-          style={[styles.textContainer, selected && selectedTextColor]}
+          style={[styles.textContainer, selected && { color: selectedTextColor }]}
           ellipsizeMode={ellipsizeMode}
           numberOfLines={1}
         >
           {children}
         </ThemedText>
-        {onClose && <CloseButton onPress={onClose} size="small" />}
+        {onClose && <CloseButton onPress={onClose} style={styles.closeButton} confirmClose />}
       </Pressable>
     </ThemedView>
   )
@@ -113,6 +149,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     minWidth: 80,
     backgroundColor: "rgba(0,0,0,0.1)",
+    overflow: "hidden",
   },
   pressable: {
     height: "100%",
@@ -129,6 +166,21 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     flexGrow: 1,
     marginHorizontal: 10,
+  },
+  closeButton: {
+    height: 60,
+    width: 60,
+    marginRight: -15,
+    bottom: 0,
+  },
+  icon: {
+    width: 60,
+    height: 60,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: -15,
+    borderRadius: 100,
   },
 })
 

@@ -56,8 +56,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
       calendarViewFrequency: false,
       calendarViewEndDate: false,
       goalSelectPicker: false,
-      periodView: true,
-      reminderView: true,
+      periodView: false,
     })
 
   useImperativeHandle(ref, () => ({
@@ -411,24 +410,9 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   </ContentContainer>
                 </AccordionContainer>
 
-                <AccordionContainer
-                  isVisible={getVisibility("reminderView")}
-                  header={
-                    <ContentFlexRow
-                      text="Lembrar-me no horário"
-                      switchOptions={{
-                        selectedColor: selectedColor || theme.colors.black.base,
-                        value: getVisibility("reminderView"),
-                        onValueChange: () => toggleVisibility("reminderView"),
-                      }}
-                      iconRotated={getVisibility("reminderView")}
-                    />
-                  }
-                >
-                  <ContentContainer schemeColor="light" withMargin>
-                    <HabitReminderSelector />
-                  </ContentContainer>
-                </AccordionContainer>
+                <ContentContainer>
+                  <HabitReminderSelector selectedColor={selectedColor} />
+                </ContentContainer>
               </ContentContainer>
               <JsonViewer jsonString={formikProps.values}></JsonViewer>
               <JsonViewer jsonString={visibilityControl}></JsonViewer>

@@ -79,10 +79,13 @@ const theme: Theme = {
       darkest: "#828282",
     },
     green: {
-      base: "#97BE5A",
+      base: "#379777",
     },
     yellow: {
       base: "#FFB74D",
+    },
+    red: {
+      base: "#DD5746",
     },
   },
   spaces: {

@@ -14,7 +14,7 @@ import { useColorScheme } from "../useColorScheme"
 import { theme } from "@/Theme"
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
 
-type ThemeProps = {
+export type ThemeProps = {
   lightColor?: string
   darkColor?: string
   animated?: boolean
@@ -32,6 +32,7 @@ export type TextProps = ThemeProps & {
 export type IconsProps = ThemeProps & {
   name?: keyof typeof MaterialIcons.glyphMap
   size?: TextStyle["fontSize"]
+  color?: string
 } & Text["props"]
 
 export type ThemedFontAwesomeProps = ThemeProps & {
@@ -128,13 +129,13 @@ export function ThemedMaterialIcons(props: IconsProps) {
 }
 
 export function ThemedIcons(props: IconsProps) {
-  const { style, lightColor, darkColor, animated, ...otherProps } = props
-  const color = useThemeColor({
+  const { style, lightColor, darkColor, animated, color, ...otherProps } = props
+  const iconColor = useThemeColor({
     light: lightColor || "transparent",
     dark: darkColor || "transparent",
   })
 
-  return <MaterialIcons style={[{ color }, style]} {...otherProps} />
+  return <MaterialIcons style={[{ color: color || iconColor }, style]} {...otherProps} />
 }
 
 export function ThemedSegmentedControl(props: ThemedSegmentedControlProps) {

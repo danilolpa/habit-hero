@@ -58,6 +58,7 @@ export interface HabitsType {
   color: HabitColorNameType
   status: "TO_DO" | "IGNORED" | "COMPLETED"
   reminderTimes?: string[]
+  reminder?: boolean
   period?: TimePeriodType[]
   createdBy: string
   createdDate: string
@@ -98,9 +99,10 @@ const initialHabitData: HabitsType = {
   endDate: "",
   completed: false,
   notes: "",
-  period: ["MORNING", "AFTERNOON", "NIGHT"],
-  reminderTimes: [], //["08:00", "12:00", "18:00"],
-  color: "teal" as HabitColorNameType,
+  period: ["ANYTIME"],
+  reminder: true,
+  reminderTimes: ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00"],
+  color: "red",
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
 }
