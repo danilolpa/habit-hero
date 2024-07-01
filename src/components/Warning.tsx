@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ViewStyle } from "react-native"
-import { ThemedIcons, ThemedText, ThemedView } from "@/components/Utils/Themed"
+import { ThemedIcon, ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { FadeIn } from "react-native-reanimated"
 
@@ -20,7 +20,7 @@ const Warning = (props: WarningProps) => {
   return (
     <ThemedView style={[styles.warnContainer, style]} entering={FadeIn} animated>
       <View style={styles.warnContentIcon}>
-        <ThemedIcons name="info" size={25} darkColor={theme.colors.black.base} />
+        <ThemedIcon name="info" size={25} darkColor={theme.colors.black.base} />
       </View>
       <View style={styles.warnContainerText}>
         <ThemedText style={[styles.warnText, styleText, center && styles.warnCenter]}>

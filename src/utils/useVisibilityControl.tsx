@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react"
 
 interface VisibilityControlState {
-  frequency: boolean
-  goal: boolean
-  emoteModal: boolean
-  calendarViewFrequency: boolean
-  calendarViewEndDate: boolean
-  goalSelectPicker: boolean
-  periodView: boolean
+  frequency?: boolean
+  goal?: boolean
+  emoteModal?: boolean
+  calendarViewFrequency?: boolean
+  calendarViewEndDate?: boolean
+  goalSelectPicker?: boolean
+  periodView?: boolean
 }
 
 const useVisibilityControl = (initialState: VisibilityControlState) => {

@@ -21,7 +21,7 @@ import JsonViewer from "@/components/Utils/JsonView"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { dateTextFormatter, getFormattedDate } from "@/utils/dateHelpers"
 import { Calendar } from "@/components/Calendar"
-import BubbleButton from "@/components/Buttons/BubbleButton"
+import { BubblePressable } from "@/components/Buttons/BubblePressable"
 import IconsHabitModal from "@/components/IconsHabitModal"
 import {
   getGoalIndexByValue,
@@ -48,16 +48,15 @@ interface HabitManagerFormProps {
 export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) => {
   const { submitForm, loading, error, habitData } = useHabitManagerContext()
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
-  const { visibilityControl, toggleVisibility, setVisibility, getVisibility } =
-    useVisibilityControl({
-      frequency: false,
-      goal: false,
-      emoteModal: false,
-      calendarViewFrequency: false,
-      calendarViewEndDate: false,
-      goalSelectPicker: false,
-      periodView: false,
-    })
+  const { toggleVisibility, setVisibility, getVisibility } = useVisibilityControl({
+    frequency: false,
+    goal: false,
+    emoteModal: false,
+    calendarViewFrequency: false,
+    calendarViewEndDate: false,
+    goalSelectPicker: false,
+    periodView: false,
+  })
 
   useImperativeHandle(ref, () => ({
     submitForm: () => {
@@ -125,6 +124,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
             <ThemedView style={styles.container}>
               {loading && <Text>Carregando...</Text>}
               {error && <Text>Erro: {error}</Text>}
+
               <View style={styles.containerFlexRow}>
                 <Input.Field
                   placeholder="Nome"
@@ -139,22 +139,24 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                   cursorColor={selectedColor}
                 />
 
-                <BubbleButton
-                  backgroundColor={selectedColor}
-                  style={{
-                    minHeight: 60,
-                    width: 60,
+                <BubblePressable.Button
+                  color={selectedColor}
+                  buttonStyle={{
+                    width: 65,
+                    height: 60,
                   }}
                   onPress={() => toggleVisibility("emoteModal")}
+                  radius={8}
                 >
                   <MaterialIcons
                     name={formikProps.values.icon}
                     size={30}
                     color={getColorContrastColorByHex(String(selectedColor))}
+                    style={{ textAlign: "center" }}
                   />
-                </BubbleButton>
+                </BubblePressable.Button>
                 <IconsHabitModal
-                  isVisible={getVisibility("emoteModal")}
+                  isVisible={getVisibility("emoteModal") || false}
                   onClose={() => setVisibility("emoteModal", false)}
                   selectedColor={String(selectedColor)}
                   habitIconActual={formikProps.values.icon}
@@ -189,17 +191,20 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 {!formikProps.values.repeat && (
                   <View>
                     <AccordionContainer
-                      isVisible={getVisibility("calendarViewFrequency")}
+                      isVisible={getVisibility("calendarViewFrequency") || false}
                       header={
                         <ContentFlexRow
                           text="Fazer uma vez"
                           customContent={
-                            <BubbleButton
-                              backgroundColor={selectedColor}
+                            <BubblePressable.Button
+                              color={selectedColor}
                               onPress={() => {
                                 toggleVisibility("calendarViewFrequency")
                                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                               }}
+                              textAlignment="center"
+                              buttonStyle={{ paddingHorizontal: 20 }}
+                              radius={10}
                             >
                               <ThemedText
                                 colorText={
@@ -208,7 +213,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                               >
                                 {dateTextFormatter(formikProps.values.singleDate?.dateString)}
                               </ThemedText>
-                            </BubbleButton>
+                            </BubblePressable.Button>
                           }
                         />
                       }
@@ -229,7 +234,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 {formikProps.values.repeat && (
                   <View>
                     <AccordionContainer
-                      isVisible={getVisibility("frequency")}
+                      isVisible={getVisibility("frequency") || false}
                       header={
                         <ContentFlexRow
                           text={formatFrequencyText(formikProps.values)}
@@ -303,18 +308,15 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                     {Boolean(formikProps.values.endDate) && (
                       <View>
                         <AccordionContainer
-                          isVisible={getVisibility("calendarViewEndDate")}
+                          isVisible={getVisibility("calendarViewEndDate") || false}
                           header={
                             <ContentFlexRow
                               text="Terminar no dia"
                               separatorPosition="top"
                               customContent={
-                                <BubbleButton
-                                  backgroundColor={selectedColor}
-                                  onPress={() => {
-                                    toggleVisibility("calendarViewEndDate")
-                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                                  }}
+                                <BubblePressable.Button
+                                  color={selectedColor}
+                                  onPress={() => toggleVisibility("calendarViewEndDate")}
                                 >
                                   <ThemedText
                                     colorText={
@@ -323,7 +325,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                                   >
                                     {dateTextFormatter(formikProps.values.endDate)}
                                   </ThemedText>
-                                </BubbleButton>
+                                </BubblePressable.Button>
                               }
                             />
                           }
@@ -383,7 +385,7 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                       />
 
                       <HabitGoalPicker
-                        visible={getVisibility("goalSelectPicker")}
+                        visible={getVisibility("goalSelectPicker") || false}
                         onClose={() => setVisibility("goalSelectPicker", false)}
                         type={String(formikProps.values.goal.goalType)}
                         selectionColor={selectedColor}
@@ -393,25 +395,9 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                 )}
               </ContentContainer>
               <ContentContainer>
-                <AccordionContainer
-                  isVisible={getVisibility("periodView")}
-                  header={
-                    <ContentFlexRow
-                      text="A qualquer hora do dia"
-                      iconIndicator="keyboard-arrow-down"
-                      onPress={() => toggleVisibility("periodView")}
-                      iconRotated={getVisibility("periodView")}
-                      separatorPosition="bottom"
-                    />
-                  }
-                >
-                  <ContentContainer schemeColor="light" onlyRadiusBottom withMargin>
-                    <HabitPeriodSelector />
-                  </ContentContainer>
-                </AccordionContainer>
-
+                <HabitPeriodSelector />
                 <ContentContainer>
-                  <HabitReminderSelector selectedColor={selectedColor} />
+                  <HabitReminderSelector />
                 </ContentContainer>
               </ContentContainer>
               <JsonViewer jsonString={formikProps.values}></JsonViewer>

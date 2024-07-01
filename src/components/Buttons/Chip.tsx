@@ -1,8 +1,10 @@
-import { StyleSheet, Pressable, View } from "react-native"
+import { Pressable, StyleSheet, View } from "react-native"
 import { colord } from "colord"
+import Animated, { LightSpeedInLeft, LightSpeedOutLeft } from "react-native-reanimated"
+import * as Haptics from "expo-haptics"
 
 import {
-  ThemedIcons,
+  ThemedIcon,
   ThemedText,
   ThemedView,
   IconsProps,
@@ -11,18 +13,9 @@ import {
 } from "@/components/Utils/Themed"
 import { getColorContrastColorByHex, theme } from "@/Theme"
 import CloseButton from "./CloseButton"
-import { useEffect } from "react"
-import Animated, {
-  LightSpeedInLeft,
-  LightSpeedOutLeft,
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated"
+import { BubblePressable } from "./BubblePressable"
 
 type ChipProps = ViewProps & {
-  children: React.ReactNode
   fontSize?: number
   selected?: boolean
   style?: ViewProps["style"]
@@ -30,7 +23,6 @@ type ChipProps = ViewProps & {
   onLongPress?: () => void
   onClose?: () => void
   type?: "flat" | "outline"
-  selectedColor?: string
   ellipsizeMode?: "tail" | "middle" | "head" | "clip"
   icon?: IconsProps["name"]
   iconSize?: number
@@ -41,16 +33,16 @@ type ChipProps = ViewProps & {
   confirmClose?: boolean
   exiting?: any
   animated?: boolean
+  text: string
+  haptics?: boolean
 }
 const Chip = (props: ChipProps) => {
   const {
     selected,
-    children,
     style,
     onPress,
     onLongPress,
     onClose,
-    ellipsizeMode = "tail",
     fontSize = 20,
     icon,
     iconSize = 20,
@@ -58,37 +50,14 @@ const Chip = (props: ChipProps) => {
     color = "rgba(0,0,0,0.1)",
     activeColor = "rgba(0,0,0,0.8)",
     confirmClose = false,
+    text,
     animated,
+    haptics = true,
     ...otherProps
   } = props
 
-  const scale = useSharedValue(1)
-  const animatedValue = useSharedValue(0)
-  const animationDuration = 200
-
-  useEffect(() => {
-    animatedValue.value = withTiming(selected ? 1 : 0, { duration: animationDuration })
-  }, [selected])
-
-  const animatedBackground = useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(animatedValue.value, [0, 1], [color, activeColor])
-    return {
-      backgroundColor,
-    }
-  })
-
-  const scaleStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-    }
-  })
-
-  const onPressIn = () => {
-    scale.value = withTiming(1.05, { duration: animationDuration / 2 })
-  }
-
-  const onPressOut = () => {
-    scale.value = withTiming(1, { duration: animationDuration / 2 })
+  if (!text) {
+    throw new Error("Chip must have a text property")
   }
 
   const selectedTextColor =
@@ -97,24 +66,15 @@ const Chip = (props: ChipProps) => {
       light: theme.colors.black.base,
       dark: theme.colors.white.base,
     })
+
+  const handlePress = () => {
+    onPress && onPress()
+  }
   return (
-    <ThemedView
-      style={[
-        styles.container,
-        style,
-        onPress && scaleStyle,
-        selected && { backgroundColor: activeColor },
-        animatedBackground,
-      ]}
-      animated
-      {...otherProps}
-    >
-      <Pressable
-        onPress={onPress}
-        onLongPress={onLongPress}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
-        style={styles.pressable}
+    <BubblePressable onPress={handlePress} onLongPress={onLongPress} style={styles.pressable}>
+      <ThemedView
+        style={[styles.container, style, selected && { backgroundColor: activeColor }]}
+        {...otherProps}
       >
         {icon && (
           <Animated.View
@@ -127,7 +87,7 @@ const Chip = (props: ChipProps) => {
               },
             ]}
           >
-            <ThemedIcons
+            <ThemedIcon
               name={icon}
               size={Number(iconSize)}
               darkColor={selectedTextColor}
@@ -135,17 +95,17 @@ const Chip = (props: ChipProps) => {
             />
           </Animated.View>
         )}
-        <ThemedText
-          fontSize={fontSize}
-          style={[styles.textContainer, selected && { color: selectedTextColor }]}
-          ellipsizeMode={ellipsizeMode}
-          numberOfLines={1}
-        >
-          {children}
-        </ThemedText>
+        <View style={styles.textContainer}>
+          <ThemedText
+            fontSize={fontSize}
+            style={[styles.text, selected && { color: selectedTextColor }]}
+          >
+            {text}
+          </ThemedText>
+        </View>
         {onClose && <CloseButton onPress={onClose} style={[styles.closeButton]} confirmClose />}
-      </Pressable>
-    </ThemedView>
+      </ThemedView>
+    </BubblePressable>
   )
 }
 
@@ -154,42 +114,40 @@ export const styles = StyleSheet.create({
     height: 45,
     borderRadius: 40,
     display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
+    flexDirection: "row",
     minWidth: 80,
     backgroundColor: "rgba(0,0,0,0.1)",
     overflow: "hidden",
   },
   pressable: {
-    height: "100%",
     flexGrow: 1,
-    display: "flex",
-    paddingHorizontal: 15,
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
     borderRadius: 40,
+    minHeight: 50,
   },
   textContainer: {
     display: "flex",
-    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
     flexGrow: 1,
-    marginHorizontal: 10,
   },
+  text: {},
   closeButton: {
-    height: 60,
     width: 60,
-    marginRight: -15,
-    bottom: 0,
+    height: 55,
+    top: 6,
+    right: 8,
     borderRadius: 0,
     borderBottomStartRadius: 100,
     borderTopStartRadius: 100,
   },
   icon: {
     width: 60,
-    height: 60,
+    height: "auto",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: -15,
     borderBottomEndRadius: 100,
     borderTopEndRadius: 100,
   },

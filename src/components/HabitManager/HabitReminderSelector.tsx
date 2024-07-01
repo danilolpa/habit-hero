@@ -8,10 +8,11 @@ import { HabitsType } from "@/app/habitsManager/habitManagerContext"
 import Button from "@/components/Buttons/Buttons"
 import AccordionContainer from "@/components/AccordionContainer"
 import ContentContainer from "@/components/ContentContainer"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getNextHour } from "@/utils/dateHelpers"
 import { FadeOut } from "react-native-reanimated"
 import HabitReminderPicker from "./HabitReminderPicker"
+import { BubblePressable } from "../Buttons/BubblePressable"
 
 interface FormValues {
   reminderTimes: HabitsType["reminderTimes"]
@@ -24,19 +25,15 @@ interface HabitReminderSelectorProps {
 export default function HabitReminderSelector(props: HabitReminderSelectorProps) {
   const { values, setFieldValue } = useFormikContext<FormValues>()
   const { reminderTimes, reminder } = values
-  const { selectedColor } = props
+  const [selectedColor, setSelectedColor] = useState(getColorHexByName(values.color))
+  const [editTime, setEditTime] = useState("")
 
   const prevReminderRef = useRef(reminder)
   const prevReminderTimesRef = useRef(reminderTimes)
+  useEffect(() => {
+    setSelectedColor(getColorHexByName(values.color))
+  }, [values.color])
 
-  const handleRemoveTime = (time: string) => {
-    if (reminderTimes) {
-      setFieldValue(
-        "reminderTimes",
-        reminderTimes.filter((t) => t !== time),
-      )
-    }
-  }
   useEffect(() => {
     const prevReminder = prevReminderRef.current
     const prevReminderTimes = prevReminderTimesRef.current
@@ -59,6 +56,19 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
     prevReminderTimesRef.current = reminderTimes
   }, [reminderTimes, reminder])
 
+  const handleRemoveTime = (time: string) => {
+    if (reminderTimes) {
+      setFieldValue(
+        "reminderTimes",
+        reminderTimes.filter((t) => t !== time),
+      )
+    }
+  }
+
+  const handleEdit = (time: string) => {
+    setEditTime(time)
+  }
+
   const renderTime = (time: string) => {
     return (
       <Chip
@@ -68,12 +78,11 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
         style={{ width: "100%", height: 55, borderRadius: 10 }}
         fontSize={20}
         textColor={getColorHexByName(values.color) || theme.colors.white.base}
-        onPress={() => console.log("Clicked")}
+        onPress={() => handleEdit(time)}
         onClose={() => handleRemoveTime(time)}
         confirmClose
-      >
-        {time}
-      </Chip>
+        text={time}
+      />
     )
   }
   return (
@@ -95,7 +104,11 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
     >
       <ContentContainer schemeColor="light">
         <View style={styles.container}>
-          <HabitReminderPicker />
+          <HabitReminderPicker
+            color={selectedColor}
+            edit={editTime}
+            onEdit={() => setEditTime("")}
+          />
           <View style={styles.timesContainer}>
             {reminderTimes && reminderTimes.map((time) => renderTime(time))}
           </View>
@@ -111,11 +124,10 @@ export const styles = StyleSheet.create({
   },
   timesContainer: {
     display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
     justifyContent: "space-between",
     gap: 8,
     paddingVertical: theme.spaces.defaultSpace,
     paddingHorizontal: theme.spaces.defaultSpace,
+    width: "100%",
   },
 })

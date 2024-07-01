@@ -18,4 +18,10 @@ const pluralizeIfNeeded = (string: string, quantity: number) => {
   return string
 }
 
-export { capitalizeFirstLetter, pluralizeIfNeeded }
+const enhanceArrayText = (texts: string[] = []) => {
+  const text =
+    texts.length > 1 ? `${texts.slice(0, -1).join(", ")} e ${texts[texts.length - 1]}.` : texts
+  return String(text)
+}
+
+export { capitalizeFirstLetter, pluralizeIfNeeded, enhanceArrayText }

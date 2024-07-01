@@ -1,21 +1,28 @@
-import { View, Text, StyleSheet, Alert } from "react-native"
-import BottomDrawer from "../BottomDrawer"
+import { View, StyleSheet, Alert, Text, Pressable } from "react-native"
 import { useEffect, useState } from "react"
-import Button from "@/components/Buttons/Buttons"
-import { Picker } from "@react-native-picker/picker"
-import { generateTimeRange, getFormattedDate, getNextHour } from "@/utils/dateHelpers"
-import { ThemedText, ThemedView } from "../Utils/Themed"
-import DateTimePicker from "@react-native-community/datetimepicker"
-import { theme } from "@/Theme"
 import { useFormikContext } from "formik"
+import { Picker } from "@react-native-picker/picker"
+
+import BottomDrawer from "@/components/BottomDrawer"
+import Warning from "@/components/Warning"
+import { generateTimeRange, getNextHour } from "@/utils/dateHelpers"
+import { ThemedText } from "@/components/Utils/Themed"
+import { theme } from "@/Theme"
 import { HabitsType } from "@/app/habitsManager/habitManagerContext"
-import Warning from "../Warning"
+import { BubblePressable } from "@/components/Buttons/BubblePressable"
+import ContentFlexRow from "../ContentFlexRow"
 
 interface FormValues {
   reminderTimes: HabitsType["reminderTimes"]
 }
 
-export default function HabitReminderPicker() {
+interface HabitReminderPickerProps {
+  color?: string
+  edit?: string
+  onEdit?: () => void
+}
+
+export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   const [visible, setVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState({ hour: getNextHour(1, "HH"), minute: "00" })
   const [warning, setWarning] = useState(false)
@@ -25,11 +32,26 @@ export default function HabitReminderPicker() {
   const hours = generateTimeRange("hours")
   const minutes = generateTimeRange("minutes")
   const { reminderTimes } = values
+  const { color, edit, onEdit } = props
 
   const validateTime = (time: string) => {
     const regex = /^([01]\d|2[0-3]):([0-5]\d)$/
     return regex.test(time)
   }
+
+  useEffect(() => {
+    setSelectedDateString(`${selectedDate.hour}:${selectedDate.minute}`)
+    handleWarning()
+  }, [selectedDate, selectedDateString])
+
+  useEffect(() => {
+    console.log("HandleEdit", edit)
+    if (edit) {
+      setVisible(true)
+      setSelectedDate({ hour: edit.split(":")[0], minute: edit.split(":")[1] })
+      onEdit
+    }
+  }, [edit])
 
   const handleSaveTime = () => {
     if (validateTime(selectedDateString)) {
@@ -58,10 +80,6 @@ export default function HabitReminderPicker() {
       setWarning(false)
     }
   }
-  useEffect(() => {
-    setSelectedDateString(`${selectedDate.hour}:${selectedDate.minute}`)
-    handleWarning()
-  }, [selectedDate, selectedDateString])
 
   const renderWarning = () => {
     return (
@@ -113,12 +131,29 @@ export default function HabitReminderPicker() {
   }
   return (
     <View style={styles.container}>
-      <Button title="Adicionar novo horário" onPress={() => setVisible(true)} />
+      {/* <View style={styles.buttonContainer}>
+        <BubblePressable.Button
+          title="Novo Horário"
+          onPress={() => setVisible(true)}
+          color={color}
+          rightIcon="arrow-forward-ios"
+        />
+      </View> */}
+
+      <ContentFlexRow
+        text="Adicionar Novo Horário"
+        iconIndicator="arrow-forward-ios"
+        iconSize={16}
+        onPress={() => setVisible(true)}
+        separatorPosition="bottom"
+        separatorColor={theme.colors.black.lightest}
+      />
       <BottomDrawer
         visible={visible}
         onClose={() => setVisible(false)}
         rightButtonOnPress={() => handleSaveTime()}
         rightButtonText="Salvar"
+        color={color}
       >
         {warning && renderWarning()}
         {visible && renderPicker()}
@@ -146,5 +181,9 @@ export const styles = StyleSheet.create({
   },
   warn: {
     marginTop: 20,
+  },
+  buttonContainer: {
+    margin: theme.spaces.defaultSpace,
+    marginBottom: 0,
   },
 })

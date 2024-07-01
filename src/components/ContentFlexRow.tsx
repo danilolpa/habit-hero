@@ -1,6 +1,7 @@
+import { StyleSheet, Pressable, ViewStyle, Switch } from "react-native"
+
 import { theme } from "@/Theme"
-import { View, Text, StyleSheet, Pressable, ViewStyle, Switch } from "react-native"
-import { ThemedIcons, ThemedText, ThemedView, IconsProps } from "./Utils/Themed"
+import { ThemedIcon, ThemedText, ThemedView, IconsProps } from "@/components/Utils/Themed"
 import RotatingAnimation from "@/components/RotatingAnimation"
 
 interface SwitchOptionsProps {
@@ -17,6 +18,7 @@ interface ContentFlexRowProps {
   onPress?: () => void
   style?: ViewStyle
   separatorPosition?: "top" | "bottom"
+  separatorColor?: string
   centerContent?: React.ReactNode
   customContent?: React.ReactNode
 }
@@ -29,6 +31,7 @@ const ContentFlexRow: React.FC<ContentFlexRowProps> = (props: ContentFlexRowProp
     switchOptions,
     onPress,
     separatorPosition,
+    separatorColor = theme.colors.black.lighter,
     style = {},
     iconRotated = false,
     centerContent = null,
@@ -42,7 +45,7 @@ const ContentFlexRow: React.FC<ContentFlexRowProps> = (props: ContentFlexRowProp
   const renderIcon = () => {
     return (
       <RotatingAnimation isRotated={iconRotated} style={{ width: 30, alignItems: "center" }}>
-        <ThemedIcons
+        <ThemedIcon
           name={iconIndicator}
           size={iconSize}
           lightColor={theme.colors.black.base}
@@ -77,6 +80,7 @@ const ContentFlexRow: React.FC<ContentFlexRowProps> = (props: ContentFlexRowProp
       onPress()
     }
   }
+
   return (
     <Pressable onPress={handlePress}>
       <ThemedView
@@ -84,6 +88,7 @@ const ContentFlexRow: React.FC<ContentFlexRowProps> = (props: ContentFlexRowProp
           styles.container,
           separatorPosition === "top" && styles.separatorTop,
           separatorPosition === "bottom" && styles.separatorBottom,
+          { borderColor: separatorColor },
           style,
         ]}
       >
@@ -118,11 +123,9 @@ export const styles = StyleSheet.create({
   },
   separatorTop: {
     borderTopWidth: 1,
-    borderTopColor: theme.colors.black.lighter,
   },
   separatorBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.black.lighter,
   },
   centerContent: {
     flexGrow: 2,

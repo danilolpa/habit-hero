@@ -133,7 +133,7 @@ export const styles = StyleSheet.create({
   roundedOptionsContainerMultiline: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    // justifyContent: "flex-space",
     width: "100%",
     gap: 5,
   },

@@ -25,7 +25,7 @@ export default function IconsHabitModal(props: iconModalProps) {
   }
   function handleSave() {
     setFieldValue("icon", selectedIcon)
-    onClose
+    onClose()
   }
 
   function getRandomColor() {

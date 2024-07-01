@@ -129,12 +129,14 @@ export function ThemedMaterialIcons(props: IconsProps) {
   return <MaterialIcons style={[{ color }, style]} {...otherProps} />
 }
 
-export function ThemedIcons(props: IconsProps) {
+export function ThemedIcon(props: IconsProps) {
   const { style, lightColor, darkColor, animated, color, ...otherProps } = props
-  const iconColor = useThemeColor({
-    light: lightColor || "transparent",
-    dark: darkColor || "transparent",
-  })
+  const iconColor =
+    color ||
+    useThemeColor({
+      light: lightColor || "transparent",
+      dark: darkColor || "transparent",
+    })
 
   return <MaterialIcons style={[{ color: color || iconColor }, style]} {...otherProps} />
 }

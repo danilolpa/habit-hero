@@ -95,6 +95,7 @@ const theme: Theme = {
     radius8: 8,
     radius16: 16,
     radius20: 20,
+    radius24: 24,
   },
   font: {
     sizes: {
@@ -197,7 +198,7 @@ const theme: Theme = {
 
 const getColorHexByName = (name: string) => {
   const color = theme.habitColors.find((c) => c.name === name)
-  return color?.hex
+  return color?.hex ? color?.hex : primaryColor
 }
 
 const getColorNameByHex = (hex: string) => {
@@ -206,7 +207,7 @@ const getColorNameByHex = (hex: string) => {
 }
 const getColorContrastColorByHex = (hex: string) => {
   const color = theme.habitColors.find((c) => c.hex === hex)
-  return color?.contrastColor
+  return color?.contrastColor || theme.colors.white.base
 }
 
 export { theme, getColorHexByName, getColorNameByHex, getColorContrastColorByHex }

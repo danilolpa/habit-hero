@@ -1,15 +1,9 @@
 import { View, Text, StyleSheet, ViewProps, Pressable, TouchableOpacity } from "react-native"
-import { ThemedFontAwesome, ThemedIcons, ThemedText, ThemedView } from "@/components/Utils/Themed"
+import { ThemedFontAwesome, ThemedIcon, ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
-import Animated, {
-  BounceInRight,
-  FadeInRight,
-  FadeOutRight,
-  LightSpeedInRight,
-  LightSpeedOutLeft,
-  LightSpeedOutRight,
-} from "react-native-reanimated"
+import Animated, { LightSpeedInRight, LightSpeedOutRight } from "react-native-reanimated"
 import { useState } from "react"
+import * as Haptics from "expo-haptics"
 
 interface closeButtonProps {
   onPress: () => void
@@ -40,6 +34,7 @@ export default function CloseButton(props: closeButtonProps) {
     }
   }
   const HandleAskConfirm = (status: boolean = true) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     setAskConfirm(status)
   }
 
@@ -70,14 +65,14 @@ export default function CloseButton(props: closeButtonProps) {
             style={styles.ActionButtonsContainer}
           >
             <Pressable onPress={handleConfirmed()} style={styles.ActionButton}>
-              <ThemedIcons name="check" size={23} color={theme.colors.white.base} />
+              <ThemedIcon name="check" size={23} color={theme.colors.white.base} />
               <ThemedText fontSize={20}>Confirmar</ThemedText>
             </Pressable>
             <Pressable
               onPress={() => HandleAskConfirm(false)}
               style={[styles.ActionButton, styles.ActionButtonCancel]}
             >
-              <ThemedIcons
+              <ThemedIcon
                 name="arrow-forward-ios"
                 size={23}
                 color={theme.colors.white.base}
@@ -115,9 +110,9 @@ export const styles = StyleSheet.create({
   ActionButtonsContainer: {
     position: "absolute",
     width: 210,
-    height: 60,
-    right: -20,
-    top: -10,
+    height: 55,
+    right: 0,
+    top: 0,
     color: theme.colors.white.base,
     display: "flex",
     justifyContent: "center",
