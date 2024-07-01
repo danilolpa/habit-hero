@@ -5,7 +5,7 @@
 
 import { Text, View, TextStyle, ColorSchemeName } from "react-native"
 
-import Animated from "react-native-reanimated"
+import Animated, { AnimatedProps } from "react-native-reanimated"
 import SegmentedControl, {
   SegmentedControlProps,
 } from "@react-native-segmented-control/segmented-control"
@@ -18,6 +18,7 @@ export type ThemeProps = {
   lightColor?: string
   darkColor?: string
   animated?: boolean
+  entering?: any
 }
 
 export type TextProps = ThemeProps & {
@@ -43,7 +44,7 @@ export type ThemedFontAwesomeProps = ThemeProps & {
 
 export type ThemedSegmentedControlProps = ThemeProps & SegmentedControlProps & {}
 
-export type ViewProps = ThemeProps & View["props"] & { animated?: boolean }
+export type ViewProps = ThemeProps & View["props"]
 
 export function useThemeColor<T, U>(props: { light: T; dark: U }) {
   const theme = (useColorScheme() as ColorSchemeName) ?? "dark"

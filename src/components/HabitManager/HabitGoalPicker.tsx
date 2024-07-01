@@ -116,7 +116,7 @@ const HabitGoalPicker: React.FC<HabitGoalPickerProps> = (props) => {
       return
     } else {
       setFieldValue("goal.goalDetails", selectedValues)
-      onClose
+      onClose()
     }
   }
 

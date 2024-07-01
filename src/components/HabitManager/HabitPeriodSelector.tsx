@@ -11,6 +11,7 @@ import { useFormikContext } from "formik"
 import { useEffect, useState } from "react"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { formatGoalText } from "@/utils/habitManagerHelpers"
+import Warning from "../Warning"
 
 interface FormValues {
   period: HabitsType["period"]
@@ -103,17 +104,9 @@ export default function HabitPeriodSelector() {
         </Chip>
       </View>
       {countSelectedPeriods > 1 && values.goal.hasGoal && (
-        <View style={styles.warn}>
-          <ThemedIcons
-            name="info"
-            size={25}
-            darkColor={theme.colors.yellow.base}
-            style={{ marginRight: 10 }}
-          />
-          <Text style={{ color: theme.colors.yellow.base }}>
-            Observação: Total da sua meta diária, {constructWarnText()}
-          </Text>
-        </View>
+        <Warning style={{ marginTop: 10 }}>
+          Observação: Total da sua meta diária, {constructWarnText()}
+        </Warning>
       )}
     </View>
   )
@@ -135,15 +128,5 @@ export const styles = StyleSheet.create({
   chipFull: {
     width: "100%",
     flexGrow: 1,
-  },
-  warn: {
-    borderRadius: 10,
-    paddingTop: 10,
-    marginBottom: 10,
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 30,
   },
 })

@@ -1,17 +1,9 @@
-import {
-  Modal,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  PanResponder,
-  Alert,
-} from "react-native"
+import { Modal, View, StyleSheet, TouchableOpacity, Animated, PanResponder } from "react-native"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import Button from "@/components/Buttons/Buttons"
 import CloseButton from "@/components/Buttons/CloseButton"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface BottomDrawerProps {
   visible: boolean
@@ -31,9 +23,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   color = theme.colors.primary.base,
 }) => {
   const translateY = useRef(new Animated.Value(0)).current
+  const [isVisible, setIsVisible] = useState(visible)
 
   useEffect(() => {
     if (visible) {
+      setIsVisible(true)
       translateY.setValue(500)
       Animated.timing(translateY, {
         toValue: 0,
@@ -45,7 +39,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
         toValue: 500,
         duration: 200,
         useNativeDriver: true,
-      }).start(onClose)
+      }).start(() => {
+        onClose
+      })
+      setIsVisible(false)
     }
   }, [visible, translateY])
 
@@ -75,11 +72,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
     }),
   ).current
 
-  if (!visible) return null
-
   const handleRightButtonPress = () => {
     rightButtonOnPress && rightButtonOnPress()
-    handleClose()
   }
   const handleClose = () => {
     Animated.timing(translateY, {
@@ -90,7 +84,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   }
 
   return (
-    <Modal transparent visible={visible} animationType="fade">
+    <Modal transparent visible={isVisible} animationType="fade">
       <ThemedView style={styles.overlay}>
         <Animated.View
           style={[

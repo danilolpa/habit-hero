@@ -101,7 +101,7 @@ const initialHabitData: HabitsType = {
   notes: "",
   period: ["ANYTIME"],
   reminder: true,
-  reminderTimes: ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00"],
+  reminderTimes: ["124:00"],
   color: "red",
   tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
   difficulty: "",
