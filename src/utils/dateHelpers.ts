@@ -49,15 +49,30 @@ function dateTextFormatter(date: string | Date = new Date()) {
   }
 }
 
-function getNextHour(additionalHours: number = 1) {
+function getNextHour(additionalHours: number = 1, format: string = "HH:mm") {
   const nextHour = addHours(startOfHour(new Date()), additionalHours)
-  return getFormattedDate("HH:mm", nextHour)
+  return getFormattedDate(format, nextHour)
 }
 
-const generateTimeRange = (start: number, end: number) => {
+const generateTimeRange = (reference: "hours" | "minutes" | "seconds") => {
+  let range = []
+  switch (reference) {
+    case "hours":
+      range = [0o0, 23]
+      break
+    case "minutes":
+      range = [0o0, 59]
+      break
+    case "seconds":
+      range = [0o0, 59]
+      break
+    default:
+      range = [0o0, 23]
+  }
+
   const result = []
-  for (let i = start; i <= end; i++) {
-    result.push(i)
+  for (let i = range[0]; i <= range[1]; i++) {
+    result.push(Number(i).toString(10).padStart(2, "0"))
   }
   return result
 }
