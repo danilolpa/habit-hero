@@ -26,7 +26,7 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
   const { values, setFieldValue } = useFormikContext<FormValues>()
   const { reminderTimes, reminder } = values
   const [selectedColor, setSelectedColor] = useState(getColorHexByName(values.color))
-  const [editTime, setEditTime] = useState("")
+  const [editItem, setEditItem] = useState("")
 
   const prevReminderRef = useRef(reminder)
   const prevReminderTimesRef = useRef(reminderTimes)
@@ -66,7 +66,8 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
   }
 
   const handleEdit = (time: string) => {
-    setEditTime(time)
+    setEditItem(time)
+    console.log("edit time: ", editItem, time)
   }
 
   const renderTime = (time: string) => {
@@ -106,8 +107,8 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
         <View style={styles.container}>
           <HabitReminderPicker
             color={selectedColor}
-            edit={editTime}
-            onEdit={() => setEditTime("")}
+            editItem={editItem}
+            setEditItem={setEditItem}
           />
           <View style={styles.timesContainer}>
             {reminderTimes && reminderTimes.map((time) => renderTime(time))}

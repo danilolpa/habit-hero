@@ -77,8 +77,6 @@ const BubbleButton = (props: BubblePressableButtonProps) => {
     ...otherProps
   } = props
 
-  console.log()
-
   return (
     <BubblePressable onPress={onPress} {...otherProps}>
       <Animated.View

@@ -9,7 +9,6 @@ import { generateTimeRange, getNextHour } from "@/utils/dateHelpers"
 import { ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { HabitsType } from "@/app/habitsManager/habitManagerContext"
-import { BubblePressable } from "@/components/Buttons/BubblePressable"
 import ContentFlexRow from "../ContentFlexRow"
 
 interface FormValues {
@@ -18,8 +17,8 @@ interface FormValues {
 
 interface HabitReminderPickerProps {
   color?: string
-  edit?: string
-  onEdit?: () => void
+  editItem?: string
+  setEditItem?: (time: string) => void
 }
 
 export default function HabitReminderPicker(props: HabitReminderPickerProps) {
@@ -32,7 +31,7 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   const hours = generateTimeRange("hours")
   const minutes = generateTimeRange("minutes")
   const { reminderTimes } = values
-  const { color, edit, onEdit } = props
+  const { color, editItem, setEditItem } = props
 
   const validateTime = (time: string) => {
     const regex = /^([01]\d|2[0-3]):([0-5]\d)$/
@@ -45,36 +44,37 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   }, [selectedDate, selectedDateString])
 
   useEffect(() => {
-    console.log("HandleEdit", edit)
-    if (edit) {
+    if (editItem) {
       setVisible(true)
-      setSelectedDate({ hour: edit.split(":")[0], minute: edit.split(":")[1] })
-      onEdit
+      setSelectedDate({ hour: editItem.split(":")[0], minute: editItem.split(":")[1] })
     }
-  }, [edit])
+  }, [editItem])
 
   const handleSaveTime = () => {
     if (validateTime(selectedDateString)) {
       if (reminderTimes?.some((time) => time === selectedDateString)) {
-        setWarning(true)
+        Alert.alert("horário de notificação já existe")
       } else {
         setWarning(false)
-        setFieldValue(
-          "reminderTimes",
-          [...(reminderTimes || []), String(selectedDateString)].sort((a, b) => a.localeCompare(b)),
+        const updatedReminderTimes = reminderTimes?.filter((time) => time !== editItem) || []
+        const newReminderTimes = [...updatedReminderTimes, String(selectedDateString)].sort(
+          (a, b) => a.localeCompare(b),
         )
+
+        setFieldValue("reminderTimes", newReminderTimes)
         setVisible(false)
+        if (editItem && setEditItem) {
+          setEditItem && setEditItem("")
+        }
       }
-    } else {
-      Alert.alert(
-        "Atenção",
-        "Horário inválido, por favor escolha outro ou tente novamente, se o problema persistir, entre em contato com o suporte.",
-      )
     }
   }
 
   const handleWarning = () => {
-    if (reminderTimes?.some((time) => time === selectedDateString)) {
+    if (
+      reminderTimes?.some((time) => time === selectedDateString) &&
+      editItem !== selectedDateString
+    ) {
       setWarning(true)
     } else {
       setWarning(false)
@@ -88,6 +88,14 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
         <ThemedText fontWeight="bold">{`${selectedDate.hour}:${selectedDate.minute}`} </ThemedText>
         já foi criado. Por favor escolha outro.
       </Warning>
+    )
+  }
+  const renderTitleEdit = () => {
+    return (
+      <ThemedText style={styles.titleEdit}>
+        Você está editando a notificação para o horário das{" "}
+        <ThemedText fontWeight="bold">{" " + editItem}</ThemedText>
+      </ThemedText>
     )
   }
   const renderPicker = () => {
@@ -150,11 +158,15 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
       />
       <BottomDrawer
         visible={visible}
-        onClose={() => setVisible(false)}
+        onClose={() => {
+          setVisible(false)
+          setEditItem && setEditItem("")
+        }}
         rightButtonOnPress={() => handleSaveTime()}
         rightButtonText="Salvar"
         color={color}
       >
+        {editItem && renderTitleEdit()}
         {warning && renderWarning()}
         {visible && renderPicker()}
       </BottomDrawer>
@@ -185,5 +197,10 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     margin: theme.spaces.defaultSpace,
     marginBottom: 0,
+  },
+  titleEdit: {
+    paddingHorizontal: "10%",
+    textAlign: "center",
+    marginTop: 10,
   },
 })
