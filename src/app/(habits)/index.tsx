@@ -1,10 +1,13 @@
-import { StyleSheet, Text, Platform, View } from "react-native"
+import { StyleSheet, Text, Platform, View, Button } from "react-native"
 
 import HabitsList from "@/components/Habits/HabitsList"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
+import { useToast } from "@/components/useToast"
 
 export default function HabitsHome() {
+  const { showToast } = useToast()
+
   return (
     <ThemedView
       darkColor={theme.colors.black.base}
@@ -15,6 +18,14 @@ export default function HabitsHome() {
       <View style={styles.viewContent}>
         <HabitsList />
       </View>
+      <Button
+        title="Show Toast"
+        onPress={() =>
+          showToast(
+            "This is a toast message!This is a toast message!This is a toast message!This is a toast message!",
+          )
+        }
+      />
     </ThemedView>
   )
 }

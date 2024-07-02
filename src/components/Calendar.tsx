@@ -1,11 +1,10 @@
 import { Calendar as CalendarLib, LocaleConfig, CalendarProps } from "react-native-calendars"
-
-import { View, Text, StyleSheet } from "react-native"
-import { getColorContrastColorByHex, theme } from "@/Theme"
-import { useThemeColor } from "./Utils/Themed"
+import { StyleSheet, Text } from "react-native"
 import { useEffect, useState } from "react"
+
+import { getColorContrastColorByHex, theme } from "@/Theme"
+import { useThemeColor } from "@/components/Utils/Themed"
 import { useColorScheme } from "@/components/useColorScheme"
-import { singleDateProps } from "@/app/habitsManager/habitManagerContext"
 
 export type ComponentCalendarProps = CalendarProps & {
   lightColor?: string
@@ -116,10 +115,11 @@ function Calendar(props: ComponentCalendarProps) {
       theme={currentTheme}
       markingType={"custom"}
       current={selectedDate}
-      enableSwipeMonths={true}
+      enableSwipeMonths={false}
       markedDates={{
         [selectedDate]: { selected: true },
       }}
+      headerStyle={{ height: 80 }}
     />
   )
 }

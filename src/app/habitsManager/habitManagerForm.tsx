@@ -317,6 +317,8 @@ export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) =
                                 <BubblePressable.Button
                                   color={selectedColor}
                                   onPress={() => toggleVisibility("calendarViewEndDate")}
+                                  buttonStyle={{ paddingHorizontal: 20 }}
+                                  radius={8}
                                 >
                                   <ThemedText
                                     colorText={

@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { RouteProvider, useRouteContext } from "@/utils/useContextRoute"
 import Navigation from "@/app/_navigation"
 import FloatMenuHome from "@/components/FloatMenuHome"
+import { ToastProvider, useToast } from "@/components/useToast"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,10 +57,12 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <GestureHandlerRootView>
-      <RouteProvider>
-        <Navigation />
-        <FloatMenuHome />
-      </RouteProvider>
+      <ToastProvider>
+        <RouteProvider>
+          <Navigation />
+          <FloatMenuHome />
+        </RouteProvider>
+      </ToastProvider>
     </GestureHandlerRootView>
   )
 }

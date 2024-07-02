@@ -87,6 +87,12 @@ const theme: Theme = {
     red: {
       base: "#DD5746",
     },
+    blue: {
+      base: "#5A72A0",
+    },
+    orange: {
+      base: "#EF9C66",
+    },
   },
   spaces: {
     defaultSpace: 16,

@@ -67,7 +67,6 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
 
   const handleEdit = (time: string) => {
     setEditItem(time)
-    console.log("edit time: ", editItem, time)
   }
 
   const renderTime = (time: string) => {
