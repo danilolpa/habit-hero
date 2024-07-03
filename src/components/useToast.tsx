@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from "react"
-import { View, Text, StyleSheet, Platform, ToastAndroid, Pressable } from "react-native"
-import { ThemedText } from "./Utils/Themed"
+import { View, StyleSheet, Platform, ToastAndroid, Pressable } from "react-native"
+
+import { ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
-import Animated, { FadeInDown, FadeInUp, FadeOutUp } from "react-native-reanimated"
+import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated"
 
 interface ToastProps {
   message: string
@@ -48,11 +49,15 @@ const getStylesByStatus = (status: string) => {
   return style ? style : statusStyles[3]
 }
 
-const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const ToastProvider: React.FC<{ children: ReactNode; isModal: Boolean }> = ({
+  children,
+  isModal = false,
+}) => {
   const [toast, setToast] = useState<ToastProps | null>(null)
+  const [toastOnModal] = useState(isModal)
 
   const showToast = useCallback((message: string, options: Omit<ToastProps, "message"> = {}) => {
-    const { duration = 4000, status = "error", styles } = options
+    const { duration = 3000, status = "error", styles } = options
 
     if (Platform.OS === "android") {
       ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.BOTTOM)
@@ -69,30 +74,34 @@ const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       {children}
 
       {toast && Platform.OS === "ios" && (
-        <Animated.View
-          entering={FadeInUp}
-          exiting={FadeOutUp}
-          style={[
-            styles.toast,
-            {
-              backgroundColor: toast.styles && toast.styles.backgroundColor,
-            },
-          ]}
-        >
-          <Pressable
-            onPress={() => setToast(null)}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+        <View style={[styles.container, toastOnModal && { paddingTop: 20 }]}>
+          <Animated.View
+            entering={FadeInUp}
+            exiting={FadeOutUp}
+            style={[
+              styles.toast,
+              {
+                backgroundColor: toast.styles && toast.styles.backgroundColor,
+              },
+            ]}
           >
-            <ThemedText style={[styles.message, { color: toast.styles && toast.styles.textColor }]}>
-              {toast.message}
-            </ThemedText>
-          </Pressable>
-        </Animated.View>
+            <Pressable
+              onPress={() => setToast(null)}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ThemedText
+                style={[styles.message, { color: toast.styles && toast.styles.textColor }]}
+              >
+                {toast.message}
+              </ThemedText>
+            </Pressable>
+          </Animated.View>
+        </View>
       )}
     </ToastContext.Provider>
   )
@@ -107,12 +116,20 @@ const useToast = () => {
 }
 
 const styles = StyleSheet.create({
-  toast: {
+  container: {
+    display: "flex",
     position: "absolute",
-    padding: 10,
-    zIndex: 1000,
-    paddingTop: 70,
     width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    paddingTop: 60,
+    zIndex: 99999,
+  },
+  toast: {
+    padding: 10,
+    borderRadius: 30,
+    width: "70%",
     display: "flex",
     alignItems: "center",
     ...Platform.select({
@@ -128,10 +145,11 @@ const styles = StyleSheet.create({
     }),
   },
   message: {
-    fontSize: 18,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 22,
     textAlign: "center",
     paddingHorizontal: 20,
+    paddingTop: 2,
   },
 })
 

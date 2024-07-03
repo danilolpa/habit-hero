@@ -30,7 +30,7 @@
       <change beforePath="$PROJECT_DIR$/src/assets/images/android_adaptive-icon.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/assets/images/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/images/icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/assets/images/splash.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/images/splash.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BottomDrawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BottomDrawer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DialogDrawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DialogDrawer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Buttons/BubbleButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Buttons/BubbleButton.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/HabitManager/HabitReminderSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HabitManager/HabitReminderSelector.tsx" afterDir="false" />
     </list>

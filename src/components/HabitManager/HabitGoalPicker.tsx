@@ -5,7 +5,7 @@ import { ThemedView } from "../Utils/Themed"
 import { capitalizeFirstLetter } from "@/utils/textHelpers"
 import { theme } from "@/Theme"
 import { useFormikContext } from "formik"
-import BottomDrawer from "../BottomDrawer"
+import DialogDrawer from "../DialogDrawer"
 import APP_CONSTANTS from "@/constants/AppConstants"
 
 interface dataProps {
@@ -121,7 +121,7 @@ const HabitGoalPicker: React.FC<HabitGoalPickerProps> = (props) => {
   }
 
   return (
-    <BottomDrawer
+    <DialogDrawer
       color={selectionColor}
       rightButtonOnPress={() => handleSave()}
       visible={visible}
@@ -151,7 +151,7 @@ const HabitGoalPicker: React.FC<HabitGoalPickerProps> = (props) => {
             )
           })}
       </ThemedView>
-    </BottomDrawer>
+    </DialogDrawer>
   )
 }
 

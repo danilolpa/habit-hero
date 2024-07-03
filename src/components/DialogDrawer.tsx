@@ -1,11 +1,13 @@
 import { Modal, View, StyleSheet, TouchableOpacity, Animated, PanResponder } from "react-native"
+import { useEffect, useRef, useState } from "react"
+
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import Button from "@/components/Buttons/Buttons"
 import CloseButton from "@/components/Buttons/CloseButton"
-import { useEffect, useRef, useState } from "react"
+import { Alert } from "./Utils/Alert"
 
-interface BottomDrawerProps {
+interface DialogDrawerProps {
   visible: boolean
   onClose: () => void
   children: React.ReactNode
@@ -14,7 +16,7 @@ interface BottomDrawerProps {
   color?: string
 }
 
-const BottomDrawer: React.FC<BottomDrawerProps> = ({
+const DialogDrawer: React.FC<DialogDrawerProps> = ({
   visible,
   onClose,
   rightButtonOnPress,
@@ -86,6 +88,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({
   return (
     <Modal transparent visible={isVisible} animationType="fade">
       <ThemedView style={styles.overlay}>
+        <Alert.View />
         <Animated.View
           style={[
             styles.container,
@@ -124,7 +127,8 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: -1,
   },
   container: {
     shadowColor: "#000",
@@ -164,4 +168,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default BottomDrawer
+export default DialogDrawer

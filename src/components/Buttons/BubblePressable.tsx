@@ -3,7 +3,7 @@ import React, { useRef } from "react"
 import { Animated, Pressable, StyleSheet, ViewProps, PressableProps, View } from "react-native"
 import * as Haptics from "expo-haptics"
 
-import { ThemedText, IconsProps, ThemedIcon } from "@/components/Utils/Themed"
+import { ThemedText, IconsProps, ThemedIcon, useThemeColor } from "@/components/Utils/Themed"
 
 type similarButtonProps = {
   darkColor?: string
@@ -18,9 +18,11 @@ type BubblePressableButtonProps = PressableProps &
   similarButtonProps & {
     title?: string
     buttonStyle?: ViewProps["style"]
-    rightIcon?: IconsProps["name"]
+    icon?: IconsProps["name"]
     textAlignment?: "left" | "center" | "right"
     radius?: number
+    rtl?: boolean
+    transparent?: boolean
   }
 
 const BubblePressable = (props: BubblePressableProps) => {
@@ -70,17 +72,25 @@ const BubbleButton = (props: BubblePressableButtonProps) => {
     buttonStyle,
     onPress,
     title,
-    rightIcon,
+    icon,
     textAlignment = "center",
     style,
     radius = 100,
+    rtl = false,
+    transparent = false,
     ...otherProps
   } = props
 
   return (
     <BubblePressable onPress={onPress} {...otherProps}>
       <Animated.View
-        style={[styles.button, buttonStyle, { backgroundColor: color }, { borderRadius: radius }]}
+        style={[
+          styles.button,
+          buttonStyle,
+          { backgroundColor: color },
+          { borderRadius: radius },
+          transparent && styles.buttonTransparent,
+        ]}
       >
         <View
           style={{
@@ -90,16 +100,16 @@ const BubbleButton = (props: BubblePressableButtonProps) => {
           {title && (
             <ThemedText
               style={[styles.text, { textAlign: textAlignment }]}
-              colorText={getColorContrastColorByHex(color) || theme.colors.white.base}
+              colorText={transparent ? color : theme.colors.white.base}
             >
               {title}
             </ThemedText>
           )}
           {children && <View>{children}</View>}
         </View>
-        {rightIcon && (
-          <View style={styles.iconContainer}>
-            <ThemedIcon name={rightIcon} color={color} size={24} style={{ left: 3 }} />
+        {icon && (
+          <View style={[styles.iconContainer, rtl && styles.buttonRTL]}>
+            <ThemedIcon name={icon} color={color} size={24} />
           </View>
         )}
       </Animated.View>
@@ -119,6 +129,14 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 4,
   },
+  buttonRTL: {
+    // flexDirection: "row-reverse",
+    left: 5,
+    right: "auto",
+  },
+  buttonTransparent: {
+    backgroundColor: "transparent",
+  },
   bubble: {
     width: "100%",
   },
@@ -128,12 +146,14 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     backgroundColor: theme.colors.white.base,
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 100,
+    position: "absolute",
+    right: 5,
   },
 })
 BubblePressable.Button = BubbleButton

@@ -4,7 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import React, { useMemo, useState } from "react"
 import { useFormikContext } from "formik"
-import BottomDrawer from "./BottomDrawer"
+import DialogDrawer from "./DialogDrawer"
 import { theme } from "@/Theme"
 
 type iconNames = typeof MaterialIcons.glyphMap
@@ -43,7 +43,7 @@ export default function IconsHabitModal(props: iconModalProps) {
 
   return (
     <ThemedView>
-      <BottomDrawer
+      <DialogDrawer
         color={selectedColor}
         rightButtonOnPress={() => handleSave()}
         visible={isVisible}
@@ -69,7 +69,7 @@ export default function IconsHabitModal(props: iconModalProps) {
             )
           })}
         </ThemedView>
-      </BottomDrawer>
+      </DialogDrawer>
     </ThemedView>
   )
 }

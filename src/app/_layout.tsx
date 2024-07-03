@@ -6,10 +6,12 @@ import "react-native-reanimated"
 import "@/styles/global.css"
 
 import { GestureHandlerRootView } from "react-native-gesture-handler"
-import { RouteProvider, useRouteContext } from "@/utils/useContextRoute"
+import { RouteProvider } from "@/utils/useContextRoute"
 import Navigation from "@/app/_navigation"
 import FloatMenuHome from "@/components/FloatMenuHome"
-import { ToastProvider, useToast } from "@/components/useToast"
+import { ToastProvider } from "@/components/useToast"
+import { Alert } from "@/components/Utils/Alert"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -18,7 +20,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(habits)",
+  initialRouteName: APP_CONSTANTS.NAV.SETTINGS,
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -57,7 +59,8 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <GestureHandlerRootView>
-      <ToastProvider>
+      <ToastProvider isModal={false}>
+        <Alert.View />
         <RouteProvider>
           <Navigation />
           <FloatMenuHome />

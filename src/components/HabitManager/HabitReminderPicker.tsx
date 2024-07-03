@@ -1,15 +1,17 @@
-import { View, StyleSheet, Alert, Text, Pressable } from "react-native"
+import { View, StyleSheet, Text, Pressable } from "react-native"
 import { useEffect, useState } from "react"
 import { useFormikContext } from "formik"
 import { Picker } from "@react-native-picker/picker"
 
-import BottomDrawer from "@/components/BottomDrawer"
+import DialogDrawer from "@/components/DialogDrawer"
 import Warning from "@/components/Warning"
 import { generateTimeRange, getNextHour } from "@/utils/dateHelpers"
 import { ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { HabitsType } from "@/app/habitsManager/habitManagerContext"
 import ContentFlexRow from "../ContentFlexRow"
+import { useToast } from "@/components/useToast"
+import { Alert } from "@/components/Utils/Alert"
 
 interface FormValues {
   reminderTimes: HabitsType["reminderTimes"]
@@ -27,6 +29,8 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   const [warning, setWarning] = useState(false)
   const [selectedDateString, setSelectedDateString] = useState("")
   const { values, setFieldValue } = useFormikContext<FormValues>()
+
+  const { showToast } = useToast()
 
   const hours = generateTimeRange("hours")
   const minutes = generateTimeRange("minutes")
@@ -53,7 +57,10 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   const handleSaveTime = () => {
     if (validateTime(selectedDateString)) {
       if (reminderTimes?.some((time) => time === selectedDateString)) {
-        Alert.alert("horário de notificação já existe")
+        showToast("O horário de notificação já foi criado.", {
+          status: "warning",
+          duration: 3000,
+        })
       } else {
         setWarning(false)
         const updatedReminderTimes = reminderTimes?.filter((time) => time !== editItem) || []
@@ -156,7 +163,7 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
         separatorPosition="bottom"
         separatorColor={theme.colors.black.lightest}
       />
-      <BottomDrawer
+      <DialogDrawer
         visible={visible}
         onClose={() => {
           setVisible(false)
@@ -169,7 +176,7 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
         {editItem && renderTitleEdit()}
         {warning && renderWarning()}
         {visible && renderPicker()}
-      </BottomDrawer>
+      </DialogDrawer>
     </View>
   )
 }

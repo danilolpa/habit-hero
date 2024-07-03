@@ -3,7 +3,6 @@ import "react-native-reanimated"
 import "@/styles/global.css"
 
 import { useRouteContext } from "@/utils/useContextRoute"
-import { useEffect } from "react"
 import APP_CONSTANTS from "@/constants/AppConstants"
 
 export default function Navigation() {
@@ -18,7 +17,7 @@ export default function Navigation() {
   }
 
   return (
-    <Stack>
+    <Stack initialRouteName={APP_CONSTANTS.NAV.HABITS_HOME}>
       <Stack.Screen
         name={APP_CONSTANTS.NAV.HABITS_HOME}
         options={{ headerShown: false }}

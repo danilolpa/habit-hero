@@ -4,6 +4,7 @@ import HabitsList from "@/components/Habits/HabitsList"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { useToast } from "@/components/useToast"
+import { Alert } from "@/components/Utils/Alert"
 
 export default function HabitsHome() {
   const { showToast } = useToast()
@@ -18,14 +19,6 @@ export default function HabitsHome() {
       <View style={styles.viewContent}>
         <HabitsList />
       </View>
-      <Button
-        title="Show Toast"
-        onPress={() =>
-          showToast(
-            "This is a toast message!This is a toast message!This is a toast message!This is a toast message!",
-          )
-        }
-      />
     </ThemedView>
   )
 }

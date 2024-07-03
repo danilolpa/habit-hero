@@ -1,15 +1,53 @@
-import { View, Text } from "react-native"
+import { View, Text, Button } from "react-native"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
+import { useToast } from "@/components/useToast"
+import { Alert } from "@/components/Utils/Alert"
 
 export default function Settings() {
-  return (
-    <View className="flex-1 items-center justify-center text-white">
-      <Text className="text-3xl text-white">Settings</Text>
+  const { showToast } = useToast()
 
-      <ThemedView darkColor={theme.colors.black.base} lightColor={theme.colors.white.base}>
-        <Text className="text-gray">Teste View</Text>
+  return (
+    <ThemedView
+      className="flex-1 items-center justify-center text-white"
+      darkColor={theme.colors.black.base}
+      lightColor={theme.colors.white.base}
+    >
+      <ThemedView>
+        <Button
+          title="Show Toast Error"
+          onPress={() => showToast("Commodo deserunt a est sunt.", { status: "error" })}
+        />
+        <Button
+          title="Show Toast Info"
+          onPress={() => showToast("Commodo deserunt a est sunt.", { status: "info" })}
+        />
+        <Button
+          title="Show Toast success"
+          onPress={() => showToast("Commodo deserunt a est sunt.", { status: "success" })}
+        />
+        <Button
+          title="Show Toast warning"
+          onPress={() => showToast("Commodo deserunt a est sunt.", { status: "warning" })}
+        />
+
+        <Button
+          title="Show Alert"
+          onPress={() =>
+            Alert.Show({
+              title: "Quis consectetur",
+              text: "Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.",
+              confirm: {
+                onPress: () => console.log("Confirm Pressed"),
+              },
+              cancel: {
+                title: "Cancelar",
+                onPress: () => console.log("Cancel Pressed"),
+              },
+            })
+          }
+        />
       </ThemedView>
-    </View>
+    </ThemedView>
   )
 }
