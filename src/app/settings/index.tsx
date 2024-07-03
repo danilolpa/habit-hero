@@ -32,18 +32,80 @@ export default function Settings() {
         />
 
         <Button
-          title="Show Alert"
+          title="Show Alert Top"
           onPress={() =>
             Alert.Show({
               title: "Quis consectetur",
               text: "Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.",
+              position: "top",
               confirm: {
-                onPress: () => console.log("Confirm Pressed"),
+                title: "Ok, entendido.",
+                icon: "check",
+                iconPosition: "left",
               },
               cancel: {
                 title: "Cancelar",
-                onPress: () => console.log("Cancel Pressed"),
+                icon: "youtube-searched-for",
               },
+            })
+          }
+        />
+
+        <Button
+          title="Show Alert Center"
+          onPress={() =>
+            Alert.Show({
+              title: "Quis consectetur",
+              text: "Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.",
+              position: "center",
+              confirm: {
+                title: "Ok, entendido.",
+                icon: "check",
+                iconPosition: "left",
+              },
+              cancel: {
+                title: "Cancelar",
+                icon: "youtube-searched-for",
+              },
+            })
+          }
+        />
+
+        <Button
+          title="Show Alert Bottom"
+          onPress={() =>
+            Alert.Show({
+              title: "Quis consectetur",
+              text: "Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.",
+
+              confirm: {
+                title: "Ok, entendido.",
+                icon: "check",
+                iconPosition: "left",
+              },
+              cancel: {
+                title: "Cancelar",
+                icon: "youtube-searched-for",
+              },
+            })
+          }
+        />
+
+        <Button
+          title="Show Alert without buttons"
+          onPress={() =>
+            Alert.Show({
+              title: "Labore labore minim laborum aliqua anim labore laborum",
+              cancel: {
+                title: "Cancelar",
+                icon: "youtube-searched-for",
+              },
+              confirm: {
+                title: "Ok, entendido.",
+                icon: "check",
+                iconPosition: "left",
+              },
+              text: "Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.Labore labore minim laborum aliqua anim labore laborum veniam adipisicing tempor ad excepteur nisi. Sunt pariatur deserunt Lorem dolore velit sint fugiat aliqua ipsum est nisi minim. Reprehenderit non incididunt incididunt duis voluptate ut cillum anim esse laboris consectetur cupidatat.",
             })
           }
         />

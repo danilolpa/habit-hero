@@ -57,9 +57,9 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   const handleSaveTime = () => {
     if (validateTime(selectedDateString)) {
       if (reminderTimes?.some((time) => time === selectedDateString)) {
-        showToast("O horário de notificação já foi criado.", {
-          status: "warning",
-          duration: 3000,
+        Alert.Show({
+          title: "Horário repetido",
+          text: "O horário de notificação já foi criado. Por favor escolha outro.",
         })
       } else {
         setWarning(false)

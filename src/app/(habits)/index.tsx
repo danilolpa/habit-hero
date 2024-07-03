@@ -29,7 +29,6 @@ export const styles = StyleSheet.create({
     marginTop: -20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    // overflow: "hidden",
     ...Platform.select({
       ios: {
         shadowColor: "#000",

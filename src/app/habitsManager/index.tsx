@@ -5,9 +5,8 @@ import { Platform, StyleSheet, Image, Text, View, Pressable, Button } from "reac
 import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
 import { HabitManagerForm } from "./habitManagerForm"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useHabitManagerContext } from "./habitManagerContext"
-import EmoteModal from "@/components/EmoteModal"
 
 interface HabitManagerFormProps {
   submitForm: () => void

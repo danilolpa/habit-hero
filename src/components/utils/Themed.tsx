@@ -19,6 +19,7 @@ export type ThemeProps = {
   darkColor?: string
   animated?: boolean
   entering?: any
+  exiting?: any
 }
 
 export type TextProps = ThemeProps & {

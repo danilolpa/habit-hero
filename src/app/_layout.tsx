@@ -12,6 +12,8 @@ import FloatMenuHome from "@/components/FloatMenuHome"
 import { ToastProvider } from "@/components/useToast"
 import { Alert } from "@/components/Utils/Alert"
 import APP_CONSTANTS from "@/constants/AppConstants"
+import { StatusBar } from "expo-status-bar"
+import { Platform } from "react-native"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,6 +63,7 @@ function RootLayoutNav() {
     <GestureHandlerRootView>
       <ToastProvider isModal={false}>
         <Alert.View />
+        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
         <RouteProvider>
           <Navigation />
           <FloatMenuHome />
