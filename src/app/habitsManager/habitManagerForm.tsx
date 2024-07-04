@@ -1,5 +1,5 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from "react"
-import { View, StyleSheet, Switch, ScrollView, Text, Pressable, Alert } from "react-native"
+import { View, StyleSheet, Switch, ScrollView, Text, Pressable, Button } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
 import * as Haptics from "expo-haptics"
@@ -35,6 +35,7 @@ import HabitGoalPicker from "@/components/HabitManager/HabitGoalPicker"
 import ContentFlexRow from "@/components/ContentFlexRow"
 import HabitPeriodSelector from "@/components/HabitManager/HabitPeriodSelector"
 import HabitReminderSelector from "@/components/HabitManager/HabitReminderSelector"
+import { useAlert } from "@/hooks/useAlert"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -46,6 +47,7 @@ interface HabitManagerFormProps {
 }
 
 export const HabitManagerForm = forwardRef<HabitManagerFormProps>((props, ref) => {
+  const { Alert } = useAlert()
   const { submitForm, loading, error, habitData } = useHabitManagerContext()
   const formikRef = useRef<FormikProps<typeof habitData>>(null)
   const { toggleVisibility, setVisibility, getVisibility } = useVisibilityControl({

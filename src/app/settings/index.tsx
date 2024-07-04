@@ -1,11 +1,15 @@
-import { View, Text, Button } from "react-native"
+import { Button } from "react-native"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { useToast } from "@/components/useToast"
-import { Alert } from "@/components/Utils/Alert"
+import { useAlert } from "@/hooks/useAlert"
+import { useState } from "react"
+import Modal from "react-native-modal"
 
 export default function Settings() {
   const { showToast } = useToast()
+  const { Alert } = useAlert()
+  const [visible, setVisible] = useState(false)
 
   return (
     <ThemedView

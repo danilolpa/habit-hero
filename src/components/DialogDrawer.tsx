@@ -5,7 +5,7 @@ import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import Button from "@/components/Buttons/Buttons"
 import CloseButton from "@/components/Buttons/CloseButton"
-import { Alert } from "./Utils/Alert"
+import { useAlert, AlertComponent } from "../hooks/useAlert"
 
 interface DialogDrawerProps {
   visible: boolean
@@ -26,6 +26,7 @@ const DialogDrawer: React.FC<DialogDrawerProps> = ({
 }) => {
   const translateY = useRef(new Animated.Value(0)).current
   const [isVisible, setIsVisible] = useState(visible)
+  const { Alert } = useAlert()
 
   useEffect(() => {
     if (visible) {
@@ -88,7 +89,7 @@ const DialogDrawer: React.FC<DialogDrawerProps> = ({
   return (
     <Modal transparent visible={isVisible} animationType="fade">
       <ThemedView style={styles.overlay}>
-        <Alert.View />
+        {AlertComponent && <AlertComponent />}
         <Animated.View
           style={[
             styles.container,
@@ -115,7 +116,18 @@ const DialogDrawer: React.FC<DialogDrawerProps> = ({
                 )}
               </View>
             </View>
-            <View style={styles.childrenContent}>{children}</View>
+            <View style={styles.childrenContent}>
+              <Button
+                title="Click"
+                onPress={() =>
+                  Alert.Show({
+                    title: "Tem certeza?",
+                    text: "Você tem certeza que deseja sair?",
+                  })
+                }
+              />
+              {children}
+            </View>
           </ThemedView>
         </Animated.View>
       </ThemedView>

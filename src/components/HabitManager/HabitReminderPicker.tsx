@@ -10,8 +10,7 @@ import { ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { HabitsType } from "@/app/habitsManager/habitManagerContext"
 import ContentFlexRow from "../ContentFlexRow"
-import { useToast } from "@/components/useToast"
-import { Alert } from "@/components/Utils/Alert"
+import { useAlert } from "../../hooks/useAlert"
 
 interface FormValues {
   reminderTimes: HabitsType["reminderTimes"]
@@ -30,7 +29,7 @@ export default function HabitReminderPicker(props: HabitReminderPickerProps) {
   const [selectedDateString, setSelectedDateString] = useState("")
   const { values, setFieldValue } = useFormikContext<FormValues>()
 
-  const { showToast } = useToast()
+  const { Alert } = useAlert()
 
   const hours = generateTimeRange("hours")
   const minutes = generateTimeRange("minutes")

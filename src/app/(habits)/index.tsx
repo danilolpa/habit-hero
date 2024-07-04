@@ -4,10 +4,11 @@ import HabitsList from "@/components/Habits/HabitsList"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { useToast } from "@/components/useToast"
-import { Alert } from "@/components/Utils/Alert"
+import { useAlert } from "@/hooks/useAlert"
 
 export default function HabitsHome() {
   const { showToast } = useToast()
+  const { Alert } = useAlert()
 
   return (
     <ThemedView

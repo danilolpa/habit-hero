@@ -4,16 +4,7 @@ import { View, Text, StyleSheet, Modal, Image, ImageBackground, Platform } from 
 import { theme } from "@/Theme"
 import { BubblePressable } from "./Buttons/BubblePressable"
 import { IconsProps, ThemedText, ThemedView, useThemeColor } from "@/components/Utils/Themed"
-import {
-  BounceInUp,
-  BounceOutUp,
-  FadeInDown,
-  FadeOutDown,
-  SlideInDown,
-  SlideInUp,
-  SlideOutDown,
-  SlideOutUp,
-} from "react-native-reanimated"
+import { SlideInDown, SlideInUp, SlideOutDown, SlideOutUp } from "react-native-reanimated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ScrollView } from "react-native-gesture-handler"
 
@@ -148,6 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.8)",
+    zIndex: 1111,
   },
   alertDialogTop: {
     justifyContent: "flex-start",

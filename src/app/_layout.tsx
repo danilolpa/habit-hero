@@ -10,7 +10,7 @@ import { RouteProvider } from "@/utils/useContextRoute"
 import Navigation from "@/app/_navigation"
 import FloatMenuHome from "@/components/FloatMenuHome"
 import { ToastProvider } from "@/components/useToast"
-import { Alert } from "@/components/Utils/Alert"
+import { AlertProvider } from "@/hooks/useAlert"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { StatusBar } from "expo-status-bar"
 import { Platform } from "react-native"
@@ -61,14 +61,15 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <GestureHandlerRootView>
-      <ToastProvider isModal={false}>
-        <Alert.View />
-        <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-        <RouteProvider>
-          <Navigation />
-          <FloatMenuHome />
-        </RouteProvider>
-      </ToastProvider>
+      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+      <RouteProvider>
+        <AlertProvider>
+          <ToastProvider isModal={false}>
+            <Navigation />
+            <FloatMenuHome />
+          </ToastProvider>
+        </AlertProvider>
+      </RouteProvider>
     </GestureHandlerRootView>
   )
 }
