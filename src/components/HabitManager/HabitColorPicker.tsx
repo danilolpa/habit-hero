@@ -6,6 +6,8 @@ import { FontAwesome6 } from "@expo/vector-icons"
 import * as Haptics from "expo-haptics"
 import { useHabitManagerContext } from "@/components/HabitManager/habitManagerContext"
 import { useFormikContext } from "formik"
+import ContentContainer from "../ContentContainer"
+import { BounceIn, BounceOut, FlipInEasyX, FlipOutEasyX } from "react-native-reanimated"
 
 type ColorPickerProps = {
   initialColor?: string
@@ -50,9 +52,16 @@ export default function ColorPicker({
         ]}
       >
         <Pressable onPress={() => handleSelectColor(item.name)}>
-          <ThemedView style={[styles.colorItem, showSelected && styles.colorSelected]}>
+          <ThemedView style={[styles.colorItem]}>
             {showSelected && (
-              <FontAwesome6 name="check" size={15} color={theme.colors.black.light} />
+              <ThemedView
+                entering={FlipInEasyX.duration(300)}
+                exiting={FlipOutEasyX.duration(200)}
+                animated
+                style={styles.colorSelected}
+              >
+                <FontAwesome6 name="check" size={20} color={theme.colors.black.light} />
+              </ThemedView>
             )}
           </ThemedView>
         </Pressable>
@@ -65,31 +74,32 @@ export default function ColorPicker({
       (color) => color.hex === getColorHexByName(initialColor),
     )
 
-    return actualIndex >= 6 ? actualIndex : 0
+    return actualIndex >= 5 ? actualIndex : 0
   }
   return (
-    <FlatList
-      data={theme.habitColors}
-      renderItem={renderItem}
-      horizontal={true}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-      initialScrollIndex={initialIndex()}
-      getItemLayout={(data, index) => ({ length: 45, offset: 60 * index, index })}
-    />
+    <ContentContainer style={styles.container}>
+      <FlatList
+        data={theme.habitColors}
+        renderItem={renderItem}
+        horizontal={true}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        initialScrollIndex={initialIndex()}
+        getItemLayout={(data, index) => ({ length: 45, offset: 60 * index, index })}
+      />
+    </ContentContainer>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    gap: 4,
-    paddingVertical: 4,
+    paddingVertical: 10,
+    width: "100%",
+    flexShrink: 1,
   },
   colorItem: {
-    height: 37,
-    width: 37,
+    height: 42,
+    width: 42,
     borderRadius: 100,
     justifyContent: "center",
     display: "flex",
@@ -103,17 +113,9 @@ const styles = StyleSheet.create({
     marginRight: theme.spaces.defaultSpace,
   },
   colorSelected: {
-    position: "absolute",
-    top: -21,
-    left: -3,
-    borderWidth: 3,
-    borderColor: theme.colors.black.dark,
-    marginHorizontal: 0,
-    height: 42,
-    width: 42,
-    // backgroundColor: "rgba(255, 255, 255, 0.3)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    left: -4,
   },
 })

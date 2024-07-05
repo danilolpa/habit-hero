@@ -1,6 +1,6 @@
-import React, { useRef, forwardRef, useImperativeHandle, useEffect } from "react"
+import React from "react"
 import { View, StyleSheet, ScrollView, Text } from "react-native"
-import { Formik, FormikHelpers, FormikProps } from "formik"
+import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
 
 import { ThemedView } from "@/components/Utils/Themed"
@@ -16,6 +16,7 @@ import HabitGoalSelector from "@/components/HabitManager/HabitGoalSelector"
 import HabitFrequencySelectors from "@/components/HabitManager/HabitFrequencySelectors"
 import HabitFields from "@/components/HabitManager/HabitFields"
 import { BubblePressable } from "@/components/Buttons/BubblePressable"
+import HabitIconSelector from "@/components/HabitManager/HabitIconSelector"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -40,7 +41,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
       await validationSchema.validate(data, { abortEarly: false })
       return true
     } catch (error: any) {
-      Alert.Show({ text: error.errors[0], title: "Atenção" })
+      Alert.Show({ text: error.errors[0], title: "Aviso!" })
       return false
     }
   }
@@ -59,7 +60,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{ width: "100%" }}>
       <Formik
         initialValues={habitData}
         onSubmit={(values: HabitsType) => {
@@ -78,9 +79,29 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
             <ThemedView style={styles.container}>
               {loading && <Text>Carregando...</Text>}
               <HabitFields color={selectedColor} />
-              <ContentContainer verticalMargin>
-                <ColorPicker initialColor={formikProps.values.color} />
-              </ContentContainer>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 4,
+                  width: "100%",
+                }}
+              >
+                <View
+                  style={{
+                    width: 70,
+                  }}
+                >
+                  <HabitIconSelector color={selectedColor} />
+                </View>
+                <View
+                  style={{
+                    flexShrink: 1,
+                  }}
+                >
+                  <ColorPicker initialColor={formikProps.values.color} />
+                </View>
+              </View>
               <ContentContainer>
                 <HabitFrequencySelectors color={selectedColor} />
               </ContentContainer>
@@ -98,6 +119,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
                   onPress={() => handleSubmit()}
                   title={loading ? "Salvando hábito..." : "Salvar novo hábito"}
                   disabled={loading}
+                  color={selectedColor}
                 />
               </View>
               <JsonViewer jsonString={values}></JsonViewer>
@@ -111,7 +133,6 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
     marginBottom: 60,
     borderColor: theme.colors.white.base,
     maxWidth: "100%",

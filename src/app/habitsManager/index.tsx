@@ -16,7 +16,7 @@ interface HabitManagerFormProps {
 export default function HabitManagerIndex() {
   const route = useNavigation()
   const formikRef = useRef<FormikProps<HabitsType>>(null)
-  const { colorHabit } = useHabitManagerContext()
+  const { colorHabit, loading } = useHabitManagerContext()
 
   const activeColor = getColorHexByName(colorHabit) || theme.colors.primary.base
 
@@ -63,7 +63,7 @@ export default function HabitManagerIndex() {
             Hábito
           </ThemedText>
           <ThemedText style={styles.headerButton}>
-            <Button title="Salvar" color={activeColor} onPress={handleSubmit} />
+            <Button title="Salvar" color={activeColor} onPress={handleSubmit} disabled={loading} />
           </ThemedText>
         </ThemedView>
         <HabitManagerForm formikRef={formikRef} />
@@ -74,16 +74,14 @@ export default function HabitManagerIndex() {
 
 const styles = StyleSheet.create({
   pageContainer: {
-    flex: 1,
     alignItems: "center",
     // marginTop: 30,
   },
   contentContainer: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
     marginTop: 10,
-    width: "96%",
+    width: "97%",
     borderTopLeftRadius: theme.radius.radius20,
     borderTopRightRadius: theme.radius.radius20,
   },
@@ -132,16 +130,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: -1,
-  },
-  backgroundImage: {
-    width: "100%",
-    resizeMode: "cover",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: -1,
-    opacity: 1,
   },
 })

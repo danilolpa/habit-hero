@@ -2,24 +2,11 @@ import { View, StyleSheet } from "react-native"
 import { useFormikContext } from "formik"
 
 import { Input } from "@/components/Input"
-import { BubblePressable } from "@/components/Buttons/BubblePressable"
-import IconsHabitModal from "@/components/IconsHabitModal"
-import { getColorContrastColorByHex, theme } from "@/Theme"
 import { HabitsType } from "@/components/HabitManager/habitManagerContext"
-import { MaterialIcons } from "@expo/vector-icons"
-import useVisibilityControl from "@/utils/useVisibilityControl"
+import { theme } from "@/Theme"
 
-interface HabitsFieldProps {
-  color: string
-}
-
-const HabitFields = (props: HabitsFieldProps) => {
-  const { color } = props
-  const { values, setFieldValue, handleChange, handleBlur, errors, touched } =
-    useFormikContext<HabitsType>()
-  const { toggleVisibility, setVisibility, getVisibility } = useVisibilityControl({
-    emoteModal: false,
-  })
+const HabitFields = ({ color }: { color: string }) => {
+  const { values, handleChange, handleBlur } = useFormikContext<HabitsType>()
 
   return (
     <View style={styles.container}>
@@ -39,29 +26,6 @@ const HabitFields = (props: HabitsFieldProps) => {
             maxLength={50}
           />
         </Input>
-
-        <BubblePressable.Button
-          color={color}
-          buttonStyle={{
-            width: 65,
-            height: 60,
-          }}
-          onPress={() => toggleVisibility("emoteModal")}
-          radius={8}
-        >
-          <MaterialIcons
-            name={values.icon}
-            size={30}
-            color={getColorContrastColorByHex(String(color))}
-            style={{ textAlign: "center" }}
-          />
-        </BubblePressable.Button>
-        <IconsHabitModal
-          isVisible={getVisibility("emoteModal") || false}
-          onClose={() => setVisibility("emoteModal", false)}
-          selectedColor={color}
-          habitIconActual={values.icon}
-        />
       </View>
       <Input.Field
         placeholder="Descrição"
