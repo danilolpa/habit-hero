@@ -180,7 +180,7 @@ export const DAYS_LIST_OF_MONTH = [
 export const HABITS_DATA: HabitsType[] = [
   {
     id: 1,
-    name: "Corrida todas as manhãs para manter a forma",
+    name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     description: "Corrida todas as manhãs para manter a forma.",
     completed: false,
     date: "2024-07-21T06:39:14-03:00",

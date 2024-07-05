@@ -1,5 +1,5 @@
 import { StyleSheet, Pressable, Platform } from "react-native"
-import { ThemedView } from "./Utils/Themed"
+import { IconsProps, ThemedView } from "./Utils/Themed"
 import { MaterialIcons } from "@expo/vector-icons"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import React, { useMemo, useState } from "react"
@@ -12,7 +12,7 @@ interface iconModalProps {
   isVisible: boolean
   onClose: () => void
   selectedColor: string
-  habitIconActual: string
+  habitIconActual: IconsProps["name"]
 }
 
 export default function IconsHabitModal(props: iconModalProps) {

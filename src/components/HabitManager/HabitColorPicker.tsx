@@ -1,10 +1,10 @@
 import { StyleSheet, FlatList, ViewStyle, Pressable, Text } from "react-native"
-import { ThemedView } from "./Utils/Themed"
+import { ThemedView } from "@/components/Utils/Themed"
 import { HabitColorNameType, getColorHexByName, theme, HabitColorType } from "@/Theme"
 import { useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
 import * as Haptics from "expo-haptics"
-import { useHabitManagerContext } from "@/app/habitsManager/habitManagerContext"
+import { useHabitManagerContext } from "@/components/HabitManager/habitManagerContext"
 import { useFormikContext } from "formik"
 
 type ColorPickerProps = {

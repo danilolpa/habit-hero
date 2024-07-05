@@ -1,38 +1,27 @@
-import { View, Text, StyleSheet } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { useFormikContext } from "formik"
+import { useEffect, useRef, useState } from "react"
 
 import { getColorHexByName, theme } from "@/Theme"
 import ContentFlexRow from "@/components/ContentFlexRow"
 import Chip from "@/components/Buttons/Chip"
-import { HabitsType } from "@/app/habitsManager/habitManagerContext"
-import Button from "@/components/Buttons/Buttons"
+import { HabitsType } from "@/components/HabitManager/habitManagerContext"
 import AccordionContainer from "@/components/AccordionContainer"
 import ContentContainer from "@/components/ContentContainer"
-import { useEffect, useRef, useState } from "react"
 import { getNextHour } from "@/utils/dateHelpers"
-import { FadeOut } from "react-native-reanimated"
-import HabitReminderPicker from "./HabitReminderPicker"
-import { BubblePressable } from "../Buttons/BubblePressable"
+import HabitReminderPicker from "@/components/HabitManager/HabitReminderPicker"
 
-interface FormValues {
-  reminderTimes: HabitsType["reminderTimes"]
-  color: HabitsType["color"]
-  reminder: HabitsType["reminder"]
-}
 interface HabitReminderSelectorProps {
-  selectedColor?: string
+  color?: string
 }
 export default function HabitReminderSelector(props: HabitReminderSelectorProps) {
-  const { values, setFieldValue } = useFormikContext<FormValues>()
+  const { values, setFieldValue } = useFormikContext<HabitsType>()
+  const { color = theme.colors.primary.base } = props
   const { reminderTimes, reminder } = values
-  const [selectedColor, setSelectedColor] = useState(getColorHexByName(values.color))
   const [editItem, setEditItem] = useState("")
 
   const prevReminderRef = useRef(reminder)
   const prevReminderTimesRef = useRef(reminderTimes)
-  useEffect(() => {
-    setSelectedColor(getColorHexByName(values.color))
-  }, [values.color])
 
   useEffect(() => {
     const prevReminder = prevReminderRef.current
@@ -86,35 +75,33 @@ export default function HabitReminderSelector(props: HabitReminderSelectorProps)
     )
   }
   return (
-    <AccordionContainer
-      isVisible={reminder || false}
-      header={
-        <ContentFlexRow
-          text="Lembrar-me no horário"
-          switchOptions={{
-            selectedColor: selectedColor || theme.colors.black.base,
-            value: reminder || false,
-            onValueChange: () => {
-              setFieldValue("reminder", reminder ? false : true)
-            },
-          }}
-          iconRotated={reminder}
-        />
-      }
-    >
-      <ContentContainer schemeColor="light">
-        <View style={styles.container}>
-          <HabitReminderPicker
-            color={selectedColor}
-            editItem={editItem}
-            setEditItem={setEditItem}
+    <ContentContainer>
+      <AccordionContainer
+        isVisible={reminder || false}
+        header={
+          <ContentFlexRow
+            text="Lembrar-me no horário"
+            switchOptions={{
+              selectedColor: color || theme.colors.black.base,
+              value: reminder || false,
+              onValueChange: () => {
+                setFieldValue("reminder", reminder ? false : true)
+              },
+            }}
+            iconRotated={reminder}
           />
-          <View style={styles.timesContainer}>
-            {reminderTimes && reminderTimes.map((time) => renderTime(time))}
+        }
+      >
+        <ContentContainer schemeColor="light">
+          <View style={styles.container}>
+            <HabitReminderPicker color={color} editItem={editItem} setEditItem={setEditItem} />
+            <View style={styles.timesContainer}>
+              {reminderTimes && reminderTimes.map((time) => renderTime(time))}
+            </View>
           </View>
-        </View>
-      </ContentContainer>
-    </AccordionContainer>
+        </ContentContainer>
+      </AccordionContainer>
+    </ContentContainer>
   )
 }
 

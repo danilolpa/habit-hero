@@ -1,12 +1,13 @@
 import { theme } from "@/Theme"
 import { ReactNode } from "react"
 import { View, TextInput, TextInputProps, StyleSheet } from "react-native"
-import { ThemedView } from "./Utils/Themed"
+import { ThemedText, ThemedView } from "./Utils/Themed"
 import { useThemeColor } from "@/components/Utils/Themed"
 
 type InputProps = {
   children: ReactNode
   size?: "small" | "medium" | "large"
+  errorMessage?: string | false
 }
 
 type InputFieldProps = TextInputProps & {
@@ -14,14 +15,20 @@ type InputFieldProps = TextInputProps & {
   darkColor?: string
   size?: "small" | "medium" | "large"
   styleField?: Object
+  invalidField?: boolean
 }
 
-function Input({ children }: InputProps) {
-  return <View>{children}</View>
+function Input({ children, errorMessage }: InputProps) {
+  return (
+    <View style={styles.input}>
+      {children}
+      {errorMessage && <ThemedText>{errorMessage}</ThemedText>}
+    </View>
+  )
 }
 
 function InputField({ ...props }: InputFieldProps) {
-  const { lightColor, darkColor, style, size, multiline, styleField } = props
+  const { lightColor, darkColor, style, size, multiline, styleField, invalidField } = props
 
   const backgroundColor = useThemeColor({
     light: lightColor || "transparent",
@@ -79,4 +86,9 @@ export const styles = StyleSheet.create({
   fieldMultiline: {
     paddingTop: 20,
   },
+  input: {
+    flex: 1,
+    width: "100%",
+  },
+  inputError: {},
 })

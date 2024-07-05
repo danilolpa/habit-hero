@@ -1,6 +1,6 @@
 import { theme } from "@/Theme"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
-import { HabitManagerProvider } from "./habitManagerContext"
+import { HabitManagerProvider } from "@/components/HabitManager/habitManagerContext"
 import { Slot } from "expo-router"
 
 import { ToastProvider } from "@/components/useToast"

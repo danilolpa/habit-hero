@@ -1,6 +1,6 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { getDaysOfWeek } from "./dateHelpers"
-import { goalProps } from "@/app/habitsManager/habitManagerContext"
+import { goalProps } from "@/components/HabitManager/habitManagerContext"
 import { pluralizeIfNeeded } from "./textHelpers"
 
 const getGoalTypeByIndex = (index: number) => {

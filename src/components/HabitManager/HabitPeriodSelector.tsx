@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import { useFormikContext } from "formik"
 
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { getColorHexByName } from "@/Theme"
-import { HabitsType, TimePeriodType } from "@/app/habitsManager/habitManagerContext"
+import { getColorHexByName, theme } from "@/Theme"
+import { HabitsType, TimePeriodType } from "@/components/HabitManager/habitManagerContext"
 import { formatGoalText } from "@/utils/habitManagerHelpers"
 import Chip from "@/components/Buttons/Chip"
 import Warning from "@/components/Warning"
@@ -15,7 +15,7 @@ import useVisibilityControl from "@/utils/useVisibilityControl"
 import { enhanceArrayText } from "@/utils/textHelpers"
 
 interface HabitPeriodSelectorProps {
-  // selectedColor?: string
+  color?: string
 }
 
 interface FormValues {
@@ -24,10 +24,10 @@ interface FormValues {
   color: HabitsType["color"]
 }
 
-export default function HabitPeriodSelector() {
+export default function HabitPeriodSelector(props: HabitPeriodSelectorProps) {
   const { values, setFieldValue } = useFormikContext<FormValues>()
-  const [selectedColor, setSelectedColor] = useState<string>(getColorHexByName(values.color))
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriodType[]>(values.period || [])
+  const { color = theme.colors.primary.base } = props
   const { MORNING, AFTERNOON, NIGHT, ANYTIME } = APP_CONSTANTS.HABIT.PERIOD
 
   const { toggleVisibility, getVisibility } = useVisibilityControl({
@@ -57,10 +57,6 @@ export default function HabitPeriodSelector() {
       setSelectedPeriod([ANYTIME])
     }
   }, [selectedPeriod])
-
-  useEffect(() => {
-    setSelectedColor(getColorHexByName(values.color))
-  }, [values.color])
 
   const countSelectedPeriods = selectedPeriod.length
   const constructWarnText = () => {
@@ -117,19 +113,19 @@ export default function HabitPeriodSelector() {
         <View style={styles.container}>
           <View style={styles.row}>
             <Chip
-              activeColor={selectedColor}
+              activeColor={color}
               selected={selectedPeriod.includes(MORNING)}
               onPress={() => handleSelect(MORNING)}
               text="Manhã"
             />
             <Chip
-              activeColor={selectedColor}
+              activeColor={color}
               onPress={() => handleSelect(AFTERNOON)}
               selected={selectedPeriod.includes(AFTERNOON)}
               text="Tarde"
             />
             <Chip
-              activeColor={selectedColor}
+              activeColor={color}
               onPress={() => handleSelect(NIGHT)}
               selected={selectedPeriod.includes(NIGHT)}
               text="Noite"
@@ -139,7 +135,7 @@ export default function HabitPeriodSelector() {
           <View style={styles.row}>
             <Chip
               style={styles.chipFull}
-              activeColor={selectedColor}
+              activeColor={color}
               onPress={() => handleSelect(ANYTIME)}
               selected={selectedPeriod.includes(ANYTIME)}
               text="A qualquer hora do dia"

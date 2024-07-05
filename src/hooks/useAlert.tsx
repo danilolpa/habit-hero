@@ -11,16 +11,36 @@ interface AlertContextProps {
 }
 
 const AlertContext = createContext<AlertContextProps | undefined>(undefined)
-
+/**
+ * A React functional component that provides an Alert context for managing and displaying alerts.
+ *
+ * @param children - The React children to be rendered within the AlertProvider.
+ * @returns A React functional component that provides the Alert context.
+ */
 const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  /**
+   * State variable to hold the properties of the alert to be displayed.
+   */
   const [alertProps, setAlertProps] = useState<ShowAlertProps | null>(null)
+
+  /**
+   * State variable to hold the visibility state of the alert.
+   */
   const [visible, setVisible] = useState(false)
 
+  /**
+   * Function to show an alert with the given properties.
+   *
+   * @param props - The properties of the alert to be displayed.
+   */
   const showAlert = (props: ShowAlertProps) => {
     setAlertProps(props)
     setVisible(true)
   }
 
+  /**
+   * Function to close the currently displayed alert.
+   */
   const closeAlert = () => {
     setVisible(false)
   }
@@ -47,6 +67,13 @@ const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     </AlertContext.Provider>
   )
 }
+
+/**
+ * Hook to access and manage the Alert context.
+ *
+ * @throws Will throw an error if the hook is not used within an AlertProvider.
+ * @returns An object containing the Alert context properties and methods.
+ */
 
 export const useAlert = (): AlertContextProps => {
   const context = useContext(AlertContext)

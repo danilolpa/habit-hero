@@ -8,14 +8,6 @@ import { SlideInDown, SlideInUp, SlideOutDown, SlideOutUp } from "react-native-r
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ScrollView } from "react-native-gesture-handler"
 
-export type ColorConfig = {
-  background: string
-  title: string
-  text: string
-  cancelText: string
-  confirmText: string
-}
-
 export type ActionsProps = {
   title?: string
   onPress?: () => void
@@ -25,7 +17,7 @@ export type ActionsProps = {
 
 export type CustomAlertProps = {
   visible: boolean
-  title: string
+  title?: string
   text: string
   confirm?: ActionsProps
   cancel?: ActionsProps
@@ -80,14 +72,16 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
                   paddingHorizontal: theme.spaces.defaultSpace,
                 }}
               >
-                <ThemedText
-                  style={[styles.title]}
-                  lightColor={theme.colors.black.base}
-                  darkColor={theme.colors.white.base}
-                  fontWeight="bold"
-                >
-                  {title}
-                </ThemedText>
+                {title && (
+                  <ThemedText
+                    style={[styles.title]}
+                    lightColor={theme.colors.black.base}
+                    darkColor={theme.colors.white.base}
+                    fontWeight="bold"
+                  >
+                    {title}
+                  </ThemedText>
+                )}
                 <ThemedText
                   style={[styles.text]}
                   lightColor={theme.colors.black.base}
@@ -174,7 +168,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spaces.defaultSpace,
     lineHeight: 30,
     paddingTop: theme.spaces.defaultSpace,
-    paddingBottom: theme.spaces.defaultSpace,
     marginTop: theme.spaces.defaultSpace,
   },
   text: {
@@ -182,6 +175,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     lineHeight: 24,
+    paddingTop: theme.spaces.defaultSpace,
   },
   buttonContainer: {
     width: "100%",

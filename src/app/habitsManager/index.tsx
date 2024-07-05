@@ -6,7 +6,8 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
 import { HabitManagerForm } from "./habitManagerForm"
 import { useRef } from "react"
-import { useHabitManagerContext } from "./habitManagerContext"
+import { HabitsType, useHabitManagerContext } from "@/components/HabitManager/habitManagerContext"
+import { FormikProps } from "formik"
 
 interface HabitManagerFormProps {
   submitForm: () => void
@@ -14,10 +15,16 @@ interface HabitManagerFormProps {
 
 export default function HabitManagerIndex() {
   const route = useNavigation()
-  const formRef = useRef()
+  const formikRef = useRef<FormikProps<HabitsType>>(null)
   const { colorHabit } = useHabitManagerContext()
 
   const activeColor = getColorHexByName(colorHabit) || theme.colors.primary.base
+
+  const handleSubmit = () => {
+    if (formikRef.current) {
+      formikRef.current.handleSubmit()
+    }
+  }
 
   return (
     <View style={styles.pageContainer}>
@@ -56,18 +63,10 @@ export default function HabitManagerIndex() {
             Hábito
           </ThemedText>
           <ThemedText style={styles.headerButton}>
-            <Button
-              title="Salvar"
-              color={activeColor}
-              onPress={() => {
-                if (formRef.current) {
-                  formRef.current.submitForm()
-                }
-              }}
-            />
+            <Button title="Salvar" color={activeColor} onPress={handleSubmit} />
           </ThemedText>
         </ThemedView>
-        <HabitManagerForm ref={formRef} />
+        <HabitManagerForm formikRef={formikRef} />
       </ThemedView>
     </View>
   )

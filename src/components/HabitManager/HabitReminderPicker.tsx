@@ -8,7 +8,7 @@ import Warning from "@/components/Warning"
 import { generateTimeRange, getNextHour } from "@/utils/dateHelpers"
 import { ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
-import { HabitsType } from "@/app/habitsManager/habitManagerContext"
+import { HabitsType } from "@/components/HabitManager/habitManagerContext"
 import ContentFlexRow from "../ContentFlexRow"
 import { useAlert } from "../../hooks/useAlert"
 

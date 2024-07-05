@@ -1,16 +1,17 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
-import MaterialIcons from "@expo/vector-icons/build/MaterialIcons"
 import React, { createContext, useContext, useState } from "react"
 import { HabitColorNameType } from "@/Theme"
+import { IconsProps } from "../Utils/Themed"
 
 type habitManagerContextType = {
   loading: boolean
+  setLoading: (loading: boolean) => void
   error: string | null
   habitData: HabitsType
   colorHabit: string
   updateHabitData: (name: string, value: any) => void
-  submitForm: (form: any) => void
+  saveHabitService: (form: any) => void
   setColorHabit: (color: HabitColorNameType) => void
 }
 
@@ -47,33 +48,31 @@ export type TimePeriodType = "MORNING" | "AFTERNOON" | "NIGHT" | "ANYTIME"
 export interface HabitsType {
   name: string
   description: string
-  completed: boolean
-  icon: keyof typeof MaterialIcons.glyphMap
-  priority: number
+  icon: IconsProps["name"]
   repeat: boolean
   frequency: "DAILY" | "WEEKLY" | "MONTHLY" | "SINGLE"
   frequencySchedule: frequencyScheduleType
-  singleDate?: singleDateProps
+  singleDate: singleDateProps
   goal: goalProps
   color: HabitColorNameType
   status: "TO_DO" | "IGNORED" | "COMPLETED"
-  reminderTimes?: string[]
-  reminder?: boolean
-  period?: TimePeriodType[]
+  reminderTimes: string[]
+  reminder: boolean
+  period: TimePeriodType[]
   createdBy: string
   createdDate: string
   concludedDate?: string
   endDate?: string
+
+  priority?: number
+  difficulty?: string
   notes?: string
-  tags: string[]
-  difficulty: string
 }
 
 const initialHabitData: HabitsType = {
-  name: "",
+  name: "teste",
   description: "",
   icon: "fastfood",
-  priority: 1,
   repeat: false,
   frequency: APP_CONSTANTS.HABIT.FREQUENCY.DAILY,
   frequencySchedule: {
@@ -97,14 +96,14 @@ const initialHabitData: HabitsType = {
   status: "TO_DO",
   createdBy: "",
   endDate: "",
-  completed: false,
-  notes: "",
   period: ["ANYTIME"],
   reminder: false,
   reminderTimes: [],
   color: "primary",
-  tags: ["health", "fitness", "workout", "study", "school", "family", "friends"],
+
+  priority: 1,
   difficulty: "",
+  notes: "",
 }
 
 const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
@@ -114,17 +113,17 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const [colorHabit, setColorHabit] = useState<HabitColorNameType>(initialHabitData.color)
 
   const updateHabitData = (name: string, value: any) => {
-    // const { name, value } = e.target
     setHabitData((prevState) => ({ ...prevState, [name]: value }))
   }
 
-  const submitForm = async (formData: Object) => {
+  const saveHabitService = async (formData: Object) => {
     setLoading(true)
-    setError(null)
+
     try {
+      console.log("submitted", formData)
       // Substitute with the actual API call
       // await api.post('/endpoint', formData);
-      console.log("Form:", formData)
+      // console.log("Form:", formData)
     } catch (e: any) {
       setError(e.message)
     } finally {
@@ -138,10 +137,11 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
     <HabitManagerContext.Provider
       value={{
         loading,
+        setLoading,
         error,
         habitData,
         updateHabitData,
-        submitForm,
+        saveHabitService,
         colorHabit,
         setColorHabit,
       }}
