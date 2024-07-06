@@ -17,7 +17,7 @@ export default function Navigation() {
   }
 
   return (
-    <Stack initialRouteName={APP_CONSTANTS.NAV.HABITS_HOME}>
+    <Stack initialRouteName={APP_CONSTANTS.NAV.TESTS}>
       <Stack.Screen
         name={APP_CONSTANTS.NAV.HABITS_HOME}
         options={{ headerShown: false }}
@@ -31,6 +31,11 @@ export default function Navigation() {
       />
       <Stack.Screen
         name={APP_CONSTANTS.NAV.SETTINGS}
+        options={{ headerShown: false }}
+        listeners={navigationListeners}
+      />
+      <Stack.Screen
+        name={APP_CONSTANTS.NAV.TESTS}
         options={{ headerShown: false }}
         listeners={navigationListeners}
       />
