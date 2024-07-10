@@ -2,27 +2,20 @@ import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import JsonViewer from "@/components/Utils/JsonView"
 
-import { getData, storeData, removeData, getAllKeys } from "@/store/storageService"
-import { addHabit, getAllHabits, Habit, clearHabits } from "@/store/habitStoreService"
+import { addHabit, getAllHabits, clearHabits } from "@/store/habitStoreService"
 import { ScrollView } from "react-native-gesture-handler"
 import Button from "@/components/Buttons/Buttons"
 
-import "react-native-get-random-values"
-import { v4 as uuidv4 } from "uuid"
 import { View } from "react-native"
 import { useEffect, useState } from "react"
+import { HabitsType, initialHabitData } from "@/components/HabitManager/habitManagerContext"
 
 export default function Tests() {
-  const [habits, setHabits] = useState<Habit[]>([])
+  const [habits, setHabits] = useState<HabitsType[]>([])
+  const [allKeys, setAllKeys] = useState<HabitsType[]>([])
 
   const handleSave = async () => {
-    const newHabit: Habit = {
-      id: uuidv4(),
-      title: "New Habit",
-      description: "Description of the new habit",
-      frequency: "daily",
-      startDate: new Date().toISOString(),
-    }
+    const newHabit: HabitsType = initialHabitData
     await addHabit(newHabit)
     setHabits(await getAllHabits())
   }
@@ -30,6 +23,11 @@ export default function Tests() {
   const handleClearHabits = async () => {
     await clearHabits()
     setHabits([])
+  }
+
+  const handleLoadHabits = async () => {
+    const storedHabits = await getAllHabits()
+    setHabits(storedHabits)
   }
 
   useEffect(() => {
@@ -46,9 +44,10 @@ export default function Tests() {
       darkColor={theme.colors.black.base}
       lightColor={theme.colors.white.base}
     >
-      <View style={{ width: "100%" }}>
+      <View style={{ width: "100%", height: "90%", marginTop: "10%" }}>
         <Button title="Add habit" onPress={handleSave} />
         <Button title="Clear habit" onPress={handleClearHabits} />
+        <Button title="Load habits" onPress={handleLoadHabits} />
         <ScrollView style={{ height: "80%", width: "100%" }}>
           <ThemedText>Tests</ThemedText>
           <JsonViewer jsonString={habits} />

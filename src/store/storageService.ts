@@ -16,8 +16,6 @@ export const storeData = async (key: string, value: string): Promise<void> => {
   try {
     console.log("storeData key:", key)
     console.log("storeData value:", value)
-    storage.clear()
-
     await storage.setItem(key, value)
   } catch (error) {
     console.error(`Failed to store data for key ${key}:`, error)
@@ -46,5 +44,20 @@ export const clearAll = async (): Promise<void> => {
     await storage.clear()
   } catch (error) {
     console.error("Failed to clear all data:", error)
+  }
+}
+
+export const getAllData = async (): Promise<{ [key: string]: string | null }> => {
+  try {
+    const keys = await getAllKeys()
+    const result = await AsyncStorage.multiGet(keys)
+    const data: { [key: string]: string | null } = {}
+    result.forEach(([key, value]) => {
+      data[key] = value
+    })
+    return data
+  } catch (error) {
+    console.error("Failed to get all data:", error)
+    return {}
   }
 }

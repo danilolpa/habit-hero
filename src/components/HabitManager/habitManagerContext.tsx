@@ -2,7 +2,10 @@ import APP_CONSTANTS from "@/constants/AppConstants"
 import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
 import React, { createContext, useContext, useState } from "react"
 import { HabitColorNameType } from "@/Theme"
+import "react-native-get-random-values"
+import { v4 as uuidv4 } from "uuid"
 import { IconsProps } from "../Utils/Themed"
+import { addHabit } from "@/store/habitStoreService"
 
 type habitManagerContextType = {
   loading: boolean
@@ -46,6 +49,7 @@ export interface goalProps {
 export type TimePeriodType = "MORNING" | "AFTERNOON" | "NIGHT" | "ANYTIME"
 
 export interface HabitsType {
+  id: string
   name: string
   description: string
   icon: IconsProps["name"]
@@ -69,8 +73,11 @@ export interface HabitsType {
   notes?: string
 }
 
-const initialHabitData: HabitsType = {
-  name: "teste",
+const id = uuidv4()
+
+export const initialHabitData: HabitsType = {
+  id: id,
+  name: id,
   description: "",
   icon: "fastfood",
   repeat: false,
@@ -116,20 +123,14 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
     setHabitData((prevState) => ({ ...prevState, [name]: value }))
   }
 
-  const saveHabitService = async (formData: Object) => {
-    setLoading(true)
-
+  const saveHabitService = async (habitData: HabitsType) => {
     try {
-      console.log("submitted", formData)
-      // Substitute with the actual API call
-      // await api.post('/endpoint', formData);
-      // console.log("Form:", formData)
+      setLoading(true)
+      await addHabit(habitData)
     } catch (e: any) {
       setError(e.message)
     } finally {
-      setTimeout(() => {
-        setLoading(false)
-      }, 5000)
+      setLoading(false)
     }
   }
 

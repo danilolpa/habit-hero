@@ -17,6 +17,7 @@ import HabitFrequencySelectors from "@/components/HabitManager/HabitFrequencySel
 import HabitFields from "@/components/HabitManager/HabitFields"
 import { BubblePressable } from "@/components/Buttons/BubblePressable"
 import HabitIconSelector from "@/components/HabitManager/HabitIconSelector"
+import Loading from "@/components/Loading"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -41,6 +42,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
       await validationSchema.validate(data, { abortEarly: false })
       return true
     } catch (error: any) {
+      setLoading(false)
       Alert.Show({ text: error.errors[0], title: "Aviso!" })
       return false
     }
@@ -52,9 +54,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
         saveHabitService(values)
       } else {
         // throw error
-        setTimeout(() => {
-          setLoading(false)
-        }, 5000)
+        setLoading(false)
       }
     })
   }
@@ -77,7 +77,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
 
           return (
             <ThemedView style={styles.container}>
-              {loading && <Text>Carregando...</Text>}
+              <Loading visible={loading} color={selectedColor} />
               <HabitFields color={selectedColor} />
               <View
                 style={{
@@ -99,7 +99,7 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
                     flexShrink: 1,
                   }}
                 >
-                  <ColorPicker initialColor={formikProps.values.color} />
+                  <ColorPicker initialColor={values.color} />
                 </View>
               </View>
               <ContentContainer>
@@ -122,7 +122,6 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
                   color={selectedColor}
                 />
               </View>
-              <JsonViewer jsonString={values}></JsonViewer>
             </ThemedView>
           )
         }}
