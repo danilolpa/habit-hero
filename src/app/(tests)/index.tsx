@@ -43,13 +43,15 @@ export default function Tests() {
       className="flex-1 items-center justify-center text-white"
       darkColor={theme.colors.black.base}
       lightColor={theme.colors.white.base}
+      style={{ paddingHorizontal: 20 }}
     >
       <View style={{ width: "100%", height: "90%", marginTop: "10%" }}>
-        <Button title="Add habit" onPress={handleSave} />
-        <Button title="Clear habit" onPress={handleClearHabits} />
-        <Button title="Load habits" onPress={handleLoadHabits} />
+        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <Button title="Add habit" onPress={handleSave} />
+          <Button title="Clear habit" onPress={handleClearHabits} />
+          <Button title="Load habits" onPress={handleLoadHabits} />
+        </View>
         <ScrollView style={{ height: "80%", width: "100%" }}>
-          <ThemedText>Tests</ThemedText>
           <JsonViewer jsonString={habits} />
         </ScrollView>
       </View>

@@ -42,9 +42,10 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
       await validationSchema.validate(data, { abortEarly: false })
       return true
     } catch (error: any) {
-      setLoading(false)
       Alert.Show({ text: error.errors[0], title: "Aviso!" })
       return false
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -53,7 +54,6 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
       if (isValid) {
         saveHabitService(values)
       } else {
-        // throw error
         setLoading(false)
       }
     })

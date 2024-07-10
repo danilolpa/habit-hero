@@ -17,13 +17,15 @@ export const getAllHabits = async (): Promise<HabitsTypeService[]> => {
 }
 
 // Função para adicionar um novo hábito
-export const addHabit = async (habit: HabitsTypeService): Promise<void> => {
+export const addHabit = async (habit: HabitsTypeService): Promise<boolean> => {
   try {
     const habits = await getAllHabits()
     habits.push(habit)
     await storeData(HABITS_KEY, JSON.stringify(habits))
+    return true
   } catch (error) {
     console.error("Failed to add habit:", error)
+    return false
   }
 }
 

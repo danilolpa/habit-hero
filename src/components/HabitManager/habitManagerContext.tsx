@@ -6,6 +6,8 @@ import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import { IconsProps } from "../Utils/Themed"
 import { addHabit } from "@/store/habitStoreService"
+import { useRouter } from "expo-router"
+import { AlertComponent, useAlert } from "@/hooks/useAlert"
 
 type habitManagerContextType = {
   loading: boolean
@@ -76,7 +78,7 @@ export interface HabitsType {
 const id = uuidv4()
 
 export const initialHabitData: HabitsType = {
-  id: id,
+  id: "",
   name: id,
   description: "",
   icon: "fastfood",
@@ -118,6 +120,8 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState(null)
   const [habitData, setHabitData] = useState(initialHabitData)
   const [colorHabit, setColorHabit] = useState<HabitColorNameType>(initialHabitData.color)
+  const router = useRouter()
+  const { Alert } = useAlert()
 
   const updateHabitData = (name: string, value: any) => {
     setHabitData((prevState) => ({ ...prevState, [name]: value }))
@@ -126,9 +130,21 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
   const saveHabitService = async (habitData: HabitsType) => {
     try {
       setLoading(true)
-      await addHabit(habitData)
+      const hasAdded = await addHabit(habitData)
+      if (hasAdded) {
+        router.dismiss(1)
+      } else {
+        throw new Error("Hábito não foi salvo.")
+      }
     } catch (e: any) {
       setError(e.message)
+      setLoading(false)
+      setTimeout(() => {
+        Alert.Show({
+          text: e.message,
+          title: "Erro ao salvar o hábito!",
+        })
+      }, 100)
     } finally {
       setLoading(false)
     }
@@ -147,6 +163,7 @@ const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {
         setColorHabit,
       }}
     >
+      <AlertComponent />
       {children}
     </HabitManagerContext.Provider>
   )

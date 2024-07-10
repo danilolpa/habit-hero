@@ -17,7 +17,7 @@ export default function Navigation() {
   }
 
   return (
-    <Stack initialRouteName={APP_CONSTANTS.NAV.TESTS}>
+    <Stack initialRouteName={APP_CONSTANTS.NAV.HABITS_HOME}>
       <Stack.Screen
         name={APP_CONSTANTS.NAV.HABITS_HOME}
         options={{ headerShown: false }}
