@@ -8,6 +8,7 @@ import { getFormattedDate } from "@/utils/dateHelpers"
 
 import { ThemedText, ThemedView } from "./Utils/Themed"
 import { theme } from "@/Theme"
+import { useHabits } from "@/app/(habits)/habitsContext"
 
 interface CustomFlatListProps extends FlatListProps<string> {
   contentContainerStyle?: FlatListProps<string>["contentContainerStyle"]
@@ -28,7 +29,7 @@ export default function DateSlider() {
     end: addDays(new Date(), afterDays),
   }).map((date) => ({ date }))
 
-  const [selectedDate, setSelectedDate] = useState(getFormattedDate(dateFormat))
+  const { selectedDate, setSelectedDate } = useHabits()
   const [selectedDateIndex, setSelectedDateIndex] = useState(0)
 
   const flatListRef = useRef<FlatList<DataItems> | null>(null)
@@ -42,6 +43,7 @@ export default function DateSlider() {
   useEffect(() => {
     const index = dates.findIndex(({ date }) => format(date, dateFormat) === selectedDate)
     setSelectedDateIndex(index)
+    console.log(selectedDate, selectedDateIndex)
   }, [selectedDate])
 
   useEffect(() => {
@@ -122,7 +124,7 @@ export default function DateSlider() {
         renderItem={renderItem}
         contentContainerStyle={styles.listContainer}
         initialNumToRender={dates.length}
-        initialScrollIndex={selectedDateIndex}
+        initialScrollIndex={selectedDateIndex < 0 ? 0 : selectedDateIndex}
         getItemLayout={getItemLayout}
         onScrollToIndexFailed={onScrollToIndexFailed}
       />
