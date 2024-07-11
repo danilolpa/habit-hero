@@ -16,7 +16,7 @@ import {
   HABIT_WEEK_FREQUENCY_NUMBERS,
 } from "@/utils/testData/habitsData"
 import APP_CONSTANTS from "@/constants/AppConstants"
-import { HabitsType } from "@/components/HabitManager/habitManagerContext"
+import { HabitsType } from "@/types/habits"
 
 import { formatFrequencyText } from "@/utils/habitManagerHelpers"
 import useVisibilityControl from "@/utils/useVisibilityControl"

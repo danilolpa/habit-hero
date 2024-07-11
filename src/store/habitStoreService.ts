@@ -1,5 +1,5 @@
 import { getData, storeData, removeData } from "./storageService"
-import { HabitsType } from "@/components/HabitManager/habitManagerContext"
+import { HabitsType } from "@/types/habits"
 
 const HABITS_KEY = "HABITS"
 

@@ -1,7 +1,7 @@
 import { View, StyleSheet } from "react-native"
 import { BubblePressable } from "../Buttons/BubblePressable"
 import IconsHabitModal from "../IconsHabitModal"
-import { HabitsType } from "./habitManagerContext"
+import { HabitsType } from "@/types/habits"
 import { useFormikContext } from "formik"
 import useVisibilityControl from "@/utils/useVisibilityControl"
 import { ThemedIcon } from "../Utils/Themed"

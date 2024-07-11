@@ -8,11 +8,11 @@ import Button from "@/components/Buttons/Buttons"
 
 import { View } from "react-native"
 import { useEffect, useState } from "react"
-import { HabitsType, initialHabitData } from "@/components/HabitManager/habitManagerContext"
+import { initialHabitData } from "@/app/habitsManager/habitManagerContext"
+import { HabitsType } from "@/types/habits"
 
 export default function Tests() {
   const [habits, setHabits] = useState<HabitsType[]>([])
-  const [allKeys, setAllKeys] = useState<HabitsType[]>([])
 
   const handleSave = async () => {
     const newHabit: HabitsType = initialHabitData

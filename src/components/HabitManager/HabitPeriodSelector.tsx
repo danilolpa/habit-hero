@@ -4,7 +4,7 @@ import { useFormikContext } from "formik"
 
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { getColorHexByName, theme } from "@/Theme"
-import { HabitsType, TimePeriodType } from "@/components/HabitManager/habitManagerContext"
+import { HabitsType, TimePeriodType } from "@/types/habits"
 import { formatGoalText } from "@/utils/habitManagerHelpers"
 import Chip from "@/components/Buttons/Chip"
 import Warning from "@/components/Warning"

@@ -6,9 +6,8 @@ import * as Yup from "yup"
 import { ThemedView } from "@/components/Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import ColorPicker from "@/components/HabitManager/HabitColorPicker"
-import { useHabitManagerContext, HabitsType } from "@/components/HabitManager/habitManagerContext"
+import { useHabitManagerContext } from "@/app/habitsManager/habitManagerContext"
 import ContentContainer from "@/components/ContentContainer"
-import JsonViewer from "@/components/Utils/JsonView"
 import HabitPeriodSelector from "@/components/HabitManager/HabitPeriodSelector"
 import HabitReminderSelector from "@/components/HabitManager/HabitReminderSelector"
 import { useAlert } from "@/hooks/useAlert"
@@ -18,6 +17,7 @@ import HabitFields from "@/components/HabitManager/HabitFields"
 import { BubblePressable } from "@/components/Buttons/BubblePressable"
 import HabitIconSelector from "@/components/HabitManager/HabitIconSelector"
 import Loading from "@/components/Loading"
+import { HabitsType } from "@/types/habits"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()

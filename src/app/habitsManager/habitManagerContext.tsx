@@ -1,13 +1,14 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
 import React, { createContext, useContext, useState } from "react"
-import { HabitColorNameType } from "@/Theme"
+
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
-import { IconsProps } from "../Utils/Themed"
 import { addHabit } from "@/store/habitStoreService"
 import { useRouter } from "expo-router"
 import { AlertComponent, useAlert } from "@/hooks/useAlert"
+import { HabitsType } from "@/types/habits"
+import { HabitColorNameType } from "@/Theme"
 
 type habitManagerContextType = {
   loading: boolean
@@ -22,64 +23,11 @@ type habitManagerContextType = {
 
 const HabitManagerContext = createContext<habitManagerContextType>({} as habitManagerContextType)
 
-interface frequencyScheduleType {
-  daily: number[]
-  weekly: number
-  monthly: number[]
-}
-
-export interface singleDateProps {
-  year: number
-  month: number
-  day: number
-  timestamp: number
-  dateString: string
-}
-
-type GoalDetails = {
-  hours?: number
-  minutes?: number
-  count?: number
-  seconds?: number
-  type?: "TIME" | "CUP" | "PAGE" | "KILOMETER" | string
-}
-export interface goalProps {
-  hasGoal: boolean
-  goalType?: "BY_TIME" | "BY_UNITS"
-  goalDetails?: GoalDetails
-}
-export type TimePeriodType = "MORNING" | "AFTERNOON" | "NIGHT" | "ANYTIME"
-
-export interface HabitsType {
-  id: string
-  name: string
-  description: string
-  icon: IconsProps["name"]
-  repeat: boolean
-  frequency: "DAILY" | "WEEKLY" | "MONTHLY" | "SINGLE"
-  frequencySchedule: frequencyScheduleType
-  singleDate: singleDateProps
-  goal: goalProps
-  color: HabitColorNameType
-  status: "TO_DO" | "IGNORED" | "COMPLETED"
-  reminderTimes: string[]
-  reminder: boolean
-  period: TimePeriodType[]
-  createdBy: string
-  createdDate: string
-  concludedDate?: string
-  endDate?: string
-
-  priority?: number
-  difficulty?: string
-  notes?: string
-}
-
 const id = uuidv4()
 
 export const initialHabitData: HabitsType = {
-  id: "",
-  name: id,
+  id: id,
+  name: "",
   description: "",
   icon: "fastfood",
   repeat: false,
@@ -102,17 +50,11 @@ export const initialHabitData: HabitsType = {
     goalDetails: APP_CONSTANTS.HABIT.GOAL.GOAL_DETAILS_INITIAL_VALUES,
   },
   createdDate: new Date().toISOString(),
-  status: "TO_DO",
-  createdBy: "",
   endDate: "",
   period: ["ANYTIME"],
   reminder: false,
   reminderTimes: [],
   color: "primary",
-
-  priority: 1,
-  difficulty: "",
-  notes: "",
 }
 
 const HabitManagerProvider = ({ children }: { children: React.ReactNode }) => {

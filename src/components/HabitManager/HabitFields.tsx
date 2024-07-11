@@ -2,7 +2,7 @@ import { View, StyleSheet } from "react-native"
 import { useFormikContext } from "formik"
 
 import { Input } from "@/components/Input"
-import { HabitsType } from "@/components/HabitManager/habitManagerContext"
+import { HabitsType } from "@/types/habits"
 import { theme } from "@/Theme"
 
 const HabitFields = ({ color }: { color: string }) => {

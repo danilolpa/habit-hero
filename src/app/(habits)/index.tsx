@@ -1,15 +1,10 @@
-import { StyleSheet, Text, Platform, View, Button } from "react-native"
+import { StyleSheet, Platform, View } from "react-native"
 
 import HabitsList from "@/components/Habits/HabitsList"
 import { ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
-import { useToast } from "@/components/useToast"
-import { useAlert } from "@/hooks/useAlert"
 
 export default function HabitsHome() {
-  const { showToast } = useToast()
-  const { Alert } = useAlert()
-
   return (
     <ThemedView
       darkColor={theme.colors.black.base}

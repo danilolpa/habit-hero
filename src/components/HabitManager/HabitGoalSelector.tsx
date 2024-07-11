@@ -14,7 +14,7 @@ import {
 } from "@/utils/habitManagerHelpers"
 import { getColorContrastColorByHex, theme } from "@/Theme"
 import HabitGoalPicker from "@/components/HabitManager/HabitGoalPicker"
-import { HabitsType } from "@/components/HabitManager/habitManagerContext"
+import { HabitsType } from "@/types/habits"
 
 interface HabitGoalSelectorProps {
   color?: string
