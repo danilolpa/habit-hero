@@ -30,14 +30,16 @@ export const addHabit = async (habit: HabitsTypeService): Promise<boolean> => {
 }
 
 // Função para remover um hábito pelo ID
-export const removeHabit = async (habitId: string): Promise<void> => {
+export const removeHabit = async (habitId: string): Promise<boolean> => {
   try {
     let habits = await getAllHabits()
     const habitToRemove = habits.find((habit) => habit.id === habitId)
     habits = habits.filter((habit) => habit.id !== habitId)
     await storeData(HABITS_KEY, JSON.stringify(habits))
+    return true
   } catch (error) {
     console.error("Failed to remove habit:", error)
+    return false
   }
 }
 

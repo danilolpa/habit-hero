@@ -3,10 +3,8 @@ import { StyleSheet, Platform, View } from "react-native"
 import HabitsList from "@/components/Habits/HabitsList"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
-import { useHabits } from "./habitsContext"
 
 export default function HabitsHome() {
-  const { selectedDate } = useHabits()
   return (
     <ThemedView
       darkColor={theme.colors.black.base}
@@ -14,7 +12,6 @@ export default function HabitsHome() {
       style={styles.container}
     >
       <View style={styles.viewContent}>
-        <ThemedText>{selectedDate}</ThemedText>
         <HabitsList />
       </View>
     </ThemedView>

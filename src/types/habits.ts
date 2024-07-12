@@ -32,18 +32,18 @@ export type TimePeriodType = "MORNING" | "AFTERNOON" | "NIGHT" | "ANYTIME"
 export interface HabitsType {
   id: string
   name: string
-  description: string
+  description?: string
   icon: IconsProps["name"]
-  repeat: boolean
-  frequency: "DAILY" | "WEEKLY" | "MONTHLY" | "SINGLE"
-  frequencySchedule: frequencyScheduleType
-  singleDate: singleDateProps
-  goal: goalProps
+  repeat?: boolean
+  frequency?: "DAILY" | "WEEKLY" | "MONTHLY" | "SINGLE"
+  frequencySchedule?: frequencyScheduleType
+  singleDate?: singleDateProps
+  goal?: goalProps
   color: HabitColorNameType
-  reminderTimes: string[]
-  reminder: boolean
-  period: TimePeriodType[]
-  createdDate: string
+  reminderTimes?: string[]
+  reminder?: boolean
+  period?: TimePeriodType[]
+  createdDate?: string
   endDate?: string
 }
 

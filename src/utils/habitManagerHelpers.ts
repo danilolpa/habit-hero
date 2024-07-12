@@ -1,7 +1,8 @@
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { getDaysOfWeek } from "./dateHelpers"
-import { goalProps } from "@/types/habits"
+import { goalProps, HabitsType } from "@/types/habits"
 import { pluralizeIfNeeded } from "./textHelpers"
+import { HabitColorNameType } from "@/Theme"
 
 const getGoalTypeByIndex = (index: number) => {
   try {
@@ -108,4 +109,84 @@ const formatGoalText = (props: goalProps, suffix = "por dia") => {
   }
 }
 
-export { getGoalTypeByIndex, getGoalIndexByValue, formatFrequencyText, formatGoalText }
+// generateHabitTitle.ts
+
+const habitTitles = [
+  "Exercitar-se",
+  "Ler um livro",
+  "Meditar",
+  "Beber água",
+  "Comer frutas",
+  "Estudar programação",
+  "Fazer caminhada",
+  "Praticar um novo hobby",
+  "Aprender um idioma",
+  "Dormir cedo",
+  "Escrever um diário",
+  "Organizar a casa",
+  "Ajudar alguém",
+  "Cuidar do jardim",
+  "Cozinhar uma nova receita",
+  "Evitar redes sociais",
+  "Praticar gratidão",
+  "Fazer alongamentos",
+  "Planejar o dia",
+  "Reduzir o consumo de açúcar",
+]
+
+const generateHabitTitle = (): string => {
+  const randomIndex = Math.floor(Math.random() * habitTitles.length)
+  return habitTitles[randomIndex]
+}
+
+const generateRandomColor = (): HabitColorNameType => {
+  const colors: HabitColorNameType[] = [
+    "primary",
+    "red",
+    "pink",
+    "lightPurple",
+    "purple",
+    "orange",
+    "yellow",
+    "green",
+    "teal",
+    "blue",
+  ]
+  const randomIndex = Math.floor(Math.random() * colors.length)
+  return colors[randomIndex]
+}
+
+const generateRandomIcons = (): HabitsType["icon"] => {
+  const icons: HabitsType["icon"][] = [
+    "style",
+    "accessible",
+    "link",
+    "email",
+    "search",
+    "image",
+    "menu",
+    "radio",
+    "tab",
+    "timer",
+    "forward",
+    "info",
+    "check",
+    "close",
+    "book",
+    "pause",
+    "mail",
+    "home",
+  ]
+  const randomIndex = Math.floor(Math.random() * icons.length)
+  return icons[randomIndex] || "search"
+}
+
+export {
+  getGoalTypeByIndex,
+  getGoalIndexByValue,
+  formatFrequencyText,
+  formatGoalText,
+  generateHabitTitle,
+  generateRandomColor,
+  generateRandomIcons,
+}

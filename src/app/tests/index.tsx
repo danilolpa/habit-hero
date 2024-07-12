@@ -5,17 +5,29 @@ import JsonViewer from "@/components/Utils/JsonView"
 import { addHabit, getAllHabits, clearHabits } from "@/store/habitStoreService"
 import { ScrollView } from "react-native-gesture-handler"
 import Button from "@/components/Buttons/Buttons"
+import { v4 as uuidv4 } from "uuid"
 
 import { View } from "react-native"
 import { useEffect, useState } from "react"
 import { initialHabitData } from "@/app/habitsManager/habitManagerContext"
 import { HabitsType } from "@/types/habits"
+import {
+  generateHabitTitle,
+  generateRandomColor,
+  generateRandomIcons,
+} from "@/utils/habitManagerHelpers"
 
 export default function Tests() {
   const [habits, setHabits] = useState<HabitsType[]>([])
 
   const handleSave = async () => {
-    const newHabit: HabitsType = initialHabitData
+    const newHabit: HabitsType = {
+      ...initialHabitData,
+      id: uuidv4(),
+      name: generateHabitTitle(),
+      color: generateRandomColor(),
+      icon: generateRandomIcons(),
+    }
     await addHabit(newHabit)
     setHabits(await getAllHabits())
   }

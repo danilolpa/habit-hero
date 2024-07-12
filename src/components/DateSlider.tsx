@@ -43,7 +43,6 @@ export default function DateSlider() {
   useEffect(() => {
     const index = dates.findIndex(({ date }) => format(date, dateFormat) === selectedDate)
     setSelectedDateIndex(index)
-    console.log(selectedDate, selectedDateIndex)
   }, [selectedDate])
 
   useEffect(() => {

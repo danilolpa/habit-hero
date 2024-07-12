@@ -66,7 +66,7 @@ function RootLayoutNav() {
         <AlertProvider>
           <ToastProvider isModal={false}>
             <Navigation />
-            <FloatMenuHome />
+            {/* <FloatMenuHome /> */}
           </ToastProvider>
         </AlertProvider>
       </RouteProvider>

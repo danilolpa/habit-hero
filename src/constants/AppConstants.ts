@@ -8,7 +8,7 @@ const APP_CONSTANTS = {
     SETTINGS: "settings",
     STATS: "stats",
     HABIT_MANAGER: "habitsManager",
-    TESTS: "(tests)",
+    TESTS: "tests",
   },
   IMAGES: {
     SCENE_1: "/assets/images/header-img-principal-opacity.png",

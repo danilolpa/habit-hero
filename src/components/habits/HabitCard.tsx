@@ -6,54 +6,35 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withSpring,
+  FadeInLeft,
+  FadeOutRight,
+  LightSpeedOutRight,
 } from "react-native-reanimated"
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
+import { Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import styles from "./habitsStyle"
 import { useEffect } from "react"
+import { HabitsType } from "@/types/habits"
+import { removeHabit } from "@/store/habitStoreService"
+import { useHabits } from "@/app/(habits)/habitsContext"
 
-type HabitCardProps = {
-  id: number
-  name: string
-  description?: string
-  completed?: boolean
-  date?: string
-  icon: keyof typeof MaterialIcons.glyphMap
-  category: string
-  priority?: number
-  duration?: string
-  frequency?: string
-  goal: number
-  progress?: number
-  createdBy?: string
-  notes?: string
-  tags?: string[]
-  reminder?: boolean
-  color: string
-  difficulty?: string
-  otherValues?: object
+type HabitCardProps = HabitsType & {
   index: number
+  experience: number
 }
 
-export default function HabitCard({
-  icon,
-  name,
-  category,
-  duration,
-  goal,
-  color,
-  index,
-}: HabitCardProps) {
+export default function HabitCard({ icon, name, period, color, index, id }: HabitCardProps) {
   const translateX = useSharedValue(0)
   const colorHex = getColorHexByName(color)
+  const { updateHabitsList } = useHabits()
   const editButtonStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: withSpring(translateX.value * 2) }],
     }
   })
 
-  const renderRightActions = (progress, dragX) => {
+  const renderRightActions = () => {
     return (
       <Animated.View style={[styles.concluded, editButtonStyle]}>
         <Pressable>
@@ -63,7 +44,7 @@ export default function HabitCard({
     )
   }
 
-  const renderLeftActions = (progress, dragX) => {
+  const renderLeftActions = () => {
     return (
       <View style={styles.actionsContainer}>
         <Animated.View style={[styles.actionButton, editButtonStyle]}>
@@ -91,53 +72,73 @@ export default function HabitCard({
     return () => clearTimeout(timeoutId)
   }, [index, opacity, translateY])
 
-  const animatedCardEnter = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-      transform: [{ translateY: translateY.value }],
-    }
-  })
-
   const onSwipeableOpen = (direction: any) => {
     if (direction === "right") {
       console.log("right")
     }
   }
 
+  const handleDelete = (id: string) => {
+    Alert.alert(
+      "Confirmação",
+      "Você tem certeza que deseja continuar?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            await removeHabit(id)
+            updateHabitsList()
+          },
+        },
+      ],
+      { cancelable: false },
+    )
+  }
+
   return (
-    <Animated.View style={animatedCardEnter}>
+    <Animated.View
+      entering={FadeInLeft.delay(10 * index)}
+      exiting={LightSpeedOutRight.delay(10 * index)}
+    >
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
-        <ThemedView
-          style={[styles.card, { borderColor: colorHex }]}
-          darkColor={theme.colors.black.lighter}
-          lightColor={theme.colors.white.dark}
-        >
-          <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
-          <View style={styles.cardContentCenter}>
-            <ThemedText
-              darkColor={theme.colors.white.dark}
-              lightColor={theme.colors.black.dark}
-              fontWeight="bold"
-              style={styles.cardContentHabit}
-            >
-              {name}
-            </ThemedText>
-            <ThemedText
-              darkColor={theme.colors.white.light}
-              lightColor={theme.colors.black.dark}
-              fontSize={14}
-              style={[styles.cardContentMisc, { color: colorHex }]}
-            >
-              {category} - {duration}
-            </ThemedText>
-          </View>
-          <View style={styles.cardContentExp}>
-            <FontAwesome6 name="bolt-lightning" size={18} style={{ color: colorHex }} />
-            <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
-              {goal}xp
-            </ThemedText>
-          </View>
-        </ThemedView>
+        <Pressable onPress={() => handleDelete(id)}>
+          <ThemedView
+            style={[styles.card, { borderColor: colorHex }]}
+            darkColor={theme.colors.black.lighter}
+            lightColor={theme.colors.white.dark}
+          >
+            <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
+            <View style={styles.cardContentCenter}>
+              <ThemedText
+                darkColor={theme.colors.white.dark}
+                lightColor={theme.colors.black.dark}
+                fontWeight="bold"
+                style={styles.cardContentHabit}
+              >
+                {name}
+              </ThemedText>
+              <ThemedText
+                darkColor={theme.colors.white.light}
+                lightColor={theme.colors.black.dark}
+                fontSize={14}
+                style={[styles.cardContentMisc, { color: colorHex }]}
+              >
+                {id}
+              </ThemedText>
+            </View>
+            <View style={styles.cardContentExp}>
+              <FontAwesome6 name="bolt-lightning" size={18} style={{ color: colorHex }} />
+              <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
+                XP
+              </ThemedText>
+            </View>
+          </ThemedView>
+        </Pressable>
       </Swipeable>
     </Animated.View>
   )

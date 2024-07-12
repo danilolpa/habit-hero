@@ -1,9 +1,10 @@
-import { Stack } from "expo-router"
+import { Stack, Tabs } from "expo-router"
 import "react-native-reanimated"
 import "@/styles/global.css"
 
 import { useRouteContext } from "@/utils/useContextRoute"
 import APP_CONSTANTS from "@/constants/AppConstants"
+import { NavigationContainer } from "@react-navigation/native"
 
 export default function Navigation() {
   const { setCurrentRoute } = useRouteContext()

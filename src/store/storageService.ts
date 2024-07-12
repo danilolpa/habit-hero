@@ -14,8 +14,6 @@ export const getData = async (key: string): Promise<string | null> => {
 
 export const storeData = async (key: string, value: string): Promise<void> => {
   try {
-    console.log("storeData key:", key)
-    console.log("storeData value:", value)
     await storage.setItem(key, value)
   } catch (error) {
     console.error(`Failed to store data for key ${key}:`, error)
@@ -30,10 +28,10 @@ export const removeData = async (key: string): Promise<void> => {
   }
 }
 
-export const getAllKeys = async (): Promise<string[]> => {
+export const getAllKeys = async (): Promise<any> => {
   try {
     const keys = await storage.getAllKeys()
-    return keys ?? []
+    return keys
   } catch (error) {
     console.error("Failed to get all keys:", error)
     return []

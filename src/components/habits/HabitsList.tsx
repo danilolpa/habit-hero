@@ -1,55 +1,45 @@
 import { theme } from "@/Theme"
 import HabitCard from "@/components/Habits/HabitCard"
 
-import { HABITS_DATA } from "@/utils/testData/habitsData"
 import { FlatList, Platform, StyleSheet, View } from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
+import { useHabits } from "@/app/(habits)/habitsContext"
 
 export default function HabitsList() {
+  const { selectedDate, habitsList } = useHabits()
+
   const renderHeader = () => (
     <ThemedView style={styles.header}>
       <ThemedText style={styles.headerText} fontWeight="extraLight">
-        Você ainda tem{" "}
-        <ThemedText
-          fontWeight="bold"
-          style={{
-            backgroundColor: theme.colors.white.base,
-            color: theme.colors.black.base,
-            padding: 10,
-            borderRadius: 10,
-          }}
-        >
-          {" "}
-          10{" "}
-        </ThemedText>{" "}
-        não concluídas
+        {selectedDate}
       </ThemedText>
     </ThemedView>
   )
 
   return (
-    <FlatList
-      data={HABITS_DATA}
-      keyExtractor={(item) => item.id.toString()}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-      ListFooterComponent={<View style={styles.footer} />}
-      ListFooterComponentStyle={styles.container}
-      renderItem={({ item, index }) => (
-        <HabitCard
-          id={item.id}
-          name={item.name}
-          icon={item.icon}
-          category={item.category}
-          duration={item.duration}
-          goal={item.goal}
-          otherValues={item}
-          color={item.color}
-          index={index}
-        />
-      )}
-    />
+    <View>
+      {renderHeader()}
+      <FlatList
+        data={habitsList}
+        keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}
+        ListFooterComponent={<View style={styles.footer} />}
+        ListFooterComponentStyle={styles.container}
+        renderItem={({ item, index }) => (
+          <HabitCard
+            id={item.id}
+            name={item.name}
+            icon={item.icon}
+            period={item.period}
+            experience={20}
+            color={item.color}
+            index={index}
+          />
+        )}
+      />
+    </View>
   )
 }
 
