@@ -4,7 +4,8 @@ const APP_CONSTANTS = {
     SELECTED_DATE: "selected_date",
   },
   NAV: {
-    HABITS_HOME: "(habits)",
+    TABS: "(tabs)",
+    HABITS_HOME: "habits",
     SETTINGS: "settings",
     STATS: "stats",
     HABIT_MANAGER: "habitsManager",

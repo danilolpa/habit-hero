@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { View } from "react-native"
 import { useEffect, useState } from "react"
-import { initialHabitData } from "@/app/habitsManager/habitManagerContext"
+import { initialHabitData } from "@/contexts/habitManagerContext"
 import { HabitsType } from "@/types/habits"
 import {
   generateHabitTitle,

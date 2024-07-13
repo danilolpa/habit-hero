@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useNavigation } from "expo-router"
 import { HabitManagerForm } from "./habitManagerForm"
 import { useRef } from "react"
-import { useHabitManagerContext } from "@/app/habitsManager/habitManagerContext"
+import { useHabitManagerContext } from "@/contexts/habitManagerContext"
 import { FormikProps } from "formik"
 import { HabitsType } from "@/types/habits"
 

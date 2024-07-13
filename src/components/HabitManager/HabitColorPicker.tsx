@@ -4,7 +4,7 @@ import { HabitColorNameType, getColorHexByName, theme, HabitColorType } from "@/
 import { useEffect, useState } from "react"
 import { FontAwesome6 } from "@expo/vector-icons"
 import * as Haptics from "expo-haptics"
-import { useHabitManagerContext } from "@/app/habitsManager/habitManagerContext"
+import { useHabitManagerContext } from "@/contexts/habitManagerContext"
 import { useFormikContext } from "formik"
 import ContentContainer from "../ContentContainer"
 import { BounceIn, BounceOut, FlipInEasyX, FlipOutEasyX } from "react-native-reanimated"

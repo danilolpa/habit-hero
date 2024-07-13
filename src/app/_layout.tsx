@@ -7,13 +7,13 @@ import "@/styles/global.css"
 
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { RouteProvider } from "@/utils/useContextRoute"
-import Navigation from "@/app/_navigation"
 import FloatMenuHome from "@/components/FloatMenuHome"
 import { ToastProvider } from "@/components/useToast"
 import { AlertProvider } from "@/hooks/useAlert"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { StatusBar } from "expo-status-bar"
 import { Platform } from "react-native"
+import { Redirect, Stack, Tabs, usePathname } from "expo-router"
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -22,7 +22,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: APP_CONSTANTS.NAV.HABITS_HOME,
+  initialRouteName: "(tabs)/home",
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -62,14 +62,19 @@ function RootLayoutNav() {
   return (
     <GestureHandlerRootView>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-      <RouteProvider>
-        <AlertProvider>
-          <ToastProvider isModal={false}>
-            <Navigation />
-            {/* <FloatMenuHome /> */}
-          </ToastProvider>
-        </AlertProvider>
-      </RouteProvider>
+      <AlertProvider>
+        <ToastProvider isModal={false}>
+          <Stack initialRouteName="(tabs)">
+            <Stack.Screen name={APP_CONSTANTS.NAV.TABS} options={{ headerShown: false }} />
+            <Stack.Screen name={APP_CONSTANTS.NAV.SETTINGS} options={{ headerShown: false }} />
+            <Stack.Screen
+              name={APP_CONSTANTS.NAV.HABIT_MANAGER}
+              options={{ presentation: "modal", headerShown: false }}
+            />
+          </Stack>
+          {/* <FloatMenuHome /> */}
+        </ToastProvider>
+      </AlertProvider>
     </GestureHandlerRootView>
   )
 }

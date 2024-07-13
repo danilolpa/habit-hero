@@ -8,7 +8,7 @@ import { getFormattedDate } from "@/utils/dateHelpers"
 
 import { ThemedText, ThemedView } from "./Utils/Themed"
 import { theme } from "@/Theme"
-import { useHabits } from "@/app/(habits)/habitsContext"
+import { useHabits } from "@/contexts/habitsContext"
 
 interface CustomFlatListProps extends FlatListProps<string> {
   contentContainerStyle?: FlatListProps<string>["contentContainerStyle"]

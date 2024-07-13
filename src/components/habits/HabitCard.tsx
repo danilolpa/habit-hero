@@ -17,7 +17,7 @@ import styles from "./habitsStyle"
 import { useEffect } from "react"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
-import { useHabits } from "@/app/(habits)/habitsContext"
+import { useHabits } from "@//contexts/habitsContext"
 
 type HabitCardProps = HabitsType & {
   index: number

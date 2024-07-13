@@ -3,7 +3,7 @@ import HabitCard from "@/components/Habits/HabitCard"
 
 import { FlatList, Platform, StyleSheet, View } from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
-import { useHabits } from "@/app/(habits)/habitsContext"
+import { useHabits } from "@/contexts/habitsContext"
 
 export default function HabitsList() {
   const { selectedDate, habitsList } = useHabits()
