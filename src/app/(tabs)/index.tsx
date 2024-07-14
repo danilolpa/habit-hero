@@ -10,6 +10,7 @@ import { StyleSheet, Platform, View } from "react-native"
 import HabitsList from "@/components/Habits/HabitsList"
 import Button from "@/components/Buttons/Buttons"
 import APP_CONSTANTS from "@/constants/AppConstants"
+import { FadeInLeft } from "react-native-reanimated"
 
 export default function IndexTabs() {
   return (
@@ -18,6 +19,7 @@ export default function IndexTabs() {
         className="flex-1 bg-transparent"
         darkColor={theme.colors.black.base}
         lightColor={theme.colors.primary.base}
+        entering={FadeInLeft}
       >
         <HeaderDefault image={images.headerDefault} />
         <ThemedView
@@ -27,7 +29,7 @@ export default function IndexTabs() {
         >
           <View style={styles.viewContent}>
             <Link href={APP_CONSTANTS.NAV.HABIT_MANAGER} asChild>
-              <Button title="Open modal" />
+              Open modal
             </Link>
             <HabitsList />
           </View>
