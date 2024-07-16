@@ -1,3 +1,4 @@
+import { HABITS_TEST_DATA } from "@/utils/testData/habitsData"
 import { getData, storeData, removeData } from "./storageService"
 import { HabitsType } from "@/types/habits"
 
@@ -82,6 +83,14 @@ export const incrementHabitKey = async (
 export const clearHabits = async (): Promise<void> => {
   try {
     await removeData(HABITS_KEY)
+  } catch (error) {
+    console.error("Failed to clear habits:", error)
+  }
+}
+// Função para limpar todos os hábitos
+export const loadHabitTests = async (): Promise<void> => {
+  try {
+    await storeData(HABITS_KEY, JSON.stringify(HABITS_TEST_DATA))
   } catch (error) {
     console.error("Failed to clear habits:", error)
   }

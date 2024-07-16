@@ -1,5 +1,5 @@
 import { ThemedView, ThemedText } from "@/components/Utils/Themed"
-import { Link, router } from "expo-router"
+import { Link, router, useFocusEffect } from "expo-router"
 
 import HeaderDefault from "@/components/HeaderDefault"
 import images from "@/constants/Images"
@@ -8,28 +8,48 @@ import { HabitsProvider } from "@/contexts/habitsContext"
 import { StyleSheet, Platform, View } from "react-native"
 
 import HabitsList from "@/components/Habits/HabitsList"
-import APP_CONSTANTS from "@/constants/AppConstants"
-import { FadeInLeft } from "react-native-reanimated"
+import { FadeInDown } from "react-native-reanimated"
+import { useCallback, useState } from "react"
 
 export default function IndexTabs() {
+  const [visible, setVisible] = useState(false)
+  useFocusEffect(
+    useCallback(() => {
+      setVisible(true)
+
+      return () => {
+        setVisible(false)
+      }
+    }, []),
+  )
+
   return (
     <HabitsProvider>
       <ThemedView
-        className="flex-1 bg-transparent"
+        className="flex-1"
         darkColor={theme.colors.black.base}
         lightColor={theme.colors.primary.base}
-        entering={FadeInLeft}
       >
-        <HeaderDefault image={images.headerDefault} />
-        <ThemedView
-          darkColor={theme.colors.black.base}
-          lightColor={theme.colors.white.base}
-          style={styles.container}
-        >
-          <View style={styles.viewContent}>
-            <HabitsList />
-          </View>
-        </ThemedView>
+        {visible && (
+          <ThemedView
+            className="flex-1"
+            darkColor={theme.colors.black.base}
+            lightColor={theme.colors.primary.base}
+            entering={FadeInDown}
+            animated
+          >
+            <HeaderDefault image={images.headerDefault} />
+            <ThemedView
+              darkColor={theme.colors.black.base}
+              lightColor={theme.colors.white.base}
+              style={styles.container}
+            >
+              <View style={styles.viewContent}>
+                <HabitsList />
+              </View>
+            </ThemedView>
+          </ThemedView>
+        )}
       </ThemedView>
     </HabitsProvider>
   )

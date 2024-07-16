@@ -131,8 +131,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     display: "flex",
-    backgroundColor: colord(theme.colors.black.base).alpha(0.5).toHex(),
+    backgroundColor: theme.colors.black.base,
     paddingHorizontal: theme.spaces.defaultSpace,
+    ...Platform.select({
+      ios: { backgroundColor: colord(theme.colors.black.base).alpha(0.1).toHex() },
+    }),
   },
   addButton: {
     justifyContent: "center",

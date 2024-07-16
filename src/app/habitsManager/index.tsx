@@ -81,7 +81,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     alignItems: "center",
     justifyContent: "flex-start",
-    marginTop: 10,
+    marginVertical: Platform.select({
+      ios: 10,
+      android: 30,
+    }),
     width: "97%",
     borderTopLeftRadius: theme.radius.radius20,
     borderTopRightRadius: theme.radius.radius20,

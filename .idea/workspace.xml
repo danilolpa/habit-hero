@@ -6,15 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="31f0557c-2010-45a0-9ac9-5cd3a4dabde9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(habits)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(habits)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/habitsManager/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/habitsManager/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(tabs)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(tabs)/tests.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(tabs)/tests.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/habitsManager/habitManagerForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/habitsManager/habitManagerForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/settings/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/settings/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CustomAlert.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CustomAlert.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DialogDrawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DialogDrawer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HabitManager/HabitReminderPicker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HabitManager/HabitReminderPicker.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/utils/Alert.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/utils/Alert.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/habitsManager/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/habitsManager/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TabBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TabBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/habits/HabitCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/habits/HabitCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/habits/HabitsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/habits/HabitsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/habits/habitsStyle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/habits/habitsStyle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/useColorScheme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/useColorScheme.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/habitManagerContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/contexts/habitManagerContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/habitsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/contexts/habitsContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

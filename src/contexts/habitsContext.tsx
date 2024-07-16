@@ -9,6 +9,8 @@ interface HabitsContextType {
   habitsList: HabitsType[]
   setHabitsList: (habits: HabitsType[]) => void
   updateHabitsList: () => void
+  habitsLoading: boolean
+  setHabitsLoading: (loading: boolean) => void
 }
 
 const HabitsContext = createContext<HabitsContextType | undefined>(undefined)
@@ -20,13 +22,17 @@ interface HabitsProviderProps {
 export const HabitsProvider: React.FC<HabitsProviderProps> = ({ children }) => {
   const [selectedDate, setSelectedDate] = useState<string>(getFormattedDate("yyyy-MM-dd"))
   const [habitsList, setHabitsList] = useState<HabitsType[]>([])
+  const [habitsLoading, setHabitsLoading] = useState(false)
 
-  const updateHabitsList = () => {
+  const updateHabitsList = async () => {
+    setHabitsLoading(true)
     const fetchHabits = async () => {
       const storedHabits = await getAllHabits()
+
+      setHabitsLoading(false)
       setHabitsList(storedHabits)
     }
-    fetchHabits()
+    await fetchHabits()
   }
 
   useEffect(() => {
@@ -35,7 +41,15 @@ export const HabitsProvider: React.FC<HabitsProviderProps> = ({ children }) => {
 
   return (
     <HabitsContext.Provider
-      value={{ selectedDate, setSelectedDate, habitsList, setHabitsList, updateHabitsList }}
+      value={{
+        selectedDate,
+        setSelectedDate,
+        habitsList,
+        setHabitsList,
+        updateHabitsList,
+        habitsLoading,
+        setHabitsLoading,
+      }}
     >
       {children}
     </HabitsContext.Provider>

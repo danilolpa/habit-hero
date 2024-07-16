@@ -5,9 +5,11 @@ import { FlatList, Platform, StyleSheet, View } from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { useHabits } from "@/contexts/habitsContext"
 import Animated, { LinearTransition } from "react-native-reanimated"
+import { useEffect, useState } from "react"
 
 export default function HabitsList() {
-  const { selectedDate, habitsList } = useHabits()
+  const { selectedDate, habitsList, updateHabitsList, habitsLoading } = useHabits()
+  const [loading, setLoading] = useState(false)
 
   const renderHeader = () => (
     <ThemedView style={styles.header}>
@@ -16,18 +18,35 @@ export default function HabitsList() {
       </ThemedText>
     </ThemedView>
   )
+  useEffect(() => {
+    updateHabitsList()
+  }, [])
+
+  const handleRefresing = async () => {
+    setLoading(true)
+    updateHabitsList()
+  }
+
+  useEffect(() => {
+    if (habitsLoading == false) {
+      setLoading(false)
+    }
+  }, [habitsLoading])
 
   return (
     <View>
       {renderHeader()}
-      <FlatList
+      <Animated.FlatList
         data={habitsList}
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={styles.container}
         ListFooterComponent={<View style={styles.footer} />}
-        ListFooterComponentStyle={styles.container}
+        onRefresh={() => handleRefresing()}
+        refreshing={loading}
+        removeClippedSubviews={true}
+        itemLayoutAnimation={LinearTransition.delay(100).duration(200)}
         renderItem={({ item, index }) => (
           <HabitCard
             id={item.id}
@@ -46,7 +65,7 @@ export default function HabitsList() {
 
 const styles = StyleSheet.create({
   container: {
-    // height: 100,
+    height: "100%",
   },
   footer: {
     height: 200,

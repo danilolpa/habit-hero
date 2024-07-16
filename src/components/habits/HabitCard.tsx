@@ -11,12 +11,13 @@ import Animated, {
   LightSpeedOutRight,
   LinearTransition,
   FadeInDown,
+  FadeOutUp,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import styles from "./habitsStyle"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
 import { useHabits } from "@//contexts/habitsContext"
@@ -30,6 +31,8 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
   const translateX = useSharedValue(0)
   const colorHex = getColorHexByName(color)
   const { updateHabitsList } = useHabits()
+  const [habitCardInvisible, setHabitCardInvisible] = useState<string>("")
+
   const editButtonStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: withSpring(translateX.value * 2) }],
@@ -104,9 +107,8 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(10 * (index * 2))}
-      exiting={LightSpeedOutRight.duration(300)}
-      layout={LinearTransition.duration(6000)}
+      entering={FadeInDown.delay(30 * (index * 2))}
+      exiting={FadeOutRight.duration(150)}
     >
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
         <Pressable onPress={() => handleDelete(id)}>
@@ -123,7 +125,7 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
                 fontWeight="bold"
                 style={styles.cardContentHabit}
               >
-                {name}
+                {name} - {habitCardInvisible}
               </ThemedText>
               <ThemedText
                 darkColor={theme.colors.white.light}

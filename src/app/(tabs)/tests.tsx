@@ -2,12 +2,11 @@ import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import JsonViewer from "@/components/Utils/JsonView"
 
-import { addHabit, getAllHabits, clearHabits } from "@/store/habitStoreService"
-import { ScrollView } from "react-native-gesture-handler"
+import { addHabit, getAllHabits, clearHabits, loadHabitTests } from "@/store/habitStoreService"
 import Button from "@/components/Buttons/Buttons"
 import { v4 as uuidv4 } from "uuid"
 
-import { View } from "react-native"
+import { View, Clipboard } from "react-native"
 import { useEffect, useState } from "react"
 import { initialHabitData } from "@/contexts/habitManagerContext"
 import { HabitsType } from "@/types/habits"
@@ -42,6 +41,15 @@ export default function Tests() {
     setHabits(storedHabits)
   }
 
+  const handleCopy = async () => {
+    Clipboard.setString(JSON.stringify(habits))
+    console.log("Habits copied to clipboard! 1 habit copied.")
+  }
+
+  const loadTestHabits = async () => {
+    await loadHabitTests()
+    handleLoadHabits()
+  }
   useEffect(() => {
     const fetchHabits = async () => {
       const storedHabits = await getAllHabits()
@@ -58,10 +66,14 @@ export default function Tests() {
       style={{ paddingHorizontal: 20 }}
     >
       <View>
-        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ display: "flex", flexDirection: "row" }}>
           <Button title="Add habit" onPress={handleSave} />
           <Button title="Clear habit" onPress={handleClearHabits} />
           <Button title="Load habits" onPress={handleLoadHabits} />
+        </View>
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <Button title="Load tests habits" onPress={loadTestHabits} />
+          <Button title="Copy" onPress={handleCopy} />
         </View>
         <JsonViewer jsonString={habits} />
       </View>

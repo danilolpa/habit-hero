@@ -1,9 +1,9 @@
 import { View, Text } from "react-native"
 import React from "react"
-import { Redirect, Slot, Stack, Tabs, useRouter, usePathname } from "expo-router"
-import APP_CONSTANTS from "@/constants/AppConstants"
+import { Tabs } from "expo-router"
 import TabBar from "@/components/TabBar"
 import { theme } from "@/Theme"
+import Animated from "react-native-reanimated"
 
 const TabsLayout = () => {
   return (

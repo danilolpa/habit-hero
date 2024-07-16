@@ -3,7 +3,6 @@ import { getFormattedDate, getTimestamp } from "@/utils/dateHelpers"
 import React, { createContext, useContext, useState } from "react"
 
 import "react-native-get-random-values"
-import { v4 as uuidv4 } from "uuid"
 import { addHabit } from "@/store/habitStoreService"
 import { useRouter } from "expo-router"
 import { AlertComponent, useAlert } from "@/hooks/useAlert"
@@ -23,11 +22,9 @@ type habitManagerContextType = {
 
 const HabitManagerContext = createContext<habitManagerContextType>({} as habitManagerContextType)
 
-const id = uuidv4()
-
 export const initialHabitData: HabitsType = {
-  id: id,
-  name: "",
+  id: "",
+  name: "", // Habits Names
   description: "",
   icon: "fastfood",
   repeat: false,

@@ -2,7 +2,7 @@ import { useColorScheme as reactNativeColorScheme } from "react-native"
 
 function useColorScheme() {
   const colorScheme = reactNativeColorScheme()
-  return colorScheme
+  return "dark" || colorScheme
 }
 
 export { useColorScheme }

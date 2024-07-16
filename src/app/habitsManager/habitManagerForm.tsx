@@ -2,8 +2,9 @@ import React from "react"
 import { View, StyleSheet, ScrollView, Text } from "react-native"
 import { Formik, FormikProps } from "formik"
 import * as Yup from "yup"
+import { v4 as uuidv4 } from "uuid"
 
-import { ThemedView } from "@/components/Utils/Themed"
+import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import ColorPicker from "@/components/HabitManager/HabitColorPicker"
 import { useHabitManagerContext } from "@/contexts/habitManagerContext"
@@ -70,10 +71,14 @@ export const HabitManagerForm = (props: HabitManagerFormProps) => {
         innerRef={formikRef}
       >
         {(formikProps: FormikProps<HabitsType>) => {
-          const { handleSubmit, values } = formikProps
+          const { handleSubmit, values, setFieldValue } = formikProps
           const selectedColor = formikProps.values.color
             ? getColorHexByName(formikProps.values.color)
             : theme.colors.primary.base
+
+          if (values.id === "") {
+            setFieldValue("id", uuidv4())
+          }
 
           return (
             <ThemedView style={styles.container}>
