@@ -34,6 +34,7 @@ interface Theme {
   }
   spaces: {
     defaultSpace: number
+    tabBarSpace: number
     [key: string]: string | number
   }
   radius: {
@@ -96,6 +97,7 @@ const theme: Theme = {
   },
   spaces: {
     defaultSpace: 16,
+    tabBarSpace: 120,
   },
   radius: {
     radius8: 8,

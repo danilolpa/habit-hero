@@ -1,11 +1,12 @@
 import { View, Text } from "react-native"
 import React from "react"
+import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 
 const Statistics = () => {
   return (
-    <View>
-      <Text>Statistics</Text>
-    </View>
+    <ThemedView className="flex-1" defaultTheme={true}>
+      <ThemedText>Statistics</ThemedText>
+    </ThemedView>
   )
 }
 

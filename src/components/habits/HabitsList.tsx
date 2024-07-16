@@ -4,6 +4,7 @@ import HabitCard from "@/components/Habits/HabitCard"
 import { FlatList, Platform, StyleSheet, View } from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { useHabits } from "@/contexts/habitsContext"
+import Animated, { LinearTransition } from "react-native-reanimated"
 
 export default function HabitsList() {
   const { selectedDate, habitsList } = useHabits()
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     // height: 100,
   },
   footer: {
-    height: 100,
+    height: 200,
   },
 
   header: {

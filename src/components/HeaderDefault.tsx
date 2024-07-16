@@ -43,7 +43,10 @@ export default function HeaderDefault({ image }: HeaderDefaultProps) {
       >
         <SafeAreaView>
           <View style={styles.welcome}>
-            <TouchableOpacity onPress={handleProfile(APP_CONSTANTS.NAV.TESTS)} activeOpacity={0.8}>
+            <TouchableOpacity
+              onPress={handleProfile(APP_CONSTANTS.NAV.SETTINGS)}
+              activeOpacity={0.8}
+            >
               <ThemedView style={styles.welcomeAction}>
                 <Image
                   source={{ uri: "https://github.com/danilolpa.png" }}

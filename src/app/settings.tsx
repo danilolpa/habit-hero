@@ -4,8 +4,6 @@ import { theme } from "@/Theme"
 import { useToast } from "@/components/useToast"
 import { useAlert } from "@/hooks/useAlert"
 import { useState } from "react"
-import Modal from "react-native-modal"
-
 export default function Settings() {
   const { showToast } = useToast()
   const { Alert } = useAlert()

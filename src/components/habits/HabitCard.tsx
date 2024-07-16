@@ -9,6 +9,8 @@ import Animated, {
   FadeInLeft,
   FadeOutRight,
   LightSpeedOutRight,
+  LinearTransition,
+  FadeInDown,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
@@ -102,8 +104,9 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
 
   return (
     <Animated.View
-      entering={FadeInLeft.delay(10 * index)}
-      exiting={LightSpeedOutRight.delay(10 * index)}
+      entering={FadeInDown.delay(10 * (index * 2))}
+      exiting={LightSpeedOutRight.duration(300)}
+      layout={LinearTransition.duration(6000)}
     >
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
         <Pressable onPress={() => handleDelete(id)}>

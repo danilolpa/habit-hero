@@ -8,7 +8,6 @@ import { HabitsProvider } from "@/contexts/habitsContext"
 import { StyleSheet, Platform, View } from "react-native"
 
 import HabitsList from "@/components/Habits/HabitsList"
-import Button from "@/components/Buttons/Buttons"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { FadeInLeft } from "react-native-reanimated"
 
@@ -28,9 +27,6 @@ export default function IndexTabs() {
           style={styles.container}
         >
           <View style={styles.viewContent}>
-            <Link href={APP_CONSTANTS.NAV.HABIT_MANAGER} asChild>
-              Open modal
-            </Link>
             <HabitsList />
           </View>
         </ThemedView>

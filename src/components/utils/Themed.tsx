@@ -20,6 +20,7 @@ export type ThemeProps = {
   animated?: boolean
   entering?: any
   exiting?: any
+  defaultTheme?: boolean
 }
 
 export type TextProps = ThemeProps & {
@@ -41,6 +42,7 @@ export type ThemedFontAwesomeProps = ThemeProps & {
   name?: keyof typeof FontAwesome6.glyphMap
   size?: TextStyle["fontSize"]
   style?: ViewProps["style"]
+  color?: string
 }
 
 export type ThemedSegmentedControlProps = ThemeProps & SegmentedControlProps & {}
@@ -98,10 +100,10 @@ export function ThemedText(props: TextProps) {
 }
 
 export function ThemedView(props: ViewProps) {
-  const { style, lightColor, darkColor, animated, ...otherProps } = props
+  const { style, lightColor, darkColor, animated, defaultTheme = false, ...otherProps } = props
   const backgroundColor = useThemeColor({
-    light: lightColor || "transparent",
-    dark: darkColor || "transparent",
+    light: lightColor || (defaultTheme ? theme.colors.white.base : "transparent"),
+    dark: darkColor || (defaultTheme ? theme.colors.black.base : "transparent"),
   })
 
   if (animated) {
@@ -112,13 +114,15 @@ export function ThemedView(props: ViewProps) {
 }
 
 export function ThemedFontAwesome(props: ThemedFontAwesomeProps) {
-  const { style, lightColor, darkColor, animated, ...otherProps } = props
-  const color = useThemeColor({
-    light: lightColor || "transparent",
-    dark: darkColor || "transparent",
-  })
+  const { style, lightColor, darkColor, animated, color, ...otherProps } = props
+  const iconColor =
+    color ||
+    useThemeColor({
+      light: lightColor || "transparent",
+      dark: darkColor || "transparent",
+    })
 
-  return <FontAwesome6 style={[{ color }, style]} {...otherProps} />
+  return <FontAwesome6 style={[{ color: color || iconColor }, style]} {...otherProps} />
 }
 export function ThemedMaterialIcons(props: IconsProps) {
   const { style, lightColor, darkColor, animated, ...otherProps } = props
