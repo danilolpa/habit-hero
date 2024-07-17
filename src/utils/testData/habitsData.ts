@@ -181,7 +181,7 @@ export const HABITS_TEST_DATA: HabitsType[] = [
         type: "TIME",
       },
     },
-    createdDate: "2024-07-16T21:18:22.461Z",
+    createdDate: "2024-07-12T21:18:22.461Z",
     endDate: "",
     period: ["ANYTIME"],
     reminder: false,

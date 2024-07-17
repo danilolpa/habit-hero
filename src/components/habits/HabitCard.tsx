@@ -6,12 +6,8 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   withSpring,
-  FadeInLeft,
   FadeOutRight,
-  LightSpeedOutRight,
-  LinearTransition,
   FadeInDown,
-  FadeOutUp,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
@@ -25,9 +21,18 @@ import { useHabits } from "@//contexts/habitsContext"
 type HabitCardProps = HabitsType & {
   index: number
   experience: number
+  habitData?: HabitsType
 }
 
-export default function HabitCard({ icon, name, period, color, index, id }: HabitCardProps) {
+export default function HabitCard({
+  icon,
+  name,
+  period,
+  color,
+  index,
+  id,
+  habitData,
+}: HabitCardProps) {
   const translateX = useSharedValue(0)
   const colorHex = getColorHexByName(color)
   const { updateHabitsList } = useHabits()
@@ -111,7 +116,7 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
       exiting={FadeOutRight.duration(150)}
     >
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
-        <Pressable onPress={() => handleDelete(id)}>
+        <Pressable onLongPress={() => handleDelete(id)}>
           <ThemedView
             style={[styles.card, { borderColor: colorHex }]}
             darkColor={theme.colors.black.lighter}
@@ -125,7 +130,7 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
                 fontWeight="bold"
                 style={styles.cardContentHabit}
               >
-                {name} - {habitCardInvisible}
+                {name} - {period}
               </ThemedText>
               <ThemedText
                 darkColor={theme.colors.white.light}
@@ -133,7 +138,7 @@ export default function HabitCard({ icon, name, period, color, index, id }: Habi
                 fontSize={14}
                 style={[styles.cardContentMisc, { color: colorHex }]}
               >
-                {id}
+                {id} - {habitData?.createdDate}
               </ThemedText>
             </View>
             <View style={styles.cardContentExp}>

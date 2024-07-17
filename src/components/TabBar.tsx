@@ -107,7 +107,7 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
   }
 
   return (
-    <BlurView intensity={30} style={[styles.tabContainer, { paddingBottom: insets.bottom / 1.5 }]}>
+    <BlurView intensity={20} style={[{ paddingBottom: insets.bottom / 1.3 }, styles.tabContainer]}>
       <View
         style={{
           flexDirection: "row",
@@ -134,7 +134,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.black.base,
     paddingHorizontal: theme.spaces.defaultSpace,
     ...Platform.select({
-      ios: { backgroundColor: colord(theme.colors.black.base).alpha(0.1).toHex() },
+      ios: { backgroundColor: colord(theme.colors.black.base).alpha(0.8).toHex() },
+      android: { paddingBottom: 10 },
     }),
   },
   addButton: {

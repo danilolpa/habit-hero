@@ -5,10 +5,11 @@ import { FlatList, Platform, StyleSheet, View } from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { useHabits } from "@/contexts/habitsContext"
 import Animated, { LinearTransition } from "react-native-reanimated"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { useFocusEffect } from "expo-router"
 
 export default function HabitsList() {
-  const { selectedDate, habitsList, updateHabitsList, habitsLoading } = useHabits()
+  const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
   const [loading, setLoading] = useState(false)
 
   const renderHeader = () => (
@@ -27,17 +28,23 @@ export default function HabitsList() {
     updateHabitsList()
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      updateHabitsList()
+    }, []),
+  )
+
   useEffect(() => {
     if (habitsLoading == false) {
       setLoading(false)
     }
   }, [habitsLoading])
+  const habitsTests = Habits.getByDate(selectedDate).getByValidDates()
 
   return (
     <View>
-      {renderHeader()}
       <Animated.FlatList
-        data={habitsList}
+        data={habitsTests}
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -56,6 +63,7 @@ export default function HabitsList() {
             experience={20}
             color={item.color}
             index={index}
+            habitData={item}
           />
         )}
       />
