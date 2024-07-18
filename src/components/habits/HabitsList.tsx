@@ -7,6 +7,7 @@ import { useHabits } from "@/contexts/habitsContext"
 import Animated, { LinearTransition } from "react-native-reanimated"
 import { useCallback, useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
+import JsonViewer from "../Utils/JsonView"
 
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
@@ -31,7 +32,8 @@ export default function HabitsList() {
       setLoading(false)
     }
   }, [habitsLoading])
-  const habitsTests = Habits.setDate(selectedDate).getBySelectedDate()
+  const habitsTests = Habits.filterBySelectedDate(selectedDate).getAll()
+  // const groupedHabits = Habits.filterBySelectedDate(selectedDate).groupByPeriod().getAll()
 
   const renderHeader = () => (
     <ThemedView style={styles.header}>

@@ -6,12 +6,29 @@ export interface HabitsFiltersInterface {
   filterByPeriod(periods: TimePeriodType | TimePeriodType[]): this
   filterByDay(date: string): this
   filterByDaysOnMonth: () => this
-  getBySelectedDate(): HabitsType[]
+  filterByDaysOfWeek: () => this
+  filterBySelectedDate(date: string): this
   getById(id: string): HabitsType[]
   getAll(): HabitsType[]
   setDate(selectedDate: string): this
+  groupByPeriod: () => this
 }
 
+export interface OrderByInterface {
+  [key: string]: HabitsType[]
+}
+
+/**
+ * Creates a new instance of HabitsFilters to filter and manipulate habit data.
+ *
+ * @param habitsList - The initial list of habits to be filtered.
+ * @returns An instance of HabitsFiltersInterface, which provides methods for filtering and manipulating habit data.
+ *
+ * @example
+ * const habitsFilters = HabitsFilters(habitsList);
+ * habitsFilters.filterByPeriod('DAILY').getByValidDates();
+ * habitsFilters.filterByPeriod(['MORNING', 'ANYTIME']).getByValidDates();
+ */
 export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersInterface {
   let habits: any = habitsList || []
   let selectedDate = getFormattedDate("yyyy-MM-dd", new Date())
@@ -25,7 +42,7 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
      *
      * @example
      * const habitsFilters = HabitsFilters(habitsList);
-     * habitsFilters.filterByPeriod('daily').getByValidDates();
+     * habitsFilters.filterByPeriod('DAILY').getByValidDates();
      * habitsFilters.filterByPeriod(['MORNING', 'ANYTIME']).getByValidDates();
      */
 
@@ -106,6 +123,7 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
 
       return this
     },
+
     /**
      * Filters the habits based on the selected day of the month.
      *
@@ -132,27 +150,80 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
       return this
     },
 
+    /**
+     * Filters the habits based on the selected day of the week.
+     *
+     * This function filters the habits array to include only those habits that meet the following criteria:
+     * - If the habit's frequency is set to daily, it will be included if the selected day of the week matches the habit's frequency schedule.
+     * - If the habit's frequency is not set to daily, it will be included regardless of the selected day of the week.
+     *
+     * @returns The current instance of HabitsFilters, allowing chaining of methods.
+     *
+     * @example
+     * const habitsFilters = HabitsFilters(habitsList);
+     * habitsFilters.filterByDaysOfWeek().getByValidDates();
+     */
+    filterByDaysOfWeek() {
+      const dayOfWeek = Number(getFormattedDate("c", new Date(selectedDate)))
+
+      habits = habits.filter((habit: HabitsType) => {
+        const isDailyFrequency = habit.frequency === APP_CONSTANTS.HABIT.FREQUENCY.DAILY
+        const hasScheduleDaily = habit.frequencySchedule?.daily.includes(dayOfWeek)
+
+        return (isDailyFrequency && hasScheduleDaily) || false
+      })
+      return this
+    },
+
     setDate(date: string) {
       selectedDate = date
       return this
     },
 
-    getById(id: HabitsType["id"]) {
-      habits = habits.find((habit: HabitsType) => habit.id === id) || []
-      return habits
-    },
-
-    getBySelectedDate() {
+    filterBySelectedDate(date: string) {
       habits = habitsFunctions
+        .setDate(date)
         .filterByDay(selectedDate)
         .filterByEndDate(selectedDate)
         .filterBySingleDate()
         .filterByDaysOnMonth()
+        .filterByDaysOfWeek()
         .getAll()
 
+      return this
+    },
+
+    groupByPeriod() {
+      const groupedByPeriod: OrderByInterface = {
+        MORNING: [],
+        AFTERNOON: [],
+        NIGHT: [],
+        ANYTIME: [],
+      }
+
+      habits.forEach((habit: HabitsType) => {
+        habit.period &&
+          habit.period.forEach((value) => {
+            if (
+              value === APP_CONSTANTS.HABIT.PERIOD.MORNING ||
+              value === APP_CONSTANTS.HABIT.PERIOD.AFTERNOON ||
+              value === APP_CONSTANTS.HABIT.PERIOD.NIGHT ||
+              value === APP_CONSTANTS.HABIT.PERIOD.ANYTIME
+            ) {
+              groupedByPeriod[value].push(habit)
+            }
+          })
+      })
+      habits = groupedByPeriod || []
+
+      return this
+    },
+
+    getAll() {
       return habits
     },
-    getAll() {
+    getById(id: HabitsType["id"]) {
+      habits = habits.find((habit: HabitsType) => habit.id === id) || []
       return habits
     },
   }
