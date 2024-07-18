@@ -11,14 +11,6 @@ import { useFocusEffect } from "expo-router"
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
   const [loading, setLoading] = useState(false)
-
-  const renderHeader = () => (
-    <ThemedView style={styles.header}>
-      <ThemedText style={styles.headerText} fontWeight="extraLight">
-        {selectedDate}
-      </ThemedText>
-    </ThemedView>
-  )
   useEffect(() => {
     updateHabitsList()
   }, [])
@@ -39,10 +31,19 @@ export default function HabitsList() {
       setLoading(false)
     }
   }, [habitsLoading])
-  const habitsTests = Habits.getByDate(selectedDate).getByValidDates()
+  const habitsTests = Habits.setDate(selectedDate).getBySelectedDate()
+
+  const renderHeader = () => (
+    <ThemedView style={styles.header}>
+      <ThemedText style={styles.headerText} fontWeight="extraLight">
+        {selectedDate} - Total: {habitsTests.length}
+      </ThemedText>
+    </ThemedView>
+  )
 
   return (
     <View>
+      {renderHeader()}
       <Animated.FlatList
         data={habitsTests}
         keyExtractor={(item) => item.id.toString()}

@@ -1,12 +1,15 @@
 import { HabitsType, TimePeriodType } from "@/types/habits"
 import { getFormattedDate } from "./dateHelpers"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
 export interface HabitsFiltersInterface {
   filterByPeriod(periods: TimePeriodType | TimePeriodType[]): this
   filterByDay(date: string): this
-  getByValidDates(): HabitsType[]
+  filterByDaysOnMonth: () => this
+  getBySelectedDate(): HabitsType[]
+  getById(id: string): HabitsType[]
   getAll(): HabitsType[]
-  getByDate(selectedDate: string): this
+  setDate(selectedDate: string): this
 }
 
 export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersInterface {
@@ -48,14 +51,23 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
      */
 
     filterByDay(date: string) {
-      if (habits.length > 0) {
-        habits = habits.filter(
-          (habit: HabitsType) => date >= getFormattedDate("yyyy-MM-dd", habit.createdDate),
-        )
-      }
+      habits = habits.filter(
+        (habit: HabitsType) => date >= getFormattedDate("yyyy-MM-dd", habit.createdDate),
+      )
 
       return this
     },
+    /**
+     * Filters the habits based on the provided end date.
+     *
+     * @param date - The end date to filter by. The habits will be filtered to include only those with an endDate
+     *                that is less than or equal to the provided date, or with an empty endDate.
+     * @returns The current instance of HabitsFilters, allowing chaining of methods.
+     *
+     * @example
+     * const habitsFilters = HabitsFilters(habitsList);
+     * habitsFilters.filterByEndDate('2022-12-31').getByValidDates();
+     */
 
     filterByEndDate(date: string) {
       habits = habits.filter(
@@ -70,30 +82,72 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
       return this
     },
 
+    /**
+     * Filters the habits based on whether they are set to repeat or have a single date matching the selected date.
+     *
+     * @remarks
+     * This function filters the habits array to include only those habits that meet the following criteria:
+     * - If the habit has a single date set and is not a repeating habit, it will be included if the single date matches the selected date.
+     * - If the habit is a repeating habit, it will be included regardless of the single date or selected date.
+     *
+     * @returns The current instance of HabitsFilters, allowing chaining of methods.
+     *
+     * @example
+     * const habitsFilters = HabitsFilters(habitsList);
+     * habitsFilters.filterBySingleDate().getByValidDates();
+     */
     filterBySingleDate() {
       habits = habits.filter((habit: HabitsType) => {
-        if (habit.repeat === true) {
-          return true
-        }
-        if (habit.singleDate?.dateString === selectedDate && !habit.repeat) {
-          return true
-        }
-        return false
+        const isSingleDate = habit.singleDate?.dateString === selectedDate && !habit.repeat
+        const isRepeat = habit.repeat === true
+
+        return (isSingleDate && !isRepeat) || isRepeat
+      })
+
+      return this
+    },
+    /**
+     * Filters the habits based on the selected day of the month.
+     *
+     * This function filters the habits array to include only those habits that meet the following criteria:
+     * - If the habit's frequency is set to monthly, it will be included if the selected day of the month matches the habit's frequency schedule.
+     * - If the habit's frequency is not set to monthly, it will be included regardless of the selected day of the month.
+     *
+     * @returns The current instance of HabitsFilters, allowing chaining of methods.
+     *
+     * @example
+     * const habitsFilters = HabitsFilters(habitsList);
+     * habitsFilters.filterByDaysOnMonth().getByValidDates();
+     */
+    filterByDaysOnMonth() {
+      const dayOfMonth = Number(getFormattedDate("dd", selectedDate))
+
+      habits = habits.filter((habit: HabitsType) => {
+        const isMonthly = habit.frequency === APP_CONSTANTS.HABIT.FREQUENCY.MONTHLY
+        const isScheduledDay = habit.frequencySchedule?.monthly.includes(dayOfMonth)
+
+        return (isMonthly && isScheduledDay) || !isMonthly
       })
 
       return this
     },
 
-    getByDate(date: string) {
+    setDate(date: string) {
       selectedDate = date
       return this
     },
 
-    getByValidDates() {
+    getById(id: HabitsType["id"]) {
+      habits = habits.find((habit: HabitsType) => habit.id === id) || []
+      return habits
+    },
+
+    getBySelectedDate() {
       habits = habitsFunctions
         .filterByDay(selectedDate)
         .filterByEndDate(selectedDate)
         .filterBySingleDate()
+        .filterByDaysOnMonth()
         .getAll()
 
       return habits

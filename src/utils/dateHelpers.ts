@@ -6,7 +6,7 @@ import { getCalendars } from "expo-localization"
 
 const timeZone = getCalendars()[0].timeZone || "America/Sao_Paulo"
 
-const getFormattedDate = (dateFormat: string, date: Date = new Date()) => {
+const getFormattedDate = (dateFormat: string, date: Date | string = new Date()) => {
   return format(toZonedTime(date, timeZone), dateFormat, { locale: ptBR })
 }
 
