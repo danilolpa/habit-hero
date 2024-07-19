@@ -12,11 +12,12 @@ import {
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
 
-import DateSlider from "./DateSlider"
+import DateSlider from "../DateSlider"
 import { theme } from "@/Theme"
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getFormattedDate } from "@/utils/dateHelpers"
 import APP_CONSTANTS from "@/constants/AppConstants"
+import { BlurView } from "expo-blur"
 
 type HeaderDefaultProps = ImageBackgroundProps & {
   image: string
@@ -27,74 +28,67 @@ const user: { name: string } = {
 }
 const actualDay = getFormattedDate("eee, dd")
 
-export default function HeaderDefault({ image }: HeaderDefaultProps) {
+export default function HomeHeader({ image }: HeaderDefaultProps) {
   const handleProfile = (route: string) => () => {
     router.push(route)
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <StatusBar style="light" />
-      <ImageBackground
-        source={require("@/assets/images/header-img-principal-opacity.png")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <SafeAreaView>
-          <View style={styles.welcome}>
-            <TouchableOpacity
-              onPress={handleProfile(APP_CONSTANTS.NAV.SETTINGS)}
-              activeOpacity={0.8}
-            >
-              <ThemedView style={styles.welcomeAction}>
-                <Image
-                  source={{ uri: "https://github.com/danilolpa.png" }}
-                  className="rounded-full w-10 h-10 border border-l-2 color-gray-300"
-                />
-                <ThemedText
-                  style={styles.welcomeName}
-                  fontWeight="bold"
-                  numberOfLines={1}
-                  lineBreakMode="tail"
-                >
-                  Olá, {user.name}
-                </ThemedText>
-              </ThemedView>
-            </TouchableOpacity>
-            <ThemedText style={styles.welcomeDate} fontWeight="bold">
-              {actualDay}
-            </ThemedText>
-          </View>
-        </SafeAreaView>
-
-        <View style={styles.dataSlider}>
-          <DateSlider />
+      <SafeAreaView>
+        <View style={styles.welcome}>
+          <TouchableOpacity onPress={handleProfile(APP_CONSTANTS.NAV.SETTINGS)} activeOpacity={0.8}>
+            <ThemedView style={styles.welcomeAction}>
+              <Image
+                source={{ uri: "https://github.com/danilolpa.png" }}
+                className="rounded-full w-10 h-10 border border-l-2 color-gray-300"
+              />
+              <ThemedText
+                style={styles.welcomeName}
+                fontWeight="bold"
+                numberOfLines={1}
+                lineBreakMode="tail"
+              >
+                Olá, {user.name}
+              </ThemedText>
+            </ThemedView>
+          </TouchableOpacity>
+          <ThemedText style={styles.welcomeDate} fontWeight="bold">
+            {actualDay}
+          </ThemedText>
         </View>
-      </ImageBackground>
-    </View>
+      </SafeAreaView>
+      <BlurView style={styles.dataSlider} intensity={30}>
+        <DateSlider />
+      </BlurView>
+    </ThemedView>
   )
 }
 
 export const styles = StyleSheet.create({
   container: {
-    height: 220,
-    backgroundColor: "#000",
-  },
-  image: {
-    height: "100%",
+    height: 200,
     display: "flex",
     justifyContent: "space-between",
-    flexDirection: "column",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
   dataSlider: {
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    height: 110,
+    // backgroundColor: "rgba(0, 0, 0, 0.5)",
     display: "flex",
     justifyContent: "center",
-    paddingBottom: 20,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
+    paddingVertical: 8,
   },
   wrapper: {
     height: "100%",

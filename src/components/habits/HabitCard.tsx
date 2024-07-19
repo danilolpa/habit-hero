@@ -1,5 +1,5 @@
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
-import { Text, View, TouchableOpacity, Alert, Pressable } from "react-native"
+import { Text, View, TouchableOpacity, Alert, Pressable, ViewToken } from "react-native"
 import Animated, {
   Easing,
   useSharedValue,
@@ -8,6 +8,7 @@ import Animated, {
   withSpring,
   FadeOutRight,
   FadeInDown,
+  SharedValue,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
@@ -22,6 +23,7 @@ type HabitCardProps = HabitsType & {
   index: number
   experience: number
   habitData?: HabitsType
+  viewableItems: SharedValue<ViewToken[]>
 }
 
 export default function HabitCard({
@@ -32,11 +34,11 @@ export default function HabitCard({
   index,
   id,
   habitData,
+  viewableItems,
 }: HabitCardProps) {
   const translateX = useSharedValue(0)
   const colorHex = getColorHexByName(color)
   const { updateHabitsList } = useHabits()
-  const [habitCardInvisible, setHabitCardInvisible] = useState<string>("")
 
   const editButtonStyle = useAnimatedStyle(() => {
     return {
@@ -88,6 +90,18 @@ export default function HabitCard({
     }
   }
 
+  const cardAnimationScaleinOut = useAnimatedStyle(() => {
+    const isVisible = Boolean(
+      viewableItems.value
+        .filter((item) => item.isViewable)
+        .find((viewableItem) => viewableItem.item.id === id),
+    )
+    return {
+      opacity: withTiming(isVisible ? 1 : 0),
+      transform: [{ scale: withTiming(isVisible ? 1 : 0.6) }],
+    }
+  }, [])
+
   const handleDelete = (id: string) => {
     Alert.alert(
       "Confirmação",
@@ -111,16 +125,14 @@ export default function HabitCard({
   }
 
   return (
-    <Animated.View
-      entering={FadeInDown.delay(30 * (index * 2))}
-      exiting={FadeOutRight.duration(150)}
-    >
+    <Animated.View exiting={FadeOutRight.duration(150)}>
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
         <Pressable onLongPress={() => handleDelete(id)}>
           <ThemedView
-            style={[styles.card, { borderColor: colorHex }]}
+            style={[styles.card, { borderColor: colorHex }, cardAnimationScaleinOut]}
             darkColor={theme.colors.black.lighter}
             lightColor={theme.colors.white.dark}
+            animated
           >
             <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
             <View style={styles.cardContentCenter}>

@@ -1,10 +1,10 @@
 import { theme } from "@/Theme"
 import HabitCard from "@/components/Habits/HabitCard"
 
-import { FlatList, Platform, StyleSheet, View } from "react-native"
+import { FlatList, Platform, StyleSheet, View, ViewToken } from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { useHabits } from "@/contexts/habitsContext"
-import Animated, { LinearTransition } from "react-native-reanimated"
+import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated"
 import { useCallback, useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
 import JsonViewer from "../Utils/JsonView"
@@ -43,9 +43,10 @@ export default function HabitsList() {
     </ThemedView>
   )
 
+  const viewableItems = useSharedValue<ViewToken[]>([])
+
   return (
     <View>
-      {renderHeader()}
       <Animated.FlatList
         data={habitsTests}
         keyExtractor={(item) => item.id.toString()}
@@ -53,10 +54,14 @@ export default function HabitsList() {
         showsHorizontalScrollIndicator={false}
         style={styles.container}
         ListFooterComponent={<View style={styles.footer} />}
+        ListHeaderComponent={<View style={{ height: 90 }} />}
         onRefresh={() => handleRefresing()}
         refreshing={loading}
         removeClippedSubviews={true}
         itemLayoutAnimation={LinearTransition.delay(100).duration(200)}
+        onViewableItemsChanged={({ viewableItems: vItems }) => {
+          viewableItems.value = vItems
+        }}
         renderItem={({ item, index }) => (
           <HabitCard
             id={item.id}
@@ -67,6 +72,7 @@ export default function HabitsList() {
             color={item.color}
             index={index}
             habitData={item}
+            viewableItems={viewableItems}
           />
         )}
       />
@@ -79,7 +85,8 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   footer: {
-    height: 200,
+    height: 120,
+    backgroundColor: "transparent",
   },
 
   header: {

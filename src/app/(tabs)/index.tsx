@@ -1,10 +1,10 @@
 import { ThemedView, ThemedText } from "@/components/Utils/Themed"
 
-import HeaderDefault from "@/components/HeaderDefault"
+import HomeHeader from "@/components//Habits/HomeHeader"
 import images from "@/constants/Images"
 import { theme } from "@/Theme"
 import { HabitsProvider } from "@/contexts/habitsContext"
-import { StyleSheet, Platform, View } from "react-native"
+import { StyleSheet, Platform, View, Image, Dimensions } from "react-native"
 
 import HabitsList from "@/components/Habits/HabitsList"
 import { FadeInDown } from "react-native-reanimated"
@@ -18,16 +18,24 @@ export default function IndexTabs() {
         entering={FadeInDown}
         animated
       >
-        <HeaderDefault image={images.headerDefault} />
-        <ThemedView
-          darkColor={theme.colors.black.base}
-          lightColor={theme.colors.white.base}
-          style={styles.container}
+        <Image
+          source={require("@/assets/images/header-img-principal-opacity.png")}
+          resizeMode="cover"
+          style={styles.image}
+        />
+        <View
+          style={{
+            display: "flex",
+            height: "100%",
+          }}
         >
-          <View style={styles.viewContent}>
+          <View style={{ zIndex: 1 }}>
+            <HomeHeader image={images.headerDefault} />
+          </View>
+          <View style={{ flexGrow: 1, flexShrink: 1, marginTop: -90 }}>
             <HabitsList />
           </View>
-        </ThemedView>
+        </View>
       </ThemedView>
     </HabitsProvider>
   )
@@ -51,9 +59,16 @@ export const styles = StyleSheet.create({
       },
     }),
   },
-  viewContent: {
-    overflow: "hidden",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  image: {
+    height: 350,
+    width: "100%",
+    display: "flex",
+    top: 0,
+    position: "absolute",
+    justifyContent: "space-between",
+    flexDirection: "column",
+    borderRadius: 14,
+    opacity: 1,
+    zIndex: 0,
   },
 })
