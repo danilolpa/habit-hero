@@ -32,7 +32,7 @@ export default function IndexTabs() {
           <View style={{ zIndex: 1 }}>
             <HomeHeader image={images.headerDefault} />
           </View>
-          <View style={{ flexGrow: 1, flexShrink: 1, marginTop: -90 }}>
+          <View style={{ flexGrow: 1, flexShrink: 1, top: 0 }}>
             <HabitsList />
           </View>
         </View>
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     }),
   },
   image: {
-    height: 350,
+    height: 400,
     width: "100%",
     display: "flex",
     top: 0,

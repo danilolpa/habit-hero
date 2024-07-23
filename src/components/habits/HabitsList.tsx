@@ -1,13 +1,22 @@
 import { theme } from "@/Theme"
 import HabitCard from "@/components/Habits/HabitCard"
 
-import { FlatList, Platform, StyleSheet, View, ViewToken } from "react-native"
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  ViewToken,
+} from "react-native"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { useHabits } from "@/contexts/habitsContext"
 import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated"
 import { useCallback, useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
 import JsonViewer from "../Utils/JsonView"
+import { SceneMap, TabView } from "react-native-tab-view"
 
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
@@ -45,8 +54,8 @@ export default function HabitsList() {
 
   const viewableItems = useSharedValue<ViewToken[]>([])
 
-  return (
-    <View>
+  const HabitList = () => {
+    return (
       <Animated.FlatList
         data={habitsTests}
         keyExtractor={(item) => item.id.toString()}
@@ -54,7 +63,6 @@ export default function HabitsList() {
         showsHorizontalScrollIndicator={false}
         style={styles.container}
         ListFooterComponent={<View style={styles.footer} />}
-        ListHeaderComponent={<View style={{ height: 90 }} />}
         onRefresh={() => handleRefresing()}
         refreshing={loading}
         removeClippedSubviews={true}
@@ -76,8 +84,9 @@ export default function HabitsList() {
           />
         )}
       />
-    </View>
-  )
+    )
+  }
+  return <HabitList />
 }
 
 const styles = StyleSheet.create({

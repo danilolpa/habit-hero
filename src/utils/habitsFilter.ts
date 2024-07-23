@@ -183,11 +183,11 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
     filterBySelectedDate(date: string) {
       habits = habitsFunctions
         .setDate(date)
-        // .filterByDay(selectedDate)
-        // .filterByEndDate(selectedDate)
-        // .filterBySingleDate()
-        // .filterByDaysOnMonth()
-        // .filterByDaysOfWeek()
+        .filterByDay(selectedDate)
+        .filterByEndDate(selectedDate)
+        .filterBySingleDate()
+        .filterByDaysOnMonth()
+        .filterByDaysOfWeek()
         .getAll()
 
       return this

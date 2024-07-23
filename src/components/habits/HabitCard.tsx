@@ -9,6 +9,7 @@ import Animated, {
   FadeOutRight,
   FadeInDown,
   SharedValue,
+  FadeOut,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 import { ThemedText, ThemedView } from "../Utils/Themed"
@@ -125,7 +126,7 @@ export default function HabitCard({
   }
 
   return (
-    <Animated.View exiting={FadeOutRight.duration(150)}>
+    <Animated.View exiting={FadeOut.duration(150)}>
       <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
         <Pressable onLongPress={() => handleDelete(id)}>
           <ThemedView
