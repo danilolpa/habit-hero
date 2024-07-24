@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   Platform,
+  SectionList,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -15,6 +16,9 @@ import { useHabits } from "@/contexts/habitsContext"
 import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated"
 import { useCallback, useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
+import JsonViewer from "../Utils/JsonView"
+import { colord } from "colord"
+import { BlurView } from "expo-blur"
 
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
@@ -39,32 +43,51 @@ export default function HabitsList() {
       setLoading(false)
     }
   }, [habitsLoading])
-  const habitsTests = Habits.filterBySelectedDate(selectedDate).getAll()
-  // const groupedHabits = Habits.filterBySelectedDate(selectedDate).groupByPeriod().getAll()
 
-  const renderHeader = () => (
-    <ThemedView style={styles.header}>
-      <ThemedText style={styles.headerText} fontWeight="extraLight">
-        {selectedDate} - Total: {habitsTests.length}
-      </ThemedText>
-    </ThemedView>
-  )
+  const groupedHabits: any = Habits.filterBySelectedDate(selectedDate).groupByPeriod().getGrouped()
 
   const viewableItems = useSharedValue<ViewToken[]>([])
 
   const HabitList = () => {
     return (
       <View>
-        <Animated.FlatList
+        <SectionList
+          sections={groupedHabits}
+          keyExtractor={(item, index) => item + index}
+          onRefresh={() => handleRefresing()}
+          refreshing={loading}
+          ListFooterComponent={<View style={styles.footer} />}
+          style={styles.container}
+          renderItem={({ item, index }) => (
+            <HabitCard
+              id={item.id}
+              name={item.name}
+              icon={item.icon}
+              period={item.period}
+              experience={20}
+              color={item.color}
+              index={index}
+              habitData={item}
+            />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <BlurView intensity={10}>
+              <ThemedView style={styles.header}>
+                <ThemedText>{title}</ThemedText>
+              </ThemedView>
+            </BlurView>
+          )}
+        />
+        {/* <Animated.FlatList
           data={habitsTests}
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           style={styles.container}
-          ListFooterComponent={<View style={styles.footer} />}
           onRefresh={() => handleRefresing()}
           refreshing={loading}
           removeClippedSubviews={true}
+          ListFooterComponent={<View style={styles.footer} />}
           itemLayoutAnimation={LinearTransition.delay(100).duration(200)}
           onViewableItemsChanged={({ viewableItems: vItems }) => {
             viewableItems.value = vItems
@@ -82,7 +105,7 @@ export default function HabitsList() {
               viewableItems={viewableItems}
             />
           )}
-        />
+        /> */}
       </View>
     )
   }
@@ -99,21 +122,13 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    padding: 10,
+    paddingHorizontal: theme.spaces.defaultSpace,
+    paddingVertical: theme.spaces.defaultSpace / 2,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: theme.colors.primary.base,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3.84,
-      },
-      android: {
-        elevation: 0,
-      },
-    }),
+    display: "flex",
+    width: "100%",
+    backgroundColor: colord(theme.colors.black.base).alpha(0.6).toRgbString(),
   },
   headerText: {
     color: "#fff",

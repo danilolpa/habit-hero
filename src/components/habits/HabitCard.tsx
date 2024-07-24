@@ -24,7 +24,7 @@ type HabitCardProps = HabitsType & {
   index: number
   experience: number
   habitData?: HabitsType
-  viewableItems: SharedValue<ViewToken[]>
+  viewableItems?: SharedValue<ViewToken[]>
 }
 
 export default function HabitCard({
@@ -92,11 +92,15 @@ export default function HabitCard({
   }
 
   const cardAnimationScaleinOut = useAnimatedStyle(() => {
-    const isVisible = Boolean(
-      viewableItems.value
-        .filter((item) => item.isViewable)
-        .find((viewableItem) => viewableItem.item.id === id),
-    )
+    const isVisible = viewableItems
+      ? Boolean(
+          viewableItems &&
+            viewableItems.value
+              .filter((item) => item.isViewable)
+              .find((viewableItem) => viewableItem.item.id === id),
+        )
+      : true
+
     return {
       opacity: withTiming(isVisible ? 1 : 0),
       transform: [{ scale: withTiming(isVisible ? 1 : 0.6) }],
@@ -126,43 +130,41 @@ export default function HabitCard({
   }
 
   return (
-    <Animated.View exiting={FadeOut.duration(150)}>
-      <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
-        <Pressable onLongPress={() => handleDelete(id)}>
-          <ThemedView
-            style={[styles.card, { borderColor: colorHex }, cardAnimationScaleinOut]}
-            darkColor={theme.colors.black.lighter}
-            lightColor={theme.colors.white.dark}
-            animated
-          >
-            <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
-            <View style={styles.cardContentCenter}>
-              <ThemedText
-                darkColor={theme.colors.white.dark}
-                lightColor={theme.colors.black.dark}
-                fontWeight="bold"
-                style={styles.cardContentHabit}
-              >
-                {name} - {period}
-              </ThemedText>
-              <ThemedText
-                darkColor={theme.colors.white.light}
-                lightColor={theme.colors.black.dark}
-                fontSize={14}
-                style={[styles.cardContentMisc, { color: colorHex }]}
-              >
-                {id} - {habitData?.createdDate}
-              </ThemedText>
-            </View>
-            <View style={styles.cardContentExp}>
-              <FontAwesome6 name="bolt-lightning" size={18} style={{ color: colorHex }} />
-              <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
-                XP
-              </ThemedText>
-            </View>
-          </ThemedView>
-        </Pressable>
-      </Swipeable>
-    </Animated.View>
+    <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
+      <Pressable onLongPress={() => handleDelete(id)}>
+        <ThemedView
+          style={[styles.card, { borderColor: colorHex }, cardAnimationScaleinOut]}
+          darkColor={theme.colors.black.lighter}
+          lightColor={theme.colors.white.dark}
+          animated
+        >
+          <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
+          <View style={styles.cardContentCenter}>
+            <ThemedText
+              darkColor={theme.colors.white.dark}
+              lightColor={theme.colors.black.dark}
+              fontWeight="bold"
+              style={styles.cardContentHabit}
+            >
+              {name} - {period}
+            </ThemedText>
+            <ThemedText
+              darkColor={theme.colors.white.light}
+              lightColor={theme.colors.black.dark}
+              fontSize={14}
+              style={[styles.cardContentMisc, { color: colorHex }]}
+            >
+              {id} - {habitData?.createdDate}
+            </ThemedText>
+          </View>
+          <View style={styles.cardContentExp}>
+            <FontAwesome6 name="bolt-lightning" size={18} style={{ color: colorHex }} />
+            <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
+              XP
+            </ThemedText>
+          </View>
+        </ThemedView>
+      </Pressable>
+    </Swipeable>
   )
 }

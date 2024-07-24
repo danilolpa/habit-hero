@@ -10,12 +10,12 @@ export interface HabitsFiltersInterface {
   filterBySelectedDate(date: string): this
   getById(id: string): HabitsType[]
   getAll(): HabitsType[]
+  getGrouped(): {
+    title: string
+    data: HabitsType[]
+  }
   setDate(selectedDate: string): this
   groupByPeriod: () => this
-}
-
-export interface OrderByInterface {
-  [key: string]: HabitsType[]
 }
 
 /**
@@ -194,12 +194,24 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
     },
 
     groupByPeriod() {
-      const groupedByPeriod: OrderByInterface = {
-        MORNING: [],
-        AFTERNOON: [],
-        NIGHT: [],
-        ANYTIME: [],
-      }
+      const groupedByPeriod: { title: string; data: HabitsType[] }[] = [
+        {
+          title: APP_CONSTANTS.HABIT.PERIOD.MORNING,
+          data: [],
+        },
+        {
+          title: APP_CONSTANTS.HABIT.PERIOD.AFTERNOON,
+          data: [],
+        },
+        {
+          title: APP_CONSTANTS.HABIT.PERIOD.NIGHT,
+          data: [],
+        },
+        {
+          title: APP_CONSTANTS.HABIT.PERIOD.ANYTIME,
+          data: [],
+        },
+      ]
 
       habits.forEach((habit: HabitsType) => {
         habit.period &&
@@ -210,16 +222,28 @@ export default function HabitsFilters(habitsList: HabitsType[]): HabitsFiltersIn
               value === APP_CONSTANTS.HABIT.PERIOD.NIGHT ||
               value === APP_CONSTANTS.HABIT.PERIOD.ANYTIME
             ) {
-              groupedByPeriod[value].push(habit)
+              // groupedByPeriod[value].push(habit.id)
+              const periodIndex = groupedByPeriod.findIndex(
+                (periodObj) => periodObj.title === value,
+              )
+
+              if (periodIndex !== -1) {
+                groupedByPeriod[periodIndex].data.push(habit)
+              }
             }
           })
       })
-      habits = groupedByPeriod || []
+      const removeEmpty = groupedByPeriod.filter((period) => period.data.length > 0)
+      habits = groupedByPeriod.filter((period) => period.data.length > 0) || []
 
       return this
     },
 
     getAll() {
+      return habits
+    },
+
+    getGrouped() {
       return habits
     },
     getById(id: HabitsType["id"]) {

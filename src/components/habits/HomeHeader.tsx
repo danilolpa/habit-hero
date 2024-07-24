@@ -8,6 +8,7 @@ import {
   Image,
   Platform,
   TouchableOpacity,
+  Pressable,
 } from "react-native"
 import * as Haptics from "expo-haptics"
 import { router } from "expo-router"
@@ -18,6 +19,7 @@ import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getFormattedDate } from "@/utils/dateHelpers"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { BlurView } from "expo-blur"
+import { useHabits } from "@/contexts/habitsContext"
 
 type HeaderDefaultProps = ImageBackgroundProps & {
   image: string
@@ -33,7 +35,7 @@ export default function HomeHeader({ image }: HeaderDefaultProps) {
     router.push(route)
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
-
+  const { selectedDate, setSelectedDate } = useHabits()
   return (
     <ThemedView style={styles.container}>
       <StatusBar style="light" />
@@ -55,9 +57,14 @@ export default function HomeHeader({ image }: HeaderDefaultProps) {
               </ThemedText>
             </ThemedView>
           </TouchableOpacity>
-          <ThemedText style={styles.welcomeDate} fontWeight="bold">
-            {actualDay}
-          </ThemedText>
+          <TouchableOpacity
+            style={styles.welcomeDate}
+            onPress={() => setSelectedDate(getFormattedDate("yyyy-MM-dd"))}
+          >
+            <ThemedText style={styles.ActualDateText} fontWeight="bold">
+              {actualDay}
+            </ThemedText>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
       <BlurView style={styles.dataSlider} intensity={30}>
@@ -102,7 +109,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: theme.spaces.defaultSpace,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     ...Platform.select({
       android: {
@@ -113,7 +120,7 @@ export const styles = StyleSheet.create({
   welcomeAction: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     height: 40,
     backgroundColor: "rgba(0,0,0, 0.1)",
@@ -133,11 +140,13 @@ export const styles = StyleSheet.create({
     marginLeft: 5,
   },
   welcomeDate: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: theme.colors.white.light,
-    flexGrow: 1,
     textAlign: "right",
     textTransform: "capitalize",
+  },
+  ActualDateText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "right",
+    color: theme.colors.white.light,
   },
 })
