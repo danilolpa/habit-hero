@@ -15,8 +15,6 @@ import { useHabits } from "@/contexts/habitsContext"
 import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated"
 import { useCallback, useEffect, useState } from "react"
 import { useFocusEffect } from "expo-router"
-import JsonViewer from "../Utils/JsonView"
-import { SceneMap, TabView } from "react-native-tab-view"
 
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
@@ -56,34 +54,36 @@ export default function HabitsList() {
 
   const HabitList = () => {
     return (
-      <Animated.FlatList
-        data={habitsTests}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        style={styles.container}
-        ListFooterComponent={<View style={styles.footer} />}
-        onRefresh={() => handleRefresing()}
-        refreshing={loading}
-        removeClippedSubviews={true}
-        itemLayoutAnimation={LinearTransition.delay(100).duration(200)}
-        onViewableItemsChanged={({ viewableItems: vItems }) => {
-          viewableItems.value = vItems
-        }}
-        renderItem={({ item, index }) => (
-          <HabitCard
-            id={item.id}
-            name={item.name}
-            icon={item.icon}
-            period={item.period}
-            experience={20}
-            color={item.color}
-            index={index}
-            habitData={item}
-            viewableItems={viewableItems}
-          />
-        )}
-      />
+      <View>
+        <Animated.FlatList
+          data={habitsTests}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          style={styles.container}
+          ListFooterComponent={<View style={styles.footer} />}
+          onRefresh={() => handleRefresing()}
+          refreshing={loading}
+          removeClippedSubviews={true}
+          itemLayoutAnimation={LinearTransition.delay(100).duration(200)}
+          onViewableItemsChanged={({ viewableItems: vItems }) => {
+            viewableItems.value = vItems
+          }}
+          renderItem={({ item, index }) => (
+            <HabitCard
+              id={item.id}
+              name={item.name}
+              icon={item.icon}
+              period={item.period}
+              experience={20}
+              color={item.color}
+              index={index}
+              habitData={item}
+              viewableItems={viewableItems}
+            />
+          )}
+        />
+      </View>
     )
   }
   return <HabitList />
