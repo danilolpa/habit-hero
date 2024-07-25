@@ -141,12 +141,12 @@ export const styles = StyleSheet.create({
   },
   welcomeDate: {
     textAlign: "right",
-    textTransform: "capitalize",
   },
   ActualDateText: {
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "right",
     color: theme.colors.white.light,
+    textTransform: "capitalize",
   },
 })
