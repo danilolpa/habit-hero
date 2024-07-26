@@ -1,3 +1,5 @@
+import { colord } from "colord"
+
 export const primaryColor = "#00ADB5"
 
 interface ColorShades {
@@ -81,6 +83,7 @@ const theme: Theme = {
     },
     green: {
       base: "#379777",
+      dark: colord("#379777").darken(0.1).toHex(),
     },
     yellow: {
       base: "#FFB74D",

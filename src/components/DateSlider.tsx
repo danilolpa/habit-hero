@@ -9,6 +9,8 @@ import { getFormattedDate } from "@/utils/dateHelpers"
 import { ThemedText, ThemedView } from "./Utils/Themed"
 import { theme } from "@/Theme"
 import { useHabits } from "@/contexts/habitsContext"
+import { isOdd } from "@/utils/numbersHelpers"
+import CircularProgress from "@/components/UI/CircularProgress"
 
 interface CustomFlatListProps extends FlatListProps<string> {
   contentContainerStyle?: FlatListProps<string>["contentContainerStyle"]
@@ -77,6 +79,9 @@ export default function DateSlider() {
     const isToday = getFormattedDate(dateFormat, item.date) === getFormattedDate(dateFormat)
     const isActive = selectedDate === formattedDate
 
+    const dayProgress = Math.floor(Math.random() * 100)
+    const isDayCompleted = isOdd(Math.floor(Math.random() * 100))
+
     return (
       <View>
         <Pressable onPress={() => handlePress(item.date)}>
@@ -93,18 +98,19 @@ export default function DateSlider() {
               </ThemedText>
             </ThemedView>
             <ThemedView
-              style={styles.dayContainer}
+              style={[styles.dayContainer, isDayCompleted && styles.dayCompleted]}
               darkColor={theme.colors.black.base}
               lightColor={theme.colors.white.base}
             >
-              <ThemedText
-                style={styles.day}
-                darkColor={theme.colors.white.lighter}
-                lightColor={theme.colors.black.dark}
-                fontWeight={isToday ? "extra-bold" : "light"}
-              >
-                {day}
-              </ThemedText>
+              <CircularProgress
+                size={38}
+                strokeWidth={4}
+                strokeColor={theme.colors.green.base}
+                progress={dayProgress}
+                style={styles.progressContainer}
+                labelString={day}
+                labelStyle={styles.day}
+              />
             </ThemedView>
           </ThemedView>
         </Pressable>
@@ -166,14 +172,21 @@ const styles = StyleSheet.create({
   },
   dayContainer: {
     borderRadius: 100,
-    height: 34,
-    width: 34,
+    height: 40,
+    width: 40,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  dayContainerIncomplete: {
+    backgroundColor: theme.colors.green.base,
   },
   day: {
     fontSize: 14,
     textAlign: "center",
     verticalAlign: "middle",
+  },
+  dayCompleted: {
+    backgroundColor: theme.colors.green.dark,
   },
 })

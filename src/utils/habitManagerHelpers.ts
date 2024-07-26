@@ -81,6 +81,19 @@ const translateGoalText = (string: string) => {
   }
 }
 
+const translatePeriod = (string: string) => {
+  const text = string.toUpperCase()
+  return text === APP_CONSTANTS.HABIT.PERIOD.MORNING
+    ? "Manhã"
+    : text === APP_CONSTANTS.HABIT.PERIOD.AFTERNOON
+    ? "Tarde"
+    : text === APP_CONSTANTS.HABIT.PERIOD.NIGHT
+    ? "Noite"
+    : "Qualquer horário"
+
+  return string
+}
+
 const formatGoalText = (props: goalProps, suffix = "por dia") => {
   const { goalType, goalDetails } = props
 
@@ -189,4 +202,5 @@ export {
   generateHabitTitle,
   generateRandomColor,
   generateRandomIcons,
+  translatePeriod,
 }

@@ -146,7 +146,7 @@ export default function HabitCard({
               fontWeight="bold"
               style={styles.cardContentHabit}
             >
-              {name} - {period}
+              Index: {index} - {name} - {period}
             </ThemedText>
             <ThemedText
               darkColor={theme.colors.white.light}
