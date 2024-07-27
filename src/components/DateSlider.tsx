@@ -11,6 +11,7 @@ import { theme } from "@/Theme"
 import { useHabits } from "@/contexts/habitsContext"
 import { isOdd } from "@/utils/numbersHelpers"
 import CircularProgress from "@/components/UI/CircularProgress"
+import { colord } from "colord"
 
 interface CustomFlatListProps extends FlatListProps<string> {
   contentContainerStyle?: FlatListProps<string>["contentContainerStyle"]
@@ -21,7 +22,7 @@ type DataItems = {
 
 // Component Configuration
 const ITEM_WIDTH = 50
-const beforeDays = 15
+const beforeDays = 30
 const afterDays = 30
 const dateFormat = "yyyy-MM-dd"
 
@@ -48,25 +49,9 @@ export default function DateSlider() {
   }, [selectedDate])
 
   useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToIndex({
-        index: selectedDateIndex,
-        animated: true,
-        viewOffset: 60,
-      })
-    }
+    handleScrollToIndex()
   }, [selectedDateIndex, selectedDate])
 
-  const onScrollToIndexFailed = () => {
-    const wait = new Promise((resolve) => setTimeout(resolve, 500))
-    wait.then(() => {
-      flatListRef.current?.scrollToIndex({
-        index: selectedDateIndex,
-        animated: true,
-        viewOffset: 60,
-      })
-    })
-  }
   const handlePress = (date: Date) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     setSelectedDate(getFormattedDate(dateFormat, date))
@@ -83,7 +68,7 @@ export default function DateSlider() {
     const isDayCompleted = isOdd(Math.floor(Math.random() * 100))
 
     return (
-      <View>
+      <View style={{ width: ITEM_WIDTH, paddingHorizontal: 1 }}>
         <Pressable onPress={() => handlePress(item.date)}>
           <ThemedView
             style={[
@@ -107,7 +92,6 @@ export default function DateSlider() {
                 strokeWidth={4}
                 strokeColor={theme.colors.green.base}
                 progress={dayProgress}
-                style={styles.progressContainer}
                 labelString={day}
                 labelStyle={styles.day}
               />
@@ -116,6 +100,18 @@ export default function DateSlider() {
         </Pressable>
       </View>
     )
+  }
+
+  const handleScrollToIndex = () => {
+    console.log(selectedDateIndex)
+
+    if (flatListRef.current) {
+      flatListRef.current.scrollToIndex({
+        index: selectedDateIndex,
+        animated: true,
+        viewOffset: ITEM_WIDTH * 5.15,
+      })
+    }
   }
 
   return (
@@ -131,7 +127,7 @@ export default function DateSlider() {
         initialNumToRender={dates.length}
         initialScrollIndex={selectedDateIndex < 0 ? 0 : selectedDateIndex}
         getItemLayout={getItemLayout}
-        onScrollToIndexFailed={onScrollToIndexFailed}
+        onContentSizeChange={() => handleScrollToIndex()}
       />
     </View>
   )
@@ -139,7 +135,7 @@ export default function DateSlider() {
 
 const styles = StyleSheet.create({
   listContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: theme.spaces.defaultSpace - 2,
   },
   dateContainer: {
     borderRadius: 100,
@@ -149,10 +145,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     paddingVertical: 5,
-    width: ITEM_WIDTH,
   },
   dateContainerActive: {
-    backgroundColor: theme.colors.black.base,
+    backgroundColor: colord(theme.colors.black.base).alpha(0.9).toHex(),
   },
   dateContainerToday: {
     backgroundColor: "rgba(0,0,0, 0.3)",
@@ -187,6 +182,6 @@ const styles = StyleSheet.create({
     verticalAlign: "middle",
   },
   dayCompleted: {
-    backgroundColor: theme.colors.green.dark,
+    backgroundColor: theme.colors.green.base,
   },
 })
