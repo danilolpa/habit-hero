@@ -15,7 +15,7 @@ import { router } from "expo-router"
 
 import DateSlider from "../DateSlider"
 import { theme } from "@/Theme"
-import { ThemedText, ThemedView } from "@/components/Utils/Themed"
+import { ThemedIcon, ThemedMaterialIcons, ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getFormattedDate } from "@/utils/dateHelpers"
 import APP_CONSTANTS from "@/constants/AppConstants"
 import { BlurView } from "expo-blur"
@@ -41,7 +41,7 @@ export default function HomeHeader({ image }: HeaderDefaultProps) {
       <StatusBar style="light" />
       <SafeAreaView>
         <View style={styles.welcome}>
-          <TouchableOpacity onPress={handleProfile(APP_CONSTANTS.NAV.SETTINGS)} activeOpacity={0.8}>
+          {/* <TouchableOpacity onPress={handleProfile(APP_CONSTANTS.NAV.SETTINGS)} activeOpacity={0.8}>
             <ThemedView style={styles.welcomeAction}>
               <Image
                 source={{ uri: "https://github.com/danilolpa.png" }}
@@ -56,15 +56,17 @@ export default function HomeHeader({ image }: HeaderDefaultProps) {
                 Olá, {user.name}
               </ThemedText>
             </ThemedView>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.welcomeDate}
-            onPress={() => setSelectedDate(getFormattedDate("yyyy-MM-dd"))}
-          >
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => setSelectedDate(getFormattedDate("yyyy-MM-dd"))}>
             <ThemedText style={styles.ActualDateText} fontWeight="bold">
               {actualDay}
             </ThemedText>
           </TouchableOpacity>
+
+          <View style={styles.dailyStrike}>
+            <ThemedIcon name="local-fire-department" size={20} color={theme.colors.red.base} />
+            <ThemedText>20 dias</ThemedText>
+          </View>
         </View>
       </SafeAreaView>
       <BlurView style={styles.dataSlider} intensity={30}>
@@ -139,14 +141,23 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 5,
   },
-  welcomeDate: {
-    textAlign: "right",
-  },
   ActualDateText: {
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "right",
     color: theme.colors.white.light,
     textTransform: "capitalize",
+  },
+  dailyStrike: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 4,
+
+    backgroundColor: "rgba(0,0,0, 0.1)",
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
 })

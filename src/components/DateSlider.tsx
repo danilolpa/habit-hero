@@ -65,7 +65,7 @@ export default function DateSlider() {
     const isActive = selectedDate === formattedDate
 
     const dayProgress = Math.floor(Math.random() * 100)
-    const isDayCompleted = isOdd(Math.floor(Math.random() * 100))
+    const isDayCompleted = false // isOdd(Math.floor(Math.random() * 100))
 
     return (
       <View style={{ width: ITEM_WIDTH, paddingHorizontal: 1 }}>
@@ -103,8 +103,6 @@ export default function DateSlider() {
   }
 
   const handleScrollToIndex = () => {
-    console.log(selectedDateIndex)
-
     if (flatListRef.current) {
       flatListRef.current.scrollToIndex({
         index: selectedDateIndex,
