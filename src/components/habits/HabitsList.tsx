@@ -10,6 +10,7 @@ import HabitCard from "@/components/Habits/HabitCard"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { colord } from "colord"
 import { translatePeriod } from "@/utils/habitManagerHelpers"
+import { HabitsType } from "@/types/habits"
 
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()
@@ -44,18 +45,7 @@ export default function HabitsList() {
         refreshing={loading}
         ListFooterComponent={<View style={styles.footer} />}
         style={styles.container}
-        renderItem={({ item, index }) => (
-          <HabitCard
-            id={item.id}
-            name={item.name}
-            icon={item.icon}
-            period={item.period}
-            experience={20}
-            color={item.color}
-            index={index}
-            habitData={item}
-          />
-        )}
+        renderItem={({ item, index }) => <HabitCard index={index} habitData={item} />}
         renderSectionHeader={({ section: { title } }) => (
           <BlurView intensity={10}>
             <ThemedView style={styles.header}>

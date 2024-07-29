@@ -94,7 +94,6 @@ export const styles = StyleSheet.create({
     }),
   },
   dataSlider: {
-    // backgroundColor: "rgba(0, 0, 0, 0.5)",
     display: "flex",
     justifyContent: "center",
     paddingVertical: 8,

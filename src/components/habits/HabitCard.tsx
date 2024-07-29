@@ -1,42 +1,29 @@
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
-import { Text, View, TouchableOpacity, Alert, Pressable, ViewToken } from "react-native"
+import { Text, View, Alert, Pressable, ViewToken } from "react-native"
 import Animated, {
-  Easing,
   useSharedValue,
   useAnimatedStyle,
-  withTiming,
   withSpring,
-  FadeOutRight,
-  FadeInDown,
   SharedValue,
-  FadeOut,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
-import { ThemedText, ThemedView } from "../Utils/Themed"
+import { ThemedIcon, ThemedText, ThemedView } from "../Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import styles from "./habitsStyle"
-import { useEffect, useState } from "react"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
 import { useHabits } from "@//contexts/habitsContext"
+import APP_CONSTANTS from "@/constants/AppConstants"
 
 type HabitCardProps = HabitsType & {
   index: number
-  experience: number
-  habitData?: HabitsType
+  habitData: HabitsType
   viewableItems?: SharedValue<ViewToken[]>
 }
 
-export default function HabitCard({
-  icon,
-  name,
-  period,
-  color,
-  index,
-  id,
-  habitData,
-  viewableItems,
-}: HabitCardProps) {
+export default function HabitCard({ index, habitData, viewableItems }: HabitCardProps) {
+  const { icon, name, color, id, period, goal } = habitData
+
   const translateX = useSharedValue(0)
   const colorHex = getColorHexByName(color)
   const { updateHabitsList } = useHabits()
@@ -67,45 +54,11 @@ export default function HabitCard({
     )
   }
 
-  const opacity = useSharedValue(0)
-  const translateY = useSharedValue(60)
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      opacity.value = withTiming(1, {
-        duration: 500,
-        easing: Easing.out(Easing.exp),
-      })
-
-      translateY.value = withTiming(0, {
-        duration: 600,
-        easing: Easing.out(Easing.exp),
-      })
-    }, index * 100)
-
-    return () => clearTimeout(timeoutId)
-  }, [index, opacity, translateY])
-
   const onSwipeableOpen = (direction: any) => {
     if (direction === "right") {
       console.log("right")
     }
   }
-
-  const cardAnimationScaleinOut = useAnimatedStyle(() => {
-    const isVisible = viewableItems
-      ? Boolean(
-          viewableItems &&
-            viewableItems.value
-              .filter((item) => item.isViewable)
-              .find((viewableItem) => viewableItem.item.id === id),
-        )
-      : true
-
-    return {
-      opacity: withTiming(isVisible ? 1 : 0),
-      transform: [{ scale: withTiming(isVisible ? 1 : 0.6) }],
-    }
-  }, [])
 
   const handleDelete = (id: string) => {
     Alert.alert(
@@ -129,11 +82,35 @@ export default function HabitCard({
     )
   }
 
+  const renderGoalView = () => {
+    const goalType = goal?.goalType || "BY_UNITS"
+    const goalDetailsType = goal?.goalDetails?.type || "TIME"
+    console.log(goalType, goalDetailsType)
+
+    return (
+      <View style={styles.cardContentExp}>
+        {goalType === "BY_TIME" && (
+          <View>
+            <ThemedIcon name="timer" size={30} style={{ color: colorHex }} />
+          </View>
+        )}
+        {goalType === "BY_UNITS" && (
+          <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
+            0/{goal?.goalDetails?.count}
+          </ThemedText>
+        )}
+        <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
+          {goalDetailsType}
+        </ThemedText>
+      </View>
+    )
+  }
+
   return (
     <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
       <Pressable onLongPress={() => handleDelete(id)}>
         <ThemedView
-          style={[styles.card, { borderColor: colorHex }, cardAnimationScaleinOut]}
+          style={[styles.card, { borderColor: colorHex }]}
           darkColor={theme.colors.black.lighter}
           lightColor={theme.colors.white.dark}
           animated
@@ -146,7 +123,7 @@ export default function HabitCard({
               fontWeight="bold"
               style={styles.cardContentHabit}
             >
-              Index: {index} - {name} - {period}
+              {name}
             </ThemedText>
             <ThemedText
               darkColor={theme.colors.white.light}
@@ -154,15 +131,10 @@ export default function HabitCard({
               fontSize={14}
               style={[styles.cardContentMisc, { color: colorHex }]}
             >
-              {id} - {habitData?.createdDate}
+              Novo - sequencia de x dias
             </ThemedText>
           </View>
-          <View style={styles.cardContentExp}>
-            <FontAwesome6 name="bolt-lightning" size={18} style={{ color: colorHex }} />
-            <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
-              XP
-            </ThemedText>
-          </View>
+          {renderGoalView()}
         </ThemedView>
       </Pressable>
     </Swipeable>
