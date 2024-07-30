@@ -77,6 +77,10 @@ const generateTimeRange = (reference: "hours" | "minutes" | "seconds") => {
   return result
 }
 
+function getTotalMinutes(hours: number, minutes: number, seconds: number): number {
+  const totalMinutes = hours * 60 + minutes + seconds / 60
+  return totalMinutes
+}
 export {
   getFormattedDate,
   getDaysOfWeek,
@@ -85,4 +89,5 @@ export {
   dateTextFormatter,
   getNextHour,
   generateTimeRange,
+  getTotalMinutes,
 }

@@ -7,13 +7,16 @@ import Animated, {
   SharedValue,
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
+
 import { ThemedIcon, ThemedText, ThemedView } from "../Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
-import styles from "./habitsStyle"
+import styles from "./habitCardStyle"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
 import { useHabits } from "@//contexts/habitsContext"
-import APP_CONSTANTS from "@/constants/AppConstants"
+import { translateGoalText } from "@/utils/habitManagerHelpers"
+import { pluralizeIfNeeded } from "@/utils/textHelpers"
+import HabitCardGoal from "./HabitCardGoal"
 
 type HabitCardProps = HabitsType & {
   index: number
@@ -82,30 +85,6 @@ export default function HabitCard({ index, habitData, viewableItems }: HabitCard
     )
   }
 
-  const renderGoalView = () => {
-    const goalType = goal?.goalType || "BY_UNITS"
-    const goalDetailsType = goal?.goalDetails?.type || "TIME"
-    console.log(goalType, goalDetailsType)
-
-    return (
-      <View style={styles.cardContentExp}>
-        {goalType === "BY_TIME" && (
-          <View>
-            <ThemedIcon name="timer" size={30} style={{ color: colorHex }} />
-          </View>
-        )}
-        {goalType === "BY_UNITS" && (
-          <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
-            0/{goal?.goalDetails?.count}
-          </ThemedText>
-        )}
-        <ThemedText darkColor={theme.colors.white.light} lightColor={theme.colors.black.dark}>
-          {goalDetailsType}
-        </ThemedText>
-      </View>
-    )
-  }
-
   return (
     <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
       <Pressable onLongPress={() => handleDelete(id)}>
@@ -134,7 +113,7 @@ export default function HabitCard({ index, habitData, viewableItems }: HabitCard
               Novo - sequencia de x dias
             </ThemedText>
           </View>
-          {renderGoalView()}
+          <HabitCardGoal color={colorHex} goal={goal} />
         </ThemedView>
       </Pressable>
     </Swipeable>

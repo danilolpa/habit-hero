@@ -1,12 +1,11 @@
 import { SectionList, StyleSheet, View, ViewToken } from "react-native"
 import { useHabits } from "@/contexts/habitsContext"
 import { useFocusEffect } from "expo-router"
-import { useSharedValue } from "react-native-reanimated"
 import { useCallback, useEffect, useState } from "react"
 import { BlurView } from "expo-blur"
 
 import { theme } from "@/Theme"
-import HabitCard from "@/components/Habits/HabitCard"
+import HabitCard from "@/components/HabitsCard/HabitCard"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { colord } from "colord"
 import { translatePeriod } from "@/utils/habitManagerHelpers"

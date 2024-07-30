@@ -203,4 +203,5 @@ export {
   generateRandomColor,
   generateRandomIcons,
   translatePeriod,
+  translateGoalText,
 }

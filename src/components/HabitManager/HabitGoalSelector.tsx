@@ -22,12 +22,13 @@ interface HabitGoalSelectorProps {
 
 const HabitGoalSelector = (props: HabitGoalSelectorProps) => {
   const { values, setFieldValue } = useFormikContext<HabitsType>()
+  const { goal } = values
   const { color = theme.colors.primary.base } = props
   const [visiblePicker, setVisibilityPicker] = useState(false)
 
   const handleGoalType = ({ nativeEvent }: any) => {
     const goalType = getGoalTypeByIndex(nativeEvent.selectedSegmentIndex) || "units"
-    const hasGoalDetails = Object.keys(values.goal.goalDetails || {}).length > 0
+    const hasGoalDetails = Object.keys(goal.goalDetails || {}).length > 0
     if (goalType && typeof goalType === "object" && "VALUE" in goalType) {
       setFieldValue("goal.goalType", String(goalType.VALUE))
       if (!hasGoalDetails) {
@@ -47,18 +48,18 @@ const HabitGoalSelector = (props: HabitGoalSelectorProps) => {
         text="Meta"
         switchOptions={{
           selectedColor: String(color),
-          value: values.goal.hasGoal,
+          value: goal.hasGoal,
           onValueChange: (value) => toggleGoal(value),
         }}
       />
 
-      {values.goal.hasGoal && (
-        <AccordionContainer isVisible={values.goal.hasGoal}>
+      {goal.hasGoal && (
+        <AccordionContainer isVisible={goal.hasGoal}>
           <ContentContainer schemeColor="light" onlyRadiusBottom>
             <View>
               <ThemedSegmentedControl
                 values={APP_CONSTANTS.HABIT.GOAL.GOAL_LABELS.map((item) => item.LABEL)}
-                selectedIndex={getGoalIndexByValue(String(values.goal.goalType))}
+                selectedIndex={getGoalIndexByValue(String(goal.goalType))}
                 onChange={(item) => handleGoalType(item)}
                 style={styles.segmentedControl}
                 tintColor={color}
@@ -72,7 +73,7 @@ const HabitGoalSelector = (props: HabitGoalSelectorProps) => {
               />
             </View>
             <ContentFlexRow
-              text={formatGoalText(values.goal) || "Escolha uma meta"}
+              text={formatGoalText(goal) || "Escolha uma meta"}
               iconIndicator="arrow-forward-ios"
               iconSize={16}
               onPress={() => setVisibilityPicker(true)}
@@ -81,7 +82,7 @@ const HabitGoalSelector = (props: HabitGoalSelectorProps) => {
             <HabitGoalPicker
               visible={visiblePicker || false}
               onClose={() => setVisibilityPicker(false)}
-              type={String(values.goal.goalType)}
+              type={String(goal.goalType)}
               selectionColor={color}
             />
           </ContentContainer>

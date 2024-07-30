@@ -15,7 +15,7 @@ export interface singleDateProps {
   dateString: string
 }
 
-export type GoalDetails = {
+export type GoalDetailsType = {
   hours?: number
   minutes?: number
   count?: number
@@ -25,7 +25,7 @@ export type GoalDetails = {
 export interface goalProps {
   hasGoal: boolean
   goalType?: "BY_TIME" | "BY_UNITS"
-  goalDetails?: GoalDetails
+  goalDetails?: GoalDetailsType
 }
 export type TimePeriodType = "MORNING" | "AFTERNOON" | "NIGHT" | "ANYTIME"
 
@@ -38,7 +38,7 @@ export interface HabitsType {
   frequency?: "DAILY" | "WEEKLY" | "MONTHLY" | "SINGLE"
   frequencySchedule?: frequencyScheduleType
   singleDate?: singleDateProps
-  goal?: goalProps
+  goal: goalProps
   color: HabitColorNameType
   reminderTimes?: string[]
   reminder?: boolean

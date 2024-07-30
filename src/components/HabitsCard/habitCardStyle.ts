@@ -49,12 +49,6 @@ const styles = StyleSheet.create({
     top: -2,
   },
 
-  cardContentExp: {
-    display: "flex",
-    width: 50,
-    alignItems: "center",
-  },
-
   itemContainer: {
     marginHorizontal: theme.spaces.defaultSpace,
     backgroundColor: "#fff", // Necessário para o Swipeable funcionar corretamente
