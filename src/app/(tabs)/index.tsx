@@ -1,6 +1,6 @@
 import { ThemedView, ThemedText } from "@/components/Utils/Themed"
 
-import HomeHeader from "@/components//Habits/HomeHeader"
+import HomeHeader from "@/components/Habits/HomeHeader"
 import images from "@/constants/Images"
 import { theme } from "@/Theme"
 import { HabitsProvider } from "@/contexts/habitsContext"
