@@ -21,10 +21,20 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
   const completedHabitsCount = 0
 
   const formatTimeText = () => {
-    let text = goal.goalDetails?.hours + "h " + goal.goalDetails?.minutes + "min"
-    if (goal.goalDetails?.seconds) {
-      text += " " + goal.goalDetails?.seconds + "s"
+    let text = ""
+    if (goal.goalDetails) {
+      const { hours, minutes, seconds } = goal.goalDetails
+
+      if (hours && hours > 0) {
+        text = hours + "h "
+      }
+
+      text = text + minutes + "min"
+      if (seconds) {
+        text += " " + seconds + "s"
+      }
     }
+
     return text
   }
   const textLabel =
@@ -35,7 +45,7 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
   return (
     <View style={styles.cardGoalContainer}>
       {goalType === "BY_TIME" && (
-        <View style={styles.byTimeContainer}>
+        <View style={styles.timeContainer}>
           <ThemedIcon name="timer" size={30} style={[{ color: color }, styles.byTimeIcon]} />
 
           <ThemedText
@@ -49,7 +59,7 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
         </View>
       )}
       {goalType === "BY_UNITS" && (
-        <>
+        <View style={styles.unitsContainer}>
           <ThemedText colorText={color} fontSize={22} style={{ top: 5 }}>
             {completedHabitsCount}
             <ThemedText style={{ opacity: 0.6 }} fontSize={16} colorText={color}>
@@ -65,7 +75,7 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
           >
             {textLabel}
           </ThemedText>
-        </>
+        </View>
       )}
     </View>
   )
@@ -76,13 +86,23 @@ export const styles = StyleSheet.create({
 
   cardGoalContainer: {
     display: "flex",
-    width: 75,
-    alignItems: "flex-end",
+    width: 80,
   },
-  byTimeContainer: {
+  timeContainer: {
     display: "flex",
     width: "100%",
     flexDirection: "column",
+    alignItems: "center",
+    flexGrow: 1,
+    justifyContent: "center",
+    backgroundColor: theme.colors.black.lightest,
+    borderRadius: 18,
+    marginTop: 1,
+  },
+  unitsContainer: {
+    paddingHorizontal: theme.spaces.defaultSpace,
+    display: "flex",
+    justifyContent: "center",
     alignItems: "flex-end",
   },
   byTimeIcon: {},

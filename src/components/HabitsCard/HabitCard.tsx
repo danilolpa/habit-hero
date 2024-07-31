@@ -14,8 +14,6 @@ import styles from "./habitCardStyle"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
 import { useHabits } from "@//contexts/habitsContext"
-import { translateGoalText } from "@/utils/habitManagerHelpers"
-import { pluralizeIfNeeded } from "@/utils/textHelpers"
 import HabitCardGoal from "./HabitCardGoal"
 
 type HabitCardProps = HabitsType & {

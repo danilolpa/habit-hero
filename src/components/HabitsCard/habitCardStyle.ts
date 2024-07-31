@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginHorizontal: theme.spaces.defaultSpace,
-    paddingHorizontal: theme.spaces.defaultSpace,
+    paddingLeft: theme.spaces.defaultSpace,
     borderBottomWidth: 3,
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexGrow: 1,
     marginLeft: 8,
-    maxWidth: "70%",
     paddingVertical: 5,
+    flexShrink: 1,
   },
   cardContentHabit: {
     display: "flex",
