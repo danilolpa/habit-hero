@@ -9,7 +9,6 @@ import HabitCard from "@/components/HabitsCard/HabitCard"
 import { ThemedText, ThemedView } from "../Utils/Themed"
 import { colord } from "colord"
 import { translatePeriod } from "@/utils/habitManagerHelpers"
-import { HabitsType } from "@/types/habits"
 
 export default function HabitsList() {
   const { selectedDate, updateHabitsList, habitsLoading, Habits } = useHabits()

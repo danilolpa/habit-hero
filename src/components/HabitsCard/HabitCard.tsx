@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   card: {
-    marginTop: 10,
+    marginVertical: 5,
     borderRadius: 20,
     borderCurve: "circular",
     display: "flex",
