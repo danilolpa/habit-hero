@@ -8,13 +8,14 @@ import Animated, {
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 
-import { ThemedIcon, ThemedText, ThemedView } from "../Utils/Themed"
+import { ThemedIcon, ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import styles from "./habitCardStyle"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
 import { useHabits } from "@//contexts/habitsContext"
 import HabitCardGoal from "./HabitCardGoal"
+import HabitCardStrike from "./HabitCardStrike"
 
 type HabitCardProps = HabitsType & {
   index: number
@@ -102,14 +103,7 @@ export default function HabitCard({ index, habitData, viewableItems }: HabitCard
             >
               {name}
             </ThemedText>
-            <ThemedText
-              darkColor={theme.colors.white.light}
-              lightColor={theme.colors.black.dark}
-              fontSize={14}
-              style={[styles.cardContentMisc, { color: colorHex }]}
-            >
-              Novo - sequencia de x dias
-            </ThemedText>
+            <HabitCardStrike color={colorHex} strike={index} />
           </View>
           <HabitCardGoal color={colorHex} goal={goal} />
         </ThemedView>

@@ -4,7 +4,6 @@ import { theme } from "@/Theme"
 import { translateGoalText } from "@/utils/habitManagerHelpers"
 import { pluralizeIfNeeded } from "@/utils/textHelpers"
 import { HabitsType } from "@/types/habits"
-import { getTotalMinutes } from "@/utils/dateHelpers"
 
 type HabitCardGoalType = {
   color: string
