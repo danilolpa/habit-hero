@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 
-import { ThemedIcon, ThemedText, ThemedView } from "@/components/Utils/Themed"
+import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
 import { HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
@@ -23,7 +23,7 @@ type HabitCardProps = HabitsType & {
 }
 
 export default function HabitCard({ index, habitData, viewableItems }: HabitCardProps) {
-  const { icon, name, color, id, period, goal } = habitData
+  const { icon, name, color, id, goal } = habitData
 
   const translateX = useSharedValue(0)
   const colorHex = getColorHexByName(color)
@@ -87,7 +87,7 @@ export default function HabitCard({ index, habitData, viewableItems }: HabitCard
     <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
       <Pressable onLongPress={() => handleDelete(id)}>
         <ThemedView
-          style={[styles.card, { borderColor: colorHex }]}
+          style={[styles.card, styles.cardDone, { borderColor: colorHex }]}
           darkColor={theme.colors.black.lighter}
           lightColor={theme.colors.white.dark}
           animated
@@ -132,6 +132,9 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderColor: theme.colors.black.darkest,
     minHeight: 70,
+  },
+  cardDone: {
+    backgroundColor: theme.colors.black.lightest,
   },
   cardContentIcon: {
     display: "flex",
