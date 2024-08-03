@@ -1,11 +1,6 @@
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons"
 import { Text, View, Alert, Pressable, ViewToken, StyleSheet } from "react-native"
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  SharedValue,
-} from "react-native-reanimated"
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated"
 import { Swipeable } from "react-native-gesture-handler"
 
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
@@ -19,16 +14,22 @@ import HabitCardStrike from "./HabitCardStrike"
 type HabitCardProps = HabitsType & {
   index: number
   habitData: HabitsType
-  viewableItems?: SharedValue<ViewToken[]>
 }
 
-export default function HabitCard({ index, habitData, viewableItems }: HabitCardProps) {
+export default function HabitCard({ index, habitData }: HabitCardProps) {
   const { icon, name, color, id, goal } = habitData
-
-  const translateX = useSharedValue(0)
-  const colorHex = getColorHexByName(color)
   const { updateHabitsList } = useHabits()
 
+  const isConcluded = index === 1
+  const isIgnored = index > 1
+
+  const colorHex = isConcluded
+    ? theme.colors.green.base
+    : isIgnored
+    ? theme.colors.blue.base
+    : getColorHexByName(color)
+
+  const translateX = useSharedValue(0)
   const editButtonStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: withSpring(translateX.value * 2) }],
@@ -87,24 +88,46 @@ export default function HabitCard({ index, habitData, viewableItems }: HabitCard
     <Swipeable renderRightActions={renderRightActions} onSwipeableOpen={onSwipeableOpen}>
       <Pressable onLongPress={() => handleDelete(id)}>
         <ThemedView
-          style={[styles.card, styles.cardDone, { borderColor: colorHex }]}
+          style={[
+            styles.card,
+            { borderColor: colorHex },
+            isConcluded && styles.cardConcluded,
+            isIgnored && styles.cardIgnored,
+          ]}
           darkColor={theme.colors.black.lighter}
           lightColor={theme.colors.white.dark}
           animated
         >
-          <MaterialIcons name={icon} style={[styles.cardContentIcon, { color: colorHex }]} />
+          <MaterialIcons
+            name={icon}
+            style={[
+              styles.cardContentIcon,
+              { color: colorHex },
+              isConcluded && styles.cardContentIconConcluded,
+              isIgnored && styles.cardContentIconIgnored,
+            ]}
+          />
           <View style={styles.cardContentCenter}>
             <ThemedText
               darkColor={theme.colors.white.dark}
               lightColor={theme.colors.black.dark}
-              fontWeight="bold"
-              style={styles.cardContentHabit}
+              fontWeight="medium"
+              fontSize={19}
+              style={[
+                styles.cardHabitNameText,
+                isConcluded && styles.cardHabitNameTextConcluded,
+                isIgnored && styles.cardHabitNameTextIgnored,
+              ]}
             >
               {name}
             </ThemedText>
             <HabitCardStrike color={colorHex} strike={index} />
           </View>
-          <HabitCardGoal color={colorHex} goal={goal} />
+          <HabitCardGoal
+            color={colorHex}
+            goal={goal}
+            style={isConcluded || isIgnored ? { opacity: 0.6 } : undefined}
+          />
         </ThemedView>
       </Pressable>
     </Swipeable>
@@ -131,14 +154,25 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderColor: theme.colors.black.darkest,
-    minHeight: 70,
+    minHeight: 75,
   },
-  cardDone: {
-    backgroundColor: theme.colors.black.lightest,
+  cardConcluded: {
+    borderColor: theme.colors.green.base,
+  },
+  cardIgnored: {
+    borderColor: theme.colors.black.lightest,
   },
   cardContentIcon: {
     display: "flex",
     fontSize: 30,
+  },
+  cardContentIconConcluded: {
+    color: theme.colors.white.darkest,
+    opacity: 0.7,
+  },
+  cardContentIconIgnored: {
+    color: theme.colors.white.darkest,
+    opacity: 0.7,
   },
 
   cardContentCenter: {
@@ -148,14 +182,20 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     flexShrink: 1,
   },
-  cardContentHabit: {
+  cardHabitNameText: {
     display: "flex",
     alignContent: "center",
     justifyContent: "center",
-    fontSize: 18,
     lineHeight: 18,
     paddingTop: 8,
     top: 5,
+  },
+  cardHabitNameTextConcluded: {
+    textDecorationLine: "line-through",
+    opacity: 0.7,
+  },
+  cardHabitNameTextIgnored: {
+    opacity: 0.7,
   },
   itemContainer: {
     marginHorizontal: theme.spaces.defaultSpace,

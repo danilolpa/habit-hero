@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, ViewStyle } from "react-native"
 import { ThemedIcon, ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import { translateGoalText } from "@/utils/habitManagerHelpers"
@@ -8,10 +8,11 @@ import { HabitsType } from "@/types/habits"
 type HabitCardGoalType = {
   color: string
   goal: HabitsType["goal"]
+  style?: ViewStyle
 }
 
 export default function HabitCardGoal(props: HabitCardGoalType) {
-  const { goal, color } = props
+  const { goal, color, style } = props
 
   if (!goal) return null
 
@@ -42,7 +43,7 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
       : formatTimeText()
 
   return (
-    <View style={styles.cardGoalContainer}>
+    <View style={[styles.cardGoalContainer, style]}>
       {goalType === "BY_TIME" && (
         <View style={styles.timeContainer}>
           <ThemedIcon name="timer" size={30} style={[{ color: color }, styles.byTimeIcon]} />

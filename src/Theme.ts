@@ -92,7 +92,8 @@ const theme: Theme = {
       base: "#DD5746",
     },
     blue: {
-      base: "#5A72A0",
+      base: "#1459c7",
+      dark: "#1459c7",
     },
     orange: {
       base: "#EF9C66",

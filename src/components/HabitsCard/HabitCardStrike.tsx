@@ -1,14 +1,18 @@
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, ViewStyle } from "react-native"
 import { ThemedIcon, ThemedText } from "@/components/Utils/Themed"
 import { theme } from "@/Theme"
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
 import MaterialIcons from "@expo/vector-icons/MaterialIcons"
 
-export default function HabitCardStrike(props: { color: string; strike: number }) {
-  const { color, strike } = props
+export default function HabitCardStrike(props: {
+  color: string
+  strike: number
+  style?: ViewStyle
+}) {
+  const { color, strike, style } = props
   const daysStrike = strike
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {daysStrike === 0 && (
         <>
           <MaterialCommunityIcons name="star-shooting-outline" size={24} color={color} />
