@@ -5,7 +5,7 @@ import { Swipeable } from "react-native-gesture-handler"
 
 import { ThemedText, ThemedView } from "@/components/Utils/Themed"
 import { getColorHexByName, theme } from "@/Theme"
-import { HabitsType } from "@/types/habits"
+import { HabitStatusProps, HabitsType } from "@/types/habits"
 import { removeHabit } from "@/store/habitStoreService"
 import { useHabits } from "@//contexts/habitsContext"
 import HabitCardGoal from "./HabitCardGoal"
@@ -22,6 +22,9 @@ export default function HabitCard({ index, habitData }: HabitCardProps) {
 
   const isConcluded = index === 1
   const isIgnored = index > 1
+
+  const habitStatus: HabitStatusProps["status"] = "IGNORED"
+  console.log(habitStatus)
 
   const colorHex = isConcluded
     ? theme.colors.green.base
@@ -121,7 +124,7 @@ export default function HabitCard({ index, habitData }: HabitCardProps) {
             >
               {name}
             </ThemedText>
-            <HabitCardStrike color={colorHex} strike={index} />
+            <HabitCardStrike color={colorHex} strike={index} ignored={isIgnored} />
           </View>
           <HabitCardGoal
             color={colorHex}
@@ -167,12 +170,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   cardContentIconConcluded: {
-    color: theme.colors.white.darkest,
-    opacity: 0.7,
+    color: theme.colors.white.dark,
+    opacity: 0.5,
   },
   cardContentIconIgnored: {
-    color: theme.colors.white.darkest,
-    opacity: 0.7,
+    color: theme.colors.white.dark,
+    opacity: 0.5,
   },
 
   cardContentCenter: {
@@ -192,10 +195,12 @@ const styles = StyleSheet.create({
   },
   cardHabitNameTextConcluded: {
     textDecorationLine: "line-through",
-    opacity: 0.7,
+    opacity: 1,
+    color: theme.colors.white.darkest,
   },
   cardHabitNameTextIgnored: {
-    opacity: 0.7,
+    opacity: 1,
+    color: theme.colors.white.darkest,
   },
   itemContainer: {
     marginHorizontal: theme.spaces.defaultSpace,

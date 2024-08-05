@@ -8,12 +8,13 @@ export default function HabitCardStrike(props: {
   color: string
   strike: number
   style?: ViewStyle
+  ignored?: boolean
 }) {
-  const { color, strike, style } = props
+  const { color, strike, style, ignored } = props
   const daysStrike = strike
   return (
     <View style={[styles.container, style]}>
-      {daysStrike === 0 && (
+      {!ignored && daysStrike === 0 && (
         <>
           <MaterialCommunityIcons name="star-shooting-outline" size={24} color={color} />
           <ThemedText fontSize={14} style={[styles.cardContentMisc, { color: color }]}>
@@ -21,7 +22,7 @@ export default function HabitCardStrike(props: {
           </ThemedText>
         </>
       )}
-      {daysStrike > 0 && (
+      {!ignored && daysStrike > 0 && (
         <>
           <MaterialIcons name="local-fire-department" size={24} color={theme.colors.red.base} />
           <ThemedText
@@ -31,6 +32,18 @@ export default function HabitCardStrike(props: {
             style={[styles.cardContentMisc]}
           >
             {daysStrike} dias
+          </ThemedText>
+        </>
+      )}
+      {ignored && (
+        <>
+          <MaterialIcons name="airline-stops" size={24} color={theme.colors.blue.base} />
+          <ThemedText
+            colorText={theme.colors.blue.dark}
+            fontSize={14}
+            style={[styles.cardContentMisc]}
+          >
+            Ignorado
           </ThemedText>
         </>
       )}

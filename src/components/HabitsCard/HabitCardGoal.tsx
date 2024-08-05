@@ -43,7 +43,7 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
       : formatTimeText()
 
   return (
-    <View style={[styles.cardGoalContainer, style]}>
+    <View style={[styles.container, style]}>
       {goalType === "BY_TIME" && (
         <View style={styles.timeContainer}>
           <ThemedIcon name="timer" size={30} style={[{ color: color }, styles.byTimeIcon]} />
@@ -82,9 +82,7 @@ export default function HabitCardGoal(props: HabitCardGoalType) {
 }
 
 export const styles = StyleSheet.create({
-  container: {},
-
-  cardGoalContainer: {
+  container: {
     display: "flex",
     width: 80,
   },
@@ -95,7 +93,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flexGrow: 1,
     justifyContent: "center",
-    backgroundColor: theme.colors.black.lightest,
+    backgroundColor: theme.colors.black.light,
     borderRadius: 18,
     marginTop: 1,
   },
