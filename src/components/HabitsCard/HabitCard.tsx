@@ -20,8 +20,8 @@ export default function HabitCard({ index, habitData }: HabitCardProps) {
   const { icon, name, color, id, goal } = habitData
   const { updateHabitsList } = useHabits()
 
-  const isConcluded = index === 1
-  const isIgnored = index > 1
+  const isConcluded = false // index === 1
+  const isIgnored = false // index > 1
 
   const habitStatus: HabitStatusProps["status"] = "IGNORED"
   console.log(habitStatus)
